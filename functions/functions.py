@@ -15,8 +15,9 @@ def AbsoluteMetricsPulseDefaultCO2(time_horizon, unit_value):
     air_molar_mass = 28.97e-3  # [kg/mol]
     atmosphere_total_mass = 5.1352e18  # [kg]
     radiative_efficiency = 1.37e-2 * 1e9  # radiative efficiency [mW/m^2]
-    A_co2 = radiative_efficiency * air_molar_mass / (
+    A_co2_unit = radiative_efficiency * air_molar_mass / (
                 co2_molar_mass * atmosphere_total_mass) * 1e-3  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
+    A_co2 = A_co2_unit * unit_value
     a = [0.2173, 0.2240, 0.2824, 0.2763]
     tau = [0, 394.4, 36.54, 4.304]
     model_remaining_fraction_species_co2 = np.zeros(time_horizon+1)
@@ -42,14 +43,6 @@ def AbsoluteMetricsPulseDefaultCO2(time_horizon, unit_value):
     igtp_co2 = np.sum(model_temperature_co2)
     atr_co2 = 1 / time_horizon * igtp_co2
     agtp_co2 = float(model_temperature_co2[-1])
-    # Linearization with unit value
-    rf_co2 = rf_co2 * unit_value
-    agwp_co2 = agwp_co2 * unit_value
-    aegwp_co2 = aegwp_co2 * unit_value
-    temp_co2 = temp_co2 * unit_value
-    agtp_co2 = agtp_co2 * unit_value
-    igtp_co2 = igtp_co2 * unit_value
-    atr_co2 = atr_co2 * unit_value
 
     return rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, igtp_co2, atr_co2
 
