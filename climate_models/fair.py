@@ -4,6 +4,51 @@ import numpy as np
 import pandas as pd
 from fair import FAIR
 from fair.interface import fill, initialise
+from functions.functions import AbsoluteMetricsPulseDefaultCO2
+
+
+def GWPStarEquivalentEmissionsFunction(start_year, end_year, emissions_erf, gwpstar_variation_duration, gwpstar_s_coefficient):
+    # Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8
+    # Global
+    climate_time_horizon = 100
+    rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, igtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(climate_time_horizon, 1)
+    co2_agwp_h = agwp_co2
+
+    # g coefficient for GWP*
+    if gwpstar_s_coefficient == 0:
+        g_coefficient = 1
+    else:
+        g_coefficient = (
+                                1 - np.exp(-gwpstar_s_coefficient / (1 - gwpstar_s_coefficient))
+                        ) / gwpstar_s_coefficient
+
+    # Main
+    emissions_erf_variation = np.zeros(end_year-start_year+1)
+    for k in range(start_year, end_year + 1):
+        if k - start_year >= gwpstar_variation_duration:
+            emissions_erf_variation[k-start_year] = (
+                                                                        emissions_erf[k-start_year] - emissions_erf[
+                                                                    k - gwpstar_variation_duration - start_year]
+                                                                ) / gwpstar_variation_duration
+        else:
+            emissions_erf_variation[k-start_year] = (
+                    emissions_erf[k-start_year] / gwpstar_variation_duration
+            )
+    emissions_equivalent_emissions = np.zeros(end_year-start_year+1)
+    for k in range(start_year, end_year + 1):
+        emissions_equivalent_emissions[k-start_year] = (
+                                                                           g_coefficient
+                                                                           * (1 - gwpstar_s_coefficient)
+                                                                           * climate_time_horizon
+                                                                           / co2_agwp_h
+                                                                           * emissions_erf_variation[k-start_year]
+                                                                   ) + g_coefficient * gwpstar_s_coefficient / co2_agwp_h * \
+                                                                   emissions_erf[k-start_year]
+
+    return emissions_equivalent_emissions
+
+
+
 
 def RunFair(start_year, end_year, background_species_quantities, studied_species='None', studied_species_quantities=0):
     # Creation of FaIR instance
@@ -349,12 +394,54 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
     elif studied_species == 'Aviation contrails':
         erf = sensitivity_erf * emission_profile
         studied_species_quantities = erf  # W/m2
-    elif studied_species == 'Aviation NOx ST O3 increase':
-        erf = sensitivity_erf * emission_profile
-        studied_species_quantities = erf  # W/m2
     elif studied_species == 'Aviation H2O':
         erf = sensitivity_erf * emission_profile
         studied_species_quantities = erf  # W/m2
+    elif studied_species == 'Aviation NOx ST O3 increase':
+        erf = sensitivity_erf * emission_profile
+        studied_species_quantities = erf  # W/m2
+    elif studied_species == 'Aviation NOx LT O3 decrease':
+        erf = sensitivity_erf * emission_profile
+        studied_species_quantities = GWPStarEquivalentEmissionsFunction(
+            start_year,
+            end_year,
+            emissions_erf=erf,
+            gwpstar_variation_duration=20,
+            gwpstar_s_coefficient=0.25,
+        )
+    elif studied_species == 'Aviation NOx CH4 decrease':
+        erf = sensitivity_erf * emission_profile
+        studied_species_quantities = GWPStarEquivalentEmissionsFunction(
+            start_year,
+            end_year,
+            emissions_erf=erf,
+            gwpstar_variation_duration=20,
+            gwpstar_s_coefficient=0.25,
+        )
+    elif studied_species == 'Aviation NOx SWV decrease':
+        erf = sensitivity_erf * emission_profile
+        studied_species_quantities = GWPStarEquivalentEmissionsFunction(
+            start_year,
+            end_year,
+            emissions_erf=erf,
+            gwpstar_variation_duration=20,
+            gwpstar_s_coefficient=0.25,
+        )
+    elif studied_species == 'Aviation NOx':
+        erf = np.zeros((4, len(emission_profile)))
+        studied_species_quantities = np.zeros((4, len(emission_profile)))
+        for k in range(0,len(erf)):
+            erf[k] = sensitivity_erf[k] * emission_profile
+            if k == 0:
+                studied_species_quantities[k] = erf[k]  # W/m2
+            studied_species_quantities[k] = GWPStarEquivalentEmissionsFunction(
+                start_year,
+                end_year,
+                emissions_erf=erf[k],
+                gwpstar_variation_duration=20,
+                gwpstar_s_coefficient=0.25,
+            )
+
     temperature_with_species, effective_radiative_forcing_with_species = RunFair(start_year, end_year, background_species_quantities, studied_species, studied_species_quantities)
     temperature_without_species, effective_radiative_forcing_without_species = RunFair(start_year, end_year, background_species_quantities, studied_species = 'None')
     temperature = temperature_with_species - temperature_without_species
