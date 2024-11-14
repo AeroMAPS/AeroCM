@@ -408,7 +408,7 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
             emissions_erf=erf,
             gwpstar_variation_duration=20,
             gwpstar_s_coefficient=0.25,
-        )
+        ) / 10**12 # Conversion from kgCO2 to GtCO2
     elif studied_species == 'Aviation NOx CH4 decrease':
         erf = sensitivity_erf * emission_profile
         studied_species_quantities = GWPStarEquivalentEmissionsFunction(
@@ -417,7 +417,7 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
             emissions_erf=erf,
             gwpstar_variation_duration=20,
             gwpstar_s_coefficient=0.25,
-        )
+        ) / 10**12 # Conversion from kgCO2 to GtCO2
     elif studied_species == 'Aviation NOx SWV decrease':
         erf = sensitivity_erf * emission_profile
         studied_species_quantities = GWPStarEquivalentEmissionsFunction(
@@ -426,21 +426,22 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
             emissions_erf=erf,
             gwpstar_variation_duration=20,
             gwpstar_s_coefficient=0.25,
-        )
+        ) / 10**12 # Conversion from kgCO2 to GtCO2
     elif studied_species == 'Aviation NOx':
         erf = np.zeros((4, len(emission_profile)))
         studied_species_quantities = np.zeros((4, len(emission_profile)))
         for k in range(0,len(erf)):
             erf[k] = sensitivity_erf[k] * emission_profile
             if k == 0:
-                studied_species_quantities[k] = erf[k]  # W/m2
-            studied_species_quantities[k] = GWPStarEquivalentEmissionsFunction(
-                start_year,
-                end_year,
-                emissions_erf=erf[k],
-                gwpstar_variation_duration=20,
-                gwpstar_s_coefficient=0.25,
-            )
+                studied_species_quantities[k] = erf[k]# W/m2
+            else:
+                studied_species_quantities[k] = GWPStarEquivalentEmissionsFunction(
+                    start_year,
+                    end_year,
+                    emissions_erf=erf[k],
+                    gwpstar_variation_duration=20,
+                    gwpstar_s_coefficient=0.25,
+                ) / 10**12 # Conversion from kgCO2 to GtCO2
 
     temperature_with_species, effective_radiative_forcing_with_species = RunFair(start_year, end_year, background_species_quantities, studied_species, studied_species_quantities)
     temperature_without_species, effective_radiative_forcing_without_species = RunFair(start_year, end_year, background_species_quantities, studied_species = 'None')
