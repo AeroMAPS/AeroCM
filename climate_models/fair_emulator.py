@@ -11,7 +11,7 @@ def GWPStarEquivalentEmissionsFunction(start_year, end_year, emissions_erf, gwps
     # Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8
     # Global
     climate_time_horizon = 100
-    rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, igtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(climate_time_horizon, 1)
+    rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(climate_time_horizon, 1)
     co2_agwp_h = agwp_co2
 
     # g coefficient for GWP*
@@ -485,7 +485,7 @@ def TemperatureFair():
         nox_ch4_decrease_gwpstar_s_coefficient: float,
         nox_stratospheric_water_vapor_decrease_gwpstar_variation_duration: float,
         nox_stratospheric_water_vapor_decrease_gwpstar_s_coefficient: float,
-    ) -> Tuple[
+    ) -> tuple[
         pd.Series,
         pd.Series,
         pd.Series,

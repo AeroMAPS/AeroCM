@@ -40,11 +40,11 @@ def AbsoluteMetricsPulseDefaultCO2(time_horizon, unit_value):
                 term += a[i] * tau[i] * c[j] / (tau[i] - d[j]) * (np.exp(-k / tau[i]) - np.exp(-k / d[j]))
             model_temperature_co2[k] += A_co2 * term
     temp_co2 = model_temperature_co2
-    igtp_co2 = np.sum(model_temperature_co2)
-    atr_co2 = 1 / time_horizon * igtp_co2
+    iagtp_co2 = np.sum(model_temperature_co2)
+    atr_co2 = 1 / time_horizon * iagtp_co2
     agtp_co2 = float(model_temperature_co2[-1])
 
-    return rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, igtp_co2, atr_co2
+    return rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2
 
 
 def AbsoluteMetrics(radiative_forcing, effective_radiative_forcing, temperature, time_horizon):
@@ -52,18 +52,18 @@ def AbsoluteMetrics(radiative_forcing, effective_radiative_forcing, temperature,
     agwp = np.sum(radiative_forcing)
     aegwp = np.sum(effective_radiative_forcing)
     agtp = float(temperature[-1])
-    igtp = np.sum(temperature)
-    atr = 1 / time_horizon * igtp
+    iagtp = np.sum(temperature)
+    atr = 1 / time_horizon * iagtp
 
-    return agwp, aegwp, agtp, igtp, atr
+    return agwp, aegwp, agtp, iagtp, atr
 
 
-def RelativeMetrics(agwp_co2, aegwp_co2, agtp_co2, igtp_co2, atr_co2, agwp, aegwp, agtp, igtp, atr):
+def RelativeMetrics(agwp_co2, aegwp_co2, agtp_co2, iagtp_co2, atr_co2, agwp, aegwp, agtp, iagtp, atr):
 
     gwp = agwp / agwp_co2
     egwp = aegwp / aegwp_co2
     gtp = agtp / agtp_co2
-    igtp = igtp / igtp_co2
+    igtp = iagtp / iagtp_co2
     ratr = atr / atr_co2
 
     return gwp, egwp, gtp, igtp, ratr
