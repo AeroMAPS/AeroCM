@@ -11,8 +11,8 @@ def GWPStarEquivalentEmissionsFunction(start_year, end_year, emissions_erf, gwps
     # Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8
     # Global
     climate_time_horizon = 100
-    rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(climate_time_horizon, 1)
-    co2_agwp_h = agwp_co2
+    rf_co2, erf_co2, agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(climate_time_horizon, 1)
+    co2_agwp_h = agwp_rf_co2
 
     # g coefficient for GWP*
     if gwpstar_s_coefficient == 0:
@@ -138,6 +138,10 @@ def RunFair(start_year, end_year, background_species_quantities, studied_species
 
     # Creation of input and output data
     f.allocate()
+
+    idx = f.species.index("Aviation contrails")
+    f.species_configs["forcing_efficacy"][:, idx] = 0.38
+    # print(f.species_configs["forcing_efficacy"])
 
     # Filling species quantities
     if studied_species == 'Aviation NOx':
@@ -441,7 +445,7 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
                     emissions_erf=erf[k],
                     gwpstar_variation_duration=20,
                     gwpstar_s_coefficient=0.25,
-                ) / 10**12 # Conversion from kgCO2 to GtCO2
+                ) / 10**12 # Conversion from kgCO2-we to GtCO2-we
 
     temperature_with_species, effective_radiative_forcing_with_species = RunFair(start_year, end_year, background_species_quantities, studied_species, studied_species_quantities)
     temperature_without_species, effective_radiative_forcing_without_species = RunFair(start_year, end_year, background_species_quantities, studied_species = 'None')
@@ -451,5 +455,90 @@ def FaIRClimateModel(start_year, end_year, background_species_quantities, emissi
         radiative_forcing = effective_radiative_forcing / np.mean(ratio_erf_rf)
     else:
         radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+
+    return radiative_forcing, effective_radiative_forcing, temperature
+
+
+def GWPStarClimateModel(start_year, end_year, emission_profile, studied_species, sensitivity_erf, ratio_erf_rf, tcre):
+
+    if studied_species == 'Aviation contrails' or studied_species == 'Aviation soot' or studied_species == 'Aviation sulfur' or studied_species == 'Aviation H2O':
+        gwpstar_variation_duration = 6
+        gwpstar_s_coefficient = 0.0
+
+    if studied_species == 'Aviation CO2':
+        equivalent_emissions = emission_profile / 10**12  # Conversion from kgCO2 to GtCO2
+        print("Not used")
+
+    else:
+        effective_radiative_forcing = sensitivity_erf * emission_profile
+
+        equivalent_emissions = GWPStarEquivalentEmissionsFunction(
+            start_year,
+            end_year,
+            emissions_erf=effective_radiative_forcing,
+            gwpstar_variation_duration=gwpstar_variation_duration,
+            gwpstar_s_coefficient=gwpstar_s_coefficient,
+        ) / 10**12 # Conversion from kgCO2-we to GtCO2-we
+
+    radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+    cumulative_equivalent_emissions = np.zeros(len(emission_profile))
+    cumulative_equivalent_emissions[0] = equivalent_emissions[0]
+    for k in range(1, len(cumulative_equivalent_emissions)):
+        cumulative_equivalent_emissions[k] = cumulative_equivalent_emissions[k-1] + equivalent_emissions[k]
+    temperature = tcre * cumulative_equivalent_emissions
+
+    return radiative_forcing, effective_radiative_forcing, temperature
+
+
+def LWEClimateModel(start_year, end_year, emission_profile, studied_species, sensitivity_erf, ratio_erf_rf, tcre):
+
+    if studied_species == 'Aviation CO2':
+        equivalent_emissions = emission_profile / 10**12  # Conversion from kgCO2 to GtCO2
+        print("Not used")
+
+    else:
+        if studied_species == 'Aviation NOx CH4 decrease and induced':
+            tau = 11.8
+            A_CH4_unit = 5.7e-4
+            A_CH4 = A_CH4_unit * sensitivity_erf * emission_profile
+            f1 = 0.5 # Indirect effect on ozone
+            f2 = 0.15 # Indirect effect on stratospheric water
+            effective_radiative_forcing_from_year = np.zeros((len(emission_profile), len(emission_profile)))
+            # Effective radiative forcing induced in year j by the species emitted in year i
+            for i in range(0, len(emission_profile)):
+                for j in range(0, len(emission_profile)):
+                    if i <= j:
+                        effective_radiative_forcing_from_year[i,j] = (1 + f1 + f2) * A_CH4[i] * np.exp(-(j-i)/tau)
+            effective_radiative_forcing = np.zeros(len(emission_profile))
+            for k in range(0, len(emission_profile)):
+                effective_radiative_forcing[k] = np.sum(effective_radiative_forcing_from_year[:, k])
+
+        else:
+            effective_radiative_forcing = sensitivity_erf * emission_profile
+
+        size = end_year - start_year + 1
+        F_co2 = np.zeros((size, size))
+        for i in range(0, size):
+            for j in range(0, size):
+                if i > j:
+                    rf_co2, erf_co2, agwp_rf_co2_1, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(
+                        i - j + 1, 1)
+                    rf_co2, erf_co2, agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(
+                        i - j, 1)
+                    F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
+                elif i == j:
+                    rf_co2, erf_co2, agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2 = AbsoluteMetricsPulseDefaultCO2(
+                        1, 1)
+                    F_co2[i, j] = agwp_rf_co2
+
+        F_co2_inv = np.linalg.inv(F_co2)
+        equivalent_emissions = np.dot(F_co2_inv, effective_radiative_forcing) / 10**12 # Conversion from kgCO2-we to GtCO2-we
+
+    radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+    cumulative_equivalent_emissions = np.zeros(len(emission_profile))
+    cumulative_equivalent_emissions[0] = equivalent_emissions[0]
+    for k in range(1, len(cumulative_equivalent_emissions)):
+        cumulative_equivalent_emissions[k] = cumulative_equivalent_emissions[k-1] + equivalent_emissions[k]
+    temperature = tcre * cumulative_equivalent_emissions
 
     return radiative_forcing, effective_radiative_forcing, temperature

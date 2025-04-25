@@ -26,10 +26,14 @@ def AbsoluteMetricsPulseDefaultCO2(time_horizon, unit_value):
         for i in [1, 2, 3]:
             model_remaining_fraction_species_co2[k] += a[i] * np.exp(-k/tau[i])
     rf_co2 = A_co2 * model_remaining_fraction_species_co2
+    erf_co2 = rf_co2
     agwp_co2 = A_co2 * a[0] * time_horizon
     for i in [1, 2, 3]:
         agwp_co2 += A_co2 * a[i] * tau[i] * (1 - np.exp(-time_horizon / tau[i]))
-    aegwp_co2 = agwp_co2
+    agwp_rf_co2 = agwp_co2
+    agwp_erf_co2 = agwp_co2
+    aegwp_rf_co2 = agwp_co2
+    aegwp_erf_co2 = agwp_co2
     c = [0.631, 0.429]
     d = [8.4, 409.5]
     model_temperature_co2 = np.zeros(time_horizon+1)
@@ -44,26 +48,30 @@ def AbsoluteMetricsPulseDefaultCO2(time_horizon, unit_value):
     atr_co2 = 1 / time_horizon * iagtp_co2
     agtp_co2 = float(model_temperature_co2[-1])
 
-    return rf_co2, agwp_co2, aegwp_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2
+    return rf_co2, erf_co2, agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, temp_co2, agtp_co2, iagtp_co2, atr_co2
 
 
-def AbsoluteMetrics(radiative_forcing, effective_radiative_forcing, temperature, time_horizon):
+def AbsoluteMetrics(radiative_forcing, effective_radiative_forcing, efficacy_rf, efficacy_erf, temperature, time_horizon):
 
-    agwp = np.sum(radiative_forcing)
-    aegwp = np.sum(effective_radiative_forcing)
+    agwp_rf = np.sum(radiative_forcing)
+    agwp_erf = np.sum(effective_radiative_forcing)
+    aegwp_rf = efficacy_rf * np.sum(radiative_forcing)
+    aegwp_erf = efficacy_erf * np.sum(effective_radiative_forcing)
     agtp = float(temperature[-1])
     iagtp = np.sum(temperature)
     atr = 1 / time_horizon * iagtp
 
-    return agwp, aegwp, agtp, iagtp, atr
+    return agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr
 
 
-def RelativeMetrics(agwp_co2, aegwp_co2, agtp_co2, iagtp_co2, atr_co2, agwp, aegwp, agtp, iagtp, atr):
+def RelativeMetrics(agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, agtp_co2, iagtp_co2, atr_co2, agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr):
 
-    gwp = agwp / agwp_co2
-    egwp = aegwp / aegwp_co2
+    gwp_rf = agwp_rf / agwp_rf_co2
+    gwp_erf = agwp_erf / agwp_erf_co2
+    egwp_rf = aegwp_rf / aegwp_rf_co2
+    egwp_erf = aegwp_erf / aegwp_erf_co2
     gtp = agtp / agtp_co2
     igtp = iagtp / iagtp_co2
     ratr = atr / atr_co2
 
-    return gwp, egwp, gtp, igtp, ratr
+    return gwp_rf, gwp_erf, egwp_rf, egwp_erf, gtp, igtp, ratr
