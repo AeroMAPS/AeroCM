@@ -208,9 +208,9 @@ def RunFair(
     # Creation of input and output data
     f.allocate()
 
-    if studied_species == "Aviation contrails":
-        idx = f.species.index("Aviation contrails")
-        f.species_configs["forcing_efficacy"][:, idx] = efficacy_erf
+    # if studied_species == "Aviation contrails":
+    #     idx = f.species.index("Aviation contrails")
+    #     f.species_configs["forcing_efficacy"][:, idx] = efficacy_erf
 
     # Filling species quantities
     if studied_species == "Aviation CO2":
@@ -405,6 +405,9 @@ def RunFair(
                 specie=specie,
             )  # W m-2 ppb-1
             fill(f.species_configs["aci_scale"], -2.09841432)
+
+        if specie == "Aviation contrails":
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
 
         if specie == "Aviation sulfur":
             erf_aci_sulfur = 0.0
