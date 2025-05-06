@@ -8,8 +8,8 @@ def aeromaps_climate_model(
     params_species = {}
 
     if (
-        species_climate_model_function == "SpeciesLWEClimateModel"
-        or species_climate_model_function == "SpeciesGWPStarClimateModel"
+        species_climate_model_function == "species_lwe_climate_model"
+        or species_climate_model_function == "species_gwpstar_climate_model"
     ):
         sensitivity_erf = params["sensitivity_erf"]
         ratio_erf_rf = params["ratio_erf_rf"]
@@ -23,7 +23,7 @@ def aeromaps_climate_model(
                 "tcre": tcre,
             }
 
-    elif species_climate_model_function == "SpeciesFaIRClimateModel":
+    elif species_climate_model_function == "species_fair_climate_model":
         background_species_quantities = params["background_species_quantities"]
         sensitivity_erf = params["sensitivity_erf"]
         ratio_erf_rf = params["ratio_erf_rf"]

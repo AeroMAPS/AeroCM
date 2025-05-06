@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def EmissionProfile(start_year, t0, time_horizon, profile, unit_value):
+def emission_profile_function(start_year, t0, time_horizon, profile, unit_value):
     emissions = np.zeros(t0 - start_year + time_horizon + 1)
     if profile == "pulse":
         emissions[t0 - start_year] = unit_value

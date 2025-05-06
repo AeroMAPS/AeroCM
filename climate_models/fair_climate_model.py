@@ -6,7 +6,7 @@ from fair import FAIR
 from fair.interface import fill, initialise
 
 
-def RunFair(start_year, end_year, species_studied, studied_species_quantities, params):
+def run_fair(start_year, end_year, species_studied, studied_species_quantities, params):
 
     # params = {
     #     "background_species_quantities": background_species_quantities,
@@ -29,7 +29,7 @@ def RunFair(start_year, end_year, species_studied, studied_species_quantities, p
 
     # Definition of species and properties
     species = [
-        "CO2",  # Includes world emissions, aviation emissions, and equivalent emissions for NOx effects (except ST O3)
+        "CO2",  # Includes world and aviation emissions
         "World CH4",
         "Aviation contrails",
         "Aviation NOx - ST O3 increase",
@@ -338,7 +338,7 @@ def RunFair(start_year, end_year, species_studied, studied_species_quantities, p
     )
 
 
-def BackgroundSpeciesQuantities(start_year, end_year, rcp):
+def background_species_quantities_function(start_year, end_year, rcp):
     if rcp == "RCP26":
         rcp_data_path = pth.join(RCP.__path__[0], "RCP26.csv")
     elif rcp == "RCP45":
@@ -369,7 +369,7 @@ def BackgroundSpeciesQuantities(start_year, end_year, rcp):
     return background_species_quantities
 
 
-def SpeciesFaIRClimateModel(
+def species_fair_climate_model(
     start_year, end_year, species_studied, species_quantities, params
 ):
 
@@ -427,10 +427,10 @@ def SpeciesFaIRClimateModel(
             )
         studied_species_quantities = effective_radiative_forcing  # W/m2
 
-    temperature_with_species, effective_radiative_forcing_with_species = RunFair(
+    temperature_with_species, effective_radiative_forcing_with_species = run_fair(
         start_year, end_year, species_studied, studied_species_quantities, params
     )
-    temperature_without_species, effective_radiative_forcing_without_species = RunFair(
+    temperature_without_species, effective_radiative_forcing_without_species = run_fair(
         start_year,
         end_year,
         species_studied="None",

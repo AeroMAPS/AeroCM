@@ -1,8 +1,8 @@
 import numpy as np
-from metrics.metrics import CO2IPCCAbsoluteMetricsPulse
+from metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
-def GWPStarEquivalentEmissionsFunction(
+def gwpstar_equivalent_emissions_function(
     start_year,
     end_year,
     emissions_erf,
@@ -20,7 +20,7 @@ def GWPStarEquivalentEmissionsFunction(
         agtp_co2,
         iagtp_co2,
         atr_co2,
-    ) = CO2IPCCAbsoluteMetricsPulse(climate_time_horizon)
+    ) = co2_ipcc_pulse_absolute_metrics(climate_time_horizon)
     co2_agwp_h = agwp_rf_co2
 
     # g coefficient for GWP*
@@ -58,7 +58,7 @@ def GWPStarEquivalentEmissionsFunction(
     return emissions_equivalent_emissions
 
 
-def SpeciesGWPStarClimateModel(
+def species_gwpstar_climate_model(
     start_year, end_year, species_studied, species_quantities, params
 ):
 
@@ -79,7 +79,7 @@ def SpeciesGWPStarClimateModel(
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
         effective_radiative_forcing = np.zeros(len(species_quantities))
-        _, agwp_erf_100_co2, *rest = CO2IPCCAbsoluteMetricsPulse(100)
+        _, agwp_erf_100_co2, *rest = co2_ipcc_pulse_absolute_metrics(100)
         sensitivity_erf = agwp_erf_100_co2 / 100
         effective_radiative_forcing[0] = sensitivity_erf * species_quantities[0]
         for k in range(1, len(species_quantities)):
@@ -106,7 +106,7 @@ def SpeciesGWPStarClimateModel(
             gwpstar_s_coefficient = 0.25
 
         equivalent_emissions = (
-            GWPStarEquivalentEmissionsFunction(
+            gwpstar_equivalent_emissions_function(
                 start_year,
                 end_year,
                 emissions_erf=effective_radiative_forcing,

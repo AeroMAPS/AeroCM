@@ -1,8 +1,8 @@
 import numpy as np
-from metrics.metrics import CO2IPCCAbsoluteMetricsPulse
+from metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
-def SpeciesLWEClimateModel(
+def species_lwe_climate_model(
     start_year, end_year, species_studied, species_quantities, params
 ):
 
@@ -23,7 +23,7 @@ def SpeciesLWEClimateModel(
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
         effective_radiative_forcing = np.zeros(len(species_quantities))
-        _, agwp_erf_100_co2, *rest = CO2IPCCAbsoluteMetricsPulse(100)
+        _, agwp_erf_100_co2, *rest = co2_ipcc_pulse_absolute_metrics(100)
         sensitivity_erf = agwp_erf_100_co2 / 100
         effective_radiative_forcing[0] = sensitivity_erf * species_quantities[0]
         for k in range(1, len(species_quantities)):
@@ -71,7 +71,7 @@ def SpeciesLWEClimateModel(
                         agtp_co2,
                         iagtp_co2,
                         atr_co2,
-                    ) = CO2IPCCAbsoluteMetricsPulse(i - j + 1)
+                    ) = co2_ipcc_pulse_absolute_metrics(i - j + 1)
                     (
                         agwp_rf_co2,
                         agwp_erf_co2,
@@ -80,7 +80,7 @@ def SpeciesLWEClimateModel(
                         agtp_co2,
                         iagtp_co2,
                         atr_co2,
-                    ) = CO2IPCCAbsoluteMetricsPulse(i - j)
+                    ) = co2_ipcc_pulse_absolute_metrics(i - j)
                     F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
                 elif i == j:
                     (
@@ -91,7 +91,7 @@ def SpeciesLWEClimateModel(
                         agtp_co2,
                         iagtp_co2,
                         atr_co2,
-                    ) = CO2IPCCAbsoluteMetricsPulse(1)
+                    ) = co2_ipcc_pulse_absolute_metrics(1)
                     F_co2[i, j] = agwp_rf_co2
 
         F_co2_inv = np.linalg.inv(F_co2)

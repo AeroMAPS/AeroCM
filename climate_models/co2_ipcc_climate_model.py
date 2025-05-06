@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def CO2IPCCClimateModel(start_year, end_year, unit_value):
+def co2_ipcc_climate_model(start_year, end_year, unit_value):
     co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
     air_molar_mass = 28.97e-3  # [kg/mol]
     atmosphere_total_mass = 5.1352e18  # [kg]

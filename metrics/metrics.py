@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def CO2IPCCAbsoluteMetricsPulse(time_horizon):
+def co2_ipcc_pulse_absolute_metrics(time_horizon):
     co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
     air_molar_mass = 28.97e-3  # [kg/mol]
     atmosphere_total_mass = 5.1352e18  # [kg]
@@ -56,7 +56,7 @@ def CO2IPCCAbsoluteMetricsPulse(time_horizon):
     )
 
 
-def AbsoluteMetrics(
+def absolute_metrics(
     radiative_forcing,
     effective_radiative_forcing,
     efficacy_rf,
@@ -76,7 +76,7 @@ def AbsoluteMetrics(
     return agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr
 
 
-def RelativeMetrics(
+def relative_metrics(
     agwp_rf_co2,
     agwp_erf_co2,
     aegwp_rf_co2,
