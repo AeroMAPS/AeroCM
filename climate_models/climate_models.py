@@ -1,16 +1,16 @@
-import numpy as np
+from climate_models.gwpstar_climate_model import species_gwpstar_climate_model
+from climate_models.lwe_climate_model import species_lwe_climate_model
+from climate_models.fair_climate_model import species_fair_climate_model
 
 
-def aeromaps_climate_model(
-    start_year, end_year, species_climate_model_function, species_quantities, params
+def aviation_climate_model(
+    start_year, end_year, species_climate_model, species_quantities, params
 ):
 
     params_species = {}
 
-    if (
-        species_climate_model_function == "species_lwe_climate_model"
-        or species_climate_model_function == "species_gwpstar_climate_model"
-    ):
+    if species_climate_model == "GWP*":
+        species_climate_model = species_gwpstar_climate_model
         sensitivity_erf = params["sensitivity_erf"]
         ratio_erf_rf = params["ratio_erf_rf"]
         efficacy_erf = params["efficacy_erf"]
@@ -23,7 +23,22 @@ def aeromaps_climate_model(
                 "tcre": tcre,
             }
 
-    elif species_climate_model_function == "species_fair_climate_model":
+    elif species_climate_model == "LWE":
+        species_climate_model = species_lwe_climate_model
+        sensitivity_erf = params["sensitivity_erf"]
+        ratio_erf_rf = params["ratio_erf_rf"]
+        efficacy_erf = params["efficacy_erf"]
+        tcre = params["tcre"]
+        for k in range(0, 7):
+            params_species[k] = {
+                "sensitivity_erf": sensitivity_erf[k],
+                "ratio_erf_rf": ratio_erf_rf[k],
+                "efficacy_erf": efficacy_erf[k],
+                "tcre": tcre,
+            }
+
+    elif species_climate_model == "FaIR":
+        species_climate_model = species_fair_climate_model
         background_species_quantities = params["background_species_quantities"]
         sensitivity_erf = params["sensitivity_erf"]
         ratio_erf_rf = params["ratio_erf_rf"]
@@ -41,7 +56,7 @@ def aeromaps_climate_model(
 
     # CO2
     co2_rf, co2_erf, temperature_increase_from_co2_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation CO2",
@@ -52,7 +67,7 @@ def aeromaps_climate_model(
 
     # Contrails
     contrails_rf, contrails_erf, temperature_increase_from_contrails_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation contrails",
@@ -63,7 +78,7 @@ def aeromaps_climate_model(
 
     # NOx - ST O3 increase
     nox_st_o3_rf, nox_st_o3_erf, temperature_increase_from_nox_st_o3_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation NOx - ST O3 increase",
@@ -74,7 +89,7 @@ def aeromaps_climate_model(
 
     # NOx - CH4 decrease and induced
     nox_ch4_rf, nox_ch4_erf, temperature_increase_from_nox_ch4_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation NOx - CH4 decrease and induced",
@@ -108,7 +123,7 @@ def aeromaps_climate_model(
 
     # H2O
     h2o_rf, h2o_erf, temperature_increase_from_h2o_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation H2O",
@@ -119,7 +134,7 @@ def aeromaps_climate_model(
 
     # Soot
     soot_rf, soot_erf, temperature_increase_from_soot_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation soot",
@@ -130,7 +145,7 @@ def aeromaps_climate_model(
 
     # Soot
     sulfur_rf, sulfur_erf, temperature_increase_from_sulfur_from_aviation = (
-        species_climate_model_function(
+        species_climate_model(
             start_year,
             end_year,
             "Aviation sulfur",
