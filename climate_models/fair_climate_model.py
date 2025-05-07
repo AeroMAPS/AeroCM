@@ -6,14 +6,7 @@ from fair import FAIR
 from fair.interface import fill, initialise
 
 
-def run_fair(start_year, end_year, species_studied, studied_species_quantities, params):
-
-    # params = {
-    #     "background_species_quantities": background_species_quantities,
-    #     "sensitivity_erf": sensitivity_erf,
-    #     "ratio_erf_rf": ratio_erf_rf,
-    #     "efficacy_erf": efficacy_erf,
-    # }
+def species_run_fair(start_year, end_year, species_studied, studied_species_quantities, params):
 
     background_species_quantities = params["background_species_quantities"]
     efficacy_erf = params["efficacy_erf"]
@@ -240,13 +233,9 @@ def run_fair(start_year, end_year, species_studied, studied_species_quantities, 
     initialise(f.airborne_emissions, 0)
 
     # Filling climate configs
-    # fill(f.climate_configs["ocean_heat_transfer"], [1.1, 1.6, 0.9], config="central")
-    # fill(f.climate_configs["ocean_heat_capacity"], [8, 14, 100], config="central")
-    # fill(f.climate_configs["deep_ocean_efficacy"], 1.1, config="central")
-    # Corresponds to a "low" configuration on FaIR
     fill(f.climate_configs["ocean_heat_transfer"], [1.7, 2.0, 1.1], config="central")
     fill(f.climate_configs["ocean_heat_capacity"], [6, 11, 75], config="central")
-    fill(f.climate_configs["deep_ocean_efficacy"], 0.8, config="central")
+    fill(f.climate_configs["deep_ocean_efficacy"], 1.0, config="central")
 
     # Filling species configs
     for specie in species:
@@ -270,16 +259,16 @@ def run_fair(start_year, end_year, species_studied, studied_species_quantities, 
             fill(f.species_configs["molecular_weight"], 44.009, specie="CO2")
             fill(
                 f.species_configs["greenhouse_gas_radiative_efficiency"],
-                1.3344985680386619e-05,
+                1.25e-05,
                 specie="CO2",
             )
             f.calculate_iirf0()
             f.calculate_g()
             f.calculate_concentration_per_emission()
-            fill(f.species_configs["iirf_0"], 29, specie="CO2")
-            fill(f.species_configs["iirf_airborne"], [0.000819 * 2], specie="CO2")
-            fill(f.species_configs["iirf_uptake"], [0.00846 * 2], specie="CO2")
-            fill(f.species_configs["iirf_temperature"], [8], specie="CO2")
+            fill(f.species_configs["iirf_0"], 27, specie="CO2")
+            fill(f.species_configs["iirf_airborne"], [0.0014], specie="CO2")
+            fill(f.species_configs["iirf_uptake"], [0.018], specie="CO2")
+            fill(f.species_configs["iirf_temperature"], [7], specie="CO2")
             fill(f.species_configs["aci_scale"], -2.09841432)
 
         if specie == "World CH4":
@@ -330,7 +319,7 @@ def run_fair(start_year, end_year, species_studied, studied_species_quantities, 
             fill(f.species_configs["aci_shape"], 0.0, specie=specie)
 
     # Run
-    f.run()
+    f.run(progress=False)
 
     return (
         f.temperature.loc[dict(config=f.configs[0], layer=0)].data,
@@ -347,24 +336,24 @@ def background_species_quantities_function(start_year, end_year, rcp):
         rcp_data_path = pth.join(RCP.__path__[0], "RCP60.csv")
     elif rcp == "RCP85":
         rcp_data_path = pth.join(RCP.__path__[0], "RCP85.csv")
-    rcp_data_df = pd.read_csv(rcp_data_path)
 
     background_species_quantities = np.zeros((2, end_year - start_year + 1))
 
-    ### World CO2
-    background_species_quantities[0] = (
-        (
-            rcp_data_df["FossilCO2"][0 : end_year - start_year + 1].values
-            + rcp_data_df["OtherCO2"][0 : end_year - start_year + 1].values
-        )
-        * 44
-        / 12
-    )  # Conversion from GtC to GtCO2
-
-    ## World CH4
-    background_species_quantities[1] = rcp_data_df["CH4"][
-        0 : end_year - start_year + 1
-    ].values  # Unit: MtCH4
+    if rcp != "None":
+        rcp_data_df = pd.read_csv(rcp_data_path)
+        ### World CO2
+        background_species_quantities[0] = (
+            (
+                rcp_data_df["FossilCO2"][0 : end_year - start_year + 1].values
+                + rcp_data_df["OtherCO2"][0 : end_year - start_year + 1].values
+            )
+            * 44
+            / 12
+        )  # Conversion from GtC to GtCO2
+        ## World CH4
+        background_species_quantities[1] = rcp_data_df["CH4"][
+            0 : end_year - start_year + 1
+        ].values  # Unit: MtCH4
 
     return background_species_quantities
 
@@ -427,10 +416,10 @@ def species_fair_climate_model(
             )
         studied_species_quantities = effective_radiative_forcing  # W/m2
 
-    temperature_with_species, effective_radiative_forcing_with_species = run_fair(
+    temperature_with_species, effective_radiative_forcing_with_species = species_run_fair(
         start_year, end_year, species_studied, studied_species_quantities, params
     )
-    temperature_without_species, effective_radiative_forcing_without_species = run_fair(
+    temperature_without_species, effective_radiative_forcing_without_species = species_run_fair(
         start_year,
         end_year,
         species_studied="None",

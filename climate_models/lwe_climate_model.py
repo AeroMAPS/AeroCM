@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg import solve_triangular
 from metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
@@ -60,41 +61,38 @@ def species_lwe_climate_model(
 
         size = end_year - start_year + 1
         F_co2 = np.zeros((size, size))
-        for i in range(0, size):
-            for j in range(0, size):
-                if i > j:
-                    (
-                        agwp_rf_co2_1,
-                        agwp_erf_co2,
-                        aegwp_rf_co2,
-                        aegwp_erf_co2,
-                        agtp_co2,
-                        iagtp_co2,
-                        atr_co2,
-                    ) = co2_ipcc_pulse_absolute_metrics(i - j + 1)
-                    (
-                        agwp_rf_co2,
-                        agwp_erf_co2,
-                        aegwp_rf_co2,
-                        aegwp_erf_co2,
-                        agtp_co2,
-                        iagtp_co2,
-                        atr_co2,
-                    ) = co2_ipcc_pulse_absolute_metrics(i - j)
-                    F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
-                elif i == j:
-                    (
-                        agwp_rf_co2,
-                        agwp_erf_co2,
-                        aegwp_rf_co2,
-                        aegwp_erf_co2,
-                        agtp_co2,
-                        iagtp_co2,
-                        atr_co2,
-                    ) = co2_ipcc_pulse_absolute_metrics(1)
-                    F_co2[i, j] = agwp_rf_co2
 
-        F_co2_inv = np.linalg.inv(F_co2)
+        # Old version for filling F_CO2 (long calculation time)
+        # for i in range(0, size):
+        #     for j in range(0, size):
+        #         if i > j:
+        #             start = time.time()
+        #             agwp_rf_co2_1, *rest = co2_ipcc_pulse_absolute_metrics(i - j + 1)
+        #             print("Matrix creation:", time.time() - start)
+        #             agwp_rf_co2, *rest = co2_ipcc_pulse_absolute_metrics(i - j)
+        #             F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
+        #
+        #         elif i == j:
+        #             agwp_rf_co2, *rest = co2_ipcc_pulse_absolute_metrics(1)
+        #             F_co2[i, j] = agwp_rf_co2
+
+        agwp_data = {}
+        for delta in range(1, size + 1):
+            agwp, *rest = co2_ipcc_pulse_absolute_metrics(delta)
+            agwp_data[delta] = agwp
+
+        for i in range(size):
+            for j in range(size):
+                delta = i - j
+                if delta > 0:
+                    F_co2[i, j] = agwp_data[delta + 1] - agwp_data[delta]
+                elif delta == 0:
+                    F_co2[i, j] = agwp_data[1]
+
+        # Inverting F_CO2 by using solve_triangular function (more efficient than np.linalg.inv)
+        Identity = np.eye(F_co2.shape[0])
+        F_co2_inv = solve_triangular(F_co2, Identity, lower=True)
+
         equivalent_emissions = (
             np.dot(F_co2_inv, effective_radiative_forcing) / 10**12
         )  # Conversion from kgCO2-we to GtCO2-we
