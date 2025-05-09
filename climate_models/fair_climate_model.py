@@ -233,9 +233,9 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
     initialise(f.airborne_emissions, 0)
 
     # Filling climate configs
-    fill(f.climate_configs["ocean_heat_transfer"], [1.7, 2.0, 1.1], config="central")
+    fill(f.climate_configs["ocean_heat_transfer"], [2, 2, 1.1], config="central")
     fill(f.climate_configs["ocean_heat_capacity"], [6, 11, 75], config="central")
-    fill(f.climate_configs["deep_ocean_efficacy"], 1.0, config="central")
+    fill(f.climate_configs["deep_ocean_efficacy"], 0.8, config="central")
 
     # Filling species configs
     for specie in species:
@@ -259,17 +259,17 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             fill(f.species_configs["molecular_weight"], 44.009, specie="CO2")
             fill(
                 f.species_configs["greenhouse_gas_radiative_efficiency"],
-                1.25e-05,
+                1.37e-05,
                 specie="CO2",
             )
             f.calculate_iirf0()
             f.calculate_g()
             f.calculate_concentration_per_emission()
-            fill(f.species_configs["iirf_0"], 27, specie="CO2")
-            fill(f.species_configs["iirf_airborne"], [0.0014], specie="CO2")
-            fill(f.species_configs["iirf_uptake"], [0.018], specie="CO2")
-            fill(f.species_configs["iirf_temperature"], [7], specie="CO2")
-            fill(f.species_configs["aci_scale"], -2.09841432)
+            fill(f.species_configs["iirf_0"], 29, specie="CO2")
+            fill(f.species_configs["iirf_airborne"], [0.0], specie="CO2")
+            fill(f.species_configs["iirf_uptake"], [0.0], specie="CO2")
+            fill(f.species_configs["iirf_temperature"], [0], specie="CO2")
+            fill(f.species_configs["aci_scale"], -3.14762148)
 
         if specie == "World CH4":
             fill(f.species_configs["partition_fraction"], [1, 0, 0, 0], specie=specie)
