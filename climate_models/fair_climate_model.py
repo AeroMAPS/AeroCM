@@ -273,9 +273,9 @@ def species_run_fair(
             f.calculate_g()
             f.calculate_concentration_per_emission()
             fill(f.species_configs["iirf_0"], 29, specie="CO2")
-            fill(f.species_configs["iirf_airborne"], [0.000819/2], specie="CO2")
-            fill(f.species_configs["iirf_uptake"], [0.00846/2], specie="CO2")
-            fill(f.species_configs["iirf_temperature"], [4/2], specie="CO2")
+            fill(f.species_configs["iirf_airborne"], [0.000819 / 2], specie="CO2")
+            fill(f.species_configs["iirf_uptake"], [0.00846 / 2], specie="CO2")
+            fill(f.species_configs["iirf_temperature"], [4 / 2], specie="CO2")
             fill(f.species_configs["aci_scale"], -3.14762148)
 
         if specie == "World CH4":
