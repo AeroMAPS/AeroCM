@@ -59,22 +59,24 @@ def gwpstar_equivalent_emissions_function(
 
 
 def species_gwpstar_climate_model(
-    start_year, end_year, species_studied, species_quantities, params
+    start_year, end_year, species, species_quantities, species_settings, model_settings
 ):
 
-    # params = {
+    # species_settings = {
     #     "sensitivity_erf": sensitivity_erf,
     #     "ratio_erf_rf": ratio_erf_rf,
-    #     "efficacy_erf": efficacy_erf,
+    #     "efficacy_erf": efficacy_erf
+    # }
+    # model_settings = {
     #     "tcre": tcre
     # }
 
-    sensitivity_erf = params["sensitivity_erf"]
-    ratio_erf_rf = params["ratio_erf_rf"]
-    efficacy_erf = params["efficacy_erf"]
-    tcre = params["tcre"]
+    sensitivity_erf = species_settings["sensitivity_erf"]
+    ratio_erf_rf = species_settings["ratio_erf_rf"]
+    efficacy_erf = species_settings["efficacy_erf"]
+    tcre = model_settings["tcre"]
 
-    if species_studied == "Aviation CO2":
+    if species == "Aviation CO2":
         equivalent_emissions = (
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
@@ -92,16 +94,16 @@ def species_gwpstar_climate_model(
         effective_radiative_forcing = sensitivity_erf * species_quantities
 
         if (
-            species_studied == "Aviation contrails"
-            or species_studied == "Aviation NOx - ST O3 increase"
-            or species_studied == "Aviation soot"
-            or species_studied == "Aviation sulfur"
-            or species_studied == "Aviation H2O"
+            species == "Aviation contrails"
+            or species == "Aviation NOx - ST O3 increase"
+            or species == "Aviation soot"
+            or species == "Aviation sulfur"
+            or species == "Aviation H2O"
         ):
             gwpstar_variation_duration = 6
             gwpstar_s_coefficient = 0.0
 
-        elif species_studied == "Aviation NOx - CH4 decrease and induced":
+        elif species == "Aviation NOx - CH4 decrease and induced":
             gwpstar_variation_duration = 20
             gwpstar_s_coefficient = 0.25
 

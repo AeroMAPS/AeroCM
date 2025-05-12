@@ -4,55 +4,38 @@ from climate_models.fair_climate_model import species_fair_climate_model
 
 
 def aviation_climate_model(
-    start_year, end_year, species_climate_model, species_quantities, params
+    start_year,
+    end_year,
+    species_climate_model,
+    species_quantities,
+    species_settings,
+    model_settings,
 ):
 
     params_species = {}
+    sensitivity_erf = species_settings["sensitivity_erf"]
+    ratio_erf_rf = species_settings["ratio_erf_rf"]
+    efficacy_erf = species_settings["efficacy_erf"]
+    for k in range(0, 7):
+        params_species[k] = {
+            "sensitivity_erf": sensitivity_erf[k],
+            "ratio_erf_rf": ratio_erf_rf[k],
+            "efficacy_erf": efficacy_erf[k],
+        }
 
     if species_climate_model == "GWP*":
         species_climate_model = species_gwpstar_climate_model
-        sensitivity_erf = params["sensitivity_erf"]
-        ratio_erf_rf = params["ratio_erf_rf"]
-        efficacy_erf = params["efficacy_erf"]
-        tcre = params["tcre"]
-        for k in range(0, 7):
-            params_species[k] = {
-                "sensitivity_erf": sensitivity_erf[k],
-                "ratio_erf_rf": ratio_erf_rf[k],
-                "efficacy_erf": efficacy_erf[k],
-                "tcre": tcre,
-            }
 
     elif species_climate_model == "LWE":
         species_climate_model = species_lwe_climate_model
-        sensitivity_erf = params["sensitivity_erf"]
-        ratio_erf_rf = params["ratio_erf_rf"]
-        efficacy_erf = params["efficacy_erf"]
-        tcre = params["tcre"]
-        for k in range(0, 7):
-            params_species[k] = {
-                "sensitivity_erf": sensitivity_erf[k],
-                "ratio_erf_rf": ratio_erf_rf[k],
-                "efficacy_erf": efficacy_erf[k],
-                "tcre": tcre,
-            }
 
     elif species_climate_model == "FaIR":
         species_climate_model = species_fair_climate_model
-        background_species_quantities = params["background_species_quantities"]
-        sensitivity_erf = params["sensitivity_erf"]
-        ratio_erf_rf = params["ratio_erf_rf"]
-        efficacy_erf = params["efficacy_erf"]
-        for k in range(0, 7):
-            params_species[k] = {
-                "background_species_quantities": background_species_quantities,
-                "sensitivity_erf": sensitivity_erf[k],
-                "ratio_erf_rf": ratio_erf_rf[k],
-                "efficacy_erf": efficacy_erf[k],
-            }
 
     else:
-        print("The chosen climate model is not available in AeroMAPS.")
+        print(
+            "The chosen climate model is directly provided or not available in AeroMAPS."
+        )
 
     # CO2
     co2_rf, co2_erf, temperature_increase_from_co2_from_aviation = (
@@ -62,6 +45,7 @@ def aviation_climate_model(
             "Aviation CO2",
             species_quantities[0],
             params_species[0],
+            model_settings,
         )
     )
 
@@ -73,6 +57,7 @@ def aviation_climate_model(
             "Aviation contrails",
             species_quantities[1],
             params_species[1],
+            model_settings,
         )
     )
 
@@ -84,6 +69,7 @@ def aviation_climate_model(
             "Aviation NOx - ST O3 increase",
             species_quantities[2],
             params_species[2],
+            model_settings,
         )
     )
 
@@ -95,6 +81,7 @@ def aviation_climate_model(
             "Aviation NOx - CH4 decrease and induced",
             species_quantities[3],
             params_species[3],
+            model_settings,
         )
     )
     nox_rf = nox_st_o3_rf + nox_ch4_rf
@@ -129,6 +116,7 @@ def aviation_climate_model(
             "Aviation H2O",
             species_quantities[4],
             params_species[4],
+            model_settings,
         )
     )
 
@@ -140,6 +128,7 @@ def aviation_climate_model(
             "Aviation soot",
             species_quantities[5],
             params_species[5],
+            model_settings,
         )
     )
 
@@ -151,6 +140,7 @@ def aviation_climate_model(
             "Aviation sulfur",
             species_quantities[6],
             params_species[6],
+            model_settings,
         )
     )
     aerosols_rf = soot_rf + sulfur_rf

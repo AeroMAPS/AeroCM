@@ -59,7 +59,6 @@ def co2_ipcc_pulse_absolute_metrics(time_horizon):
 def absolute_metrics(
     radiative_forcing,
     effective_radiative_forcing,
-    efficacy_rf,
     efficacy_erf,
     temperature,
     time_horizon,
@@ -67,6 +66,7 @@ def absolute_metrics(
 
     agwp_rf = np.sum(radiative_forcing)
     agwp_erf = np.sum(effective_radiative_forcing)
+    efficacy_rf = efficacy_erf * agwp_erf / agwp_rf
     aegwp_rf = efficacy_rf * np.sum(radiative_forcing)
     aegwp_erf = efficacy_erf * np.sum(effective_radiative_forcing)
     agtp = float(temperature[-1])

@@ -4,22 +4,24 @@ from metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
 def species_lwe_climate_model(
-    start_year, end_year, species_studied, species_quantities, params
+    start_year, end_year, species, species_quantities, species_settings, model_settings
 ):
 
-    # params = {
+    # species_settings = {
     #     "sensitivity_erf": sensitivity_erf,
     #     "ratio_erf_rf": ratio_erf_rf,
-    #     "efficacy_erf": efficacy_erf,
+    #     "efficacy_erf": efficacy_erf
+    # }
+    # model_settings = {
     #     "tcre": tcre
     # }
 
-    sensitivity_erf = params["sensitivity_erf"]
-    ratio_erf_rf = params["ratio_erf_rf"]
-    efficacy_erf = params["efficacy_erf"]
-    tcre = params["tcre"]
+    sensitivity_erf = species_settings["sensitivity_erf"]
+    ratio_erf_rf = species_settings["ratio_erf_rf"]
+    efficacy_erf = species_settings["efficacy_erf"]
+    tcre = model_settings["tcre"]
 
-    if species_studied == "Aviation CO2":
+    if species == "Aviation CO2":
         equivalent_emissions = (
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
@@ -34,7 +36,7 @@ def species_lwe_climate_model(
             )
 
     else:
-        if species_studied == "Aviation NOx - CH4 decrease and induced":
+        if species == "Aviation NOx - CH4 decrease and induced":
             tau = 11.8
             A_CH4_unit = 5.7e-4
             A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities

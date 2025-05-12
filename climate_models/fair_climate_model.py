@@ -6,10 +6,17 @@ from fair import FAIR
 from fair.interface import fill, initialise
 
 
-def species_run_fair(start_year, end_year, species_studied, studied_species_quantities, params):
+def species_run_fair(
+    start_year,
+    end_year,
+    species,
+    studied_species_quantities,
+    species_settings,
+    model_settings,
+):
 
-    background_species_quantities = params["background_species_quantities"]
-    efficacy_erf = params["efficacy_erf"]
+    efficacy_erf = species_settings["efficacy_erf"]
+    background_species_quantities = model_settings["background_species_quantities"]
 
     # Creation of FaIR instance
     f = FAIR()
@@ -21,7 +28,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
     # f.define_configs(["high", "central", "low"])
 
     # Definition of species and properties
-    species = [
+    species_list = [
         "CO2",  # Includes world and aviation emissions
         "World CH4",
         "Aviation contrails",
@@ -98,7 +105,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             "aerosol_chemistry_from_concentration": False,
         },
     }
-    f.define_species(species, properties)
+    f.define_species(species_list, properties)
 
     # Definition of run options
     f.ghg_method = "leach2021"
@@ -108,7 +115,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
     f.allocate()
 
     # Filling species quantities
-    if species_studied == "Aviation CO2":
+    if species == "Aviation CO2":
         total_CO2 = (
             background_species_quantities[0][1 : end_year - start_year + 1]
             + studied_species_quantities[1 : end_year - start_year + 1]
@@ -130,7 +137,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
         config=f.configs[0],
         scenario=f.scenarios[0],
     )
-    if species_studied == "Aviation contrails":
+    if species == "Aviation contrails":
         fill(
             f.forcing,
             studied_species_quantities,
@@ -146,7 +153,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             config=f.configs[0],
             scenario=f.scenarios[0],
         )
-    if species_studied == "Aviation NOx - ST O3 increase":
+    if species == "Aviation NOx - ST O3 increase":
         fill(
             f.forcing,
             studied_species_quantities,
@@ -162,7 +169,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             config=f.configs[0],
             scenario=f.scenarios[0],
         )
-    if species_studied == "Aviation NOx - CH4 decrease and induced":
+    if species == "Aviation NOx - CH4 decrease and induced":
         fill(
             f.forcing,
             studied_species_quantities,
@@ -178,7 +185,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             config=f.configs[0],
             scenario=f.scenarios[0],
         )
-    if species_studied == "Aviation H2O":
+    if species == "Aviation H2O":
         fill(
             f.forcing,
             studied_species_quantities,
@@ -194,7 +201,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             config=f.configs[0],
             scenario=f.scenarios[0],
         )
-    if species_studied == "Aviation sulfur":
+    if species == "Aviation sulfur":
         fill(
             f.emissions,
             studied_species_quantities[1 : end_year - start_year + 1],
@@ -210,7 +217,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             config=f.configs[0],
             scenario=f.scenarios[0],
         )
-    if species_studied == "Aviation soot":
+    if species == "Aviation soot":
         fill(
             f.emissions,
             studied_species_quantities[1 : end_year - start_year + 1],
@@ -238,7 +245,7 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
     fill(f.climate_configs["deep_ocean_efficacy"], 0.8, config="central")
 
     # Filling species configs
-    for specie in species:
+    for specie in species_list:
         if specie == "CO2":
             fill(
                 f.species_configs["partition_fraction"],
@@ -266,9 +273,9 @@ def species_run_fair(start_year, end_year, species_studied, studied_species_quan
             f.calculate_g()
             f.calculate_concentration_per_emission()
             fill(f.species_configs["iirf_0"], 29, specie="CO2")
-            fill(f.species_configs["iirf_airborne"], [0.0], specie="CO2")
-            fill(f.species_configs["iirf_uptake"], [0.0], specie="CO2")
-            fill(f.species_configs["iirf_temperature"], [0], specie="CO2")
+            fill(f.species_configs["iirf_airborne"], [0.000819/2], specie="CO2")
+            fill(f.species_configs["iirf_uptake"], [0.00846/2], specie="CO2")
+            fill(f.species_configs["iirf_temperature"], [4/2], specie="CO2")
             fill(f.species_configs["aci_scale"], -3.14762148)
 
         if specie == "World CH4":
@@ -359,41 +366,43 @@ def background_species_quantities_function(start_year, end_year, rcp):
 
 
 def species_fair_climate_model(
-    start_year, end_year, species_studied, species_quantities, params
+    start_year, end_year, species, species_quantities, species_settings, model_settings
 ):
 
-    # params = {
-    #     "background_species_quantities": background_species_quantities,
+    # species_settings = {
     #     "sensitivity_erf": sensitivity_erf,
     #     "ratio_erf_rf": ratio_erf_rf,
     #     "efficacy_erf": efficacy_erf,
     # }
+    # model_settings = {
+    #     "background_species_quantities": background_species_quantities,
+    # }
 
-    sensitivity_erf = params["sensitivity_erf"]
-    ratio_erf_rf = params["ratio_erf_rf"]
+    sensitivity_erf = species_settings["sensitivity_erf"]
+    ratio_erf_rf = species_settings["ratio_erf_rf"]
 
-    if species_studied == "Aviation CO2":
+    if species == "Aviation CO2":
         studied_species_quantities = (
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
-    elif species_studied == "Aviation soot":
+    elif species == "Aviation soot":
         studied_species_quantities = (
             species_quantities / 10**9
         )  # Conversion from kgSO2 to MtSO2
-    elif species_studied == "Aviation sulfur":
+    elif species == "Aviation sulfur":
         studied_species_quantities = (
             species_quantities / 10**9
         )  # Conversion from kgBC to MtBC
-    elif species_studied == "Aviation contrails":
+    elif species == "Aviation contrails":
         erf = sensitivity_erf * species_quantities
         studied_species_quantities = erf  # W/m2
-    elif species_studied == "Aviation H2O":
+    elif species == "Aviation H2O":
         erf = sensitivity_erf * species_quantities
         studied_species_quantities = erf  # W/m2
-    elif species_studied == "Aviation NOx - ST O3 increase":
+    elif species == "Aviation NOx - ST O3 increase":
         erf = sensitivity_erf * species_quantities
         studied_species_quantities = erf  # W/m2
-    elif species_studied == "Aviation NOx - CH4 decrease and induced":
+    elif species == "Aviation NOx - CH4 decrease and induced":
         tau = 11.8
         A_CH4_unit = 5.7e-4
         A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities
@@ -416,15 +425,25 @@ def species_fair_climate_model(
             )
         studied_species_quantities = effective_radiative_forcing  # W/m2
 
-    temperature_with_species, effective_radiative_forcing_with_species = species_run_fair(
-        start_year, end_year, species_studied, studied_species_quantities, params
+    temperature_with_species, effective_radiative_forcing_with_species = (
+        species_run_fair(
+            start_year,
+            end_year,
+            species,
+            studied_species_quantities,
+            species_settings=species_settings,
+            model_settings=model_settings,
+        )
     )
-    temperature_without_species, effective_radiative_forcing_without_species = species_run_fair(
-        start_year,
-        end_year,
-        species_studied="None",
-        studied_species_quantities=0,
-        params=params,
+    temperature_without_species, effective_radiative_forcing_without_species = (
+        species_run_fair(
+            start_year,
+            end_year,
+            species="None",
+            studied_species_quantities=0,
+            species_settings=species_settings,
+            model_settings=model_settings,
+        )
     )
     temperature = temperature_with_species - temperature_without_species
     effective_radiative_forcing = (
