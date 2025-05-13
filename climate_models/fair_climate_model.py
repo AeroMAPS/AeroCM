@@ -365,6 +365,22 @@ def background_species_quantities_function(start_year, end_year, rcp):
     return background_species_quantities
 
 
+def background_fair_climate_model(
+    start_year, end_year, species_settings, model_settings
+):
+
+    background_temperature, background_effective_radiative_forcing = species_run_fair(
+        start_year,
+        end_year,
+        species="None",
+        studied_species_quantities=0,
+        species_settings=species_settings,
+        model_settings=model_settings,
+    )
+
+    return background_effective_radiative_forcing, background_temperature
+
+
 def species_fair_climate_model(
     start_year, end_year, species, species_quantities, species_settings, model_settings
 ):
@@ -376,6 +392,8 @@ def species_fair_climate_model(
     # }
     # model_settings = {
     #     "background_species_quantities": background_species_quantities,
+    #     "background_effective_radiative_forcing": background_effective_radiative_forcing,
+    #     "background_temperature": background_temperature,
     # }
 
     sensitivity_erf = species_settings["sensitivity_erf"]
@@ -435,16 +453,24 @@ def species_fair_climate_model(
             model_settings=model_settings,
         )
     )
-    temperature_without_species, effective_radiative_forcing_without_species = (
-        species_run_fair(
-            start_year,
-            end_year,
-            species="None",
-            studied_species_quantities=0,
-            species_settings=species_settings,
-            model_settings=model_settings,
+
+    if "background_effective_radiative_forcing" in model_settings:
+        temperature_without_species = model_settings["background_temperature"]
+        effective_radiative_forcing_without_species = model_settings[
+            "background_effective_radiative_forcing"
+        ]
+    else:
+        temperature_without_species, effective_radiative_forcing_without_species = (
+            species_run_fair(
+                start_year,
+                end_year,
+                species="None",
+                studied_species_quantities=0,
+                species_settings=species_settings,
+                model_settings=model_settings,
+            )
         )
-    )
+
     temperature = temperature_with_species - temperature_without_species
     effective_radiative_forcing = (
         effective_radiative_forcing_with_species

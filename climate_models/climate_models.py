@@ -1,6 +1,9 @@
 from climate_models.gwpstar_climate_model import species_gwpstar_climate_model
 from climate_models.lwe_climate_model import species_lwe_climate_model
-from climate_models.fair_climate_model import species_fair_climate_model
+from climate_models.fair_climate_model import (
+    species_fair_climate_model,
+    background_fair_climate_model,
+)
 
 
 def aviation_climate_model(
@@ -23,6 +26,8 @@ def aviation_climate_model(
             "efficacy_erf": efficacy_erf[k],
         }
 
+    params_model = model_settings.copy()
+
     if species_climate_model == "GWP*":
         species_climate_model = species_gwpstar_climate_model
 
@@ -31,6 +36,15 @@ def aviation_climate_model(
 
     elif species_climate_model == "FaIR":
         species_climate_model = species_fair_climate_model
+        background_effective_radiative_forcing, background_temperature = (
+            background_fair_climate_model(
+                start_year, end_year, params_species[0], model_settings
+            )
+        )
+        params_model["background_effective_radiative_forcing"] = (
+            background_effective_radiative_forcing
+        )
+        params_model["background_temperature"] = background_temperature
 
     else:
         print(
@@ -45,7 +59,7 @@ def aviation_climate_model(
             "Aviation CO2",
             species_quantities[0],
             params_species[0],
-            model_settings,
+            params_model,
         )
     )
 
@@ -57,7 +71,7 @@ def aviation_climate_model(
             "Aviation contrails",
             species_quantities[1],
             params_species[1],
-            model_settings,
+            params_model,
         )
     )
 
@@ -69,7 +83,7 @@ def aviation_climate_model(
             "Aviation NOx - ST O3 increase",
             species_quantities[2],
             params_species[2],
-            model_settings,
+            params_model,
         )
     )
 
@@ -81,7 +95,7 @@ def aviation_climate_model(
             "Aviation NOx - CH4 decrease and induced",
             species_quantities[3],
             params_species[3],
-            model_settings,
+            params_model,
         )
     )
     nox_rf = nox_st_o3_rf + nox_ch4_rf
@@ -116,7 +130,7 @@ def aviation_climate_model(
             "Aviation H2O",
             species_quantities[4],
             params_species[4],
-            model_settings,
+            params_model,
         )
     )
 
@@ -128,7 +142,7 @@ def aviation_climate_model(
             "Aviation soot",
             species_quantities[5],
             params_species[5],
-            model_settings,
+            params_model,
         )
     )
 
@@ -140,7 +154,7 @@ def aviation_climate_model(
             "Aviation sulfur",
             species_quantities[6],
             params_species[6],
-            model_settings,
+            params_model,
         )
     )
     aerosols_rf = soot_rf + sulfur_rf
