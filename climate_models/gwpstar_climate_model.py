@@ -80,18 +80,45 @@ def species_gwpstar_climate_model(
         equivalent_emissions = (
             species_quantities / 10**12
         )  # Conversion from kgCO2 to GtCO2
-        effective_radiative_forcing = np.zeros(len(species_quantities))
-        _, agwp_erf_100_co2, *rest = co2_ipcc_pulse_absolute_metrics(100)
-        sensitivity_erf = agwp_erf_100_co2 / 100
-        effective_radiative_forcing[0] = sensitivity_erf * species_quantities[0]
-        for k in range(1, len(species_quantities)):
-            effective_radiative_forcing[k] = (
-                effective_radiative_forcing[k - 1]
-                + sensitivity_erf * species_quantities[k]
+
+        co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
+        air_molar_mass = 28.97e-3  # [kg/mol]
+        atmosphere_total_mass = 5.1352e18  # [kg]
+        radiative_efficiency = 1.37e-2 * 1e9  # radiative efficiency [mW/m^2]
+        A_co2_unit = (
+                radiative_efficiency
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
+                * 1e-3
+        )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
+        A_co2 = A_co2_unit * species_quantities
+        a = [0.2173, 0.2240, 0.2824, 0.2763]
+        tau = [0, 394.4, 36.54, 4.304]
+
+        radiative_forcing_from_year = np.zeros(
+            (len(species_quantities), len(species_quantities))
+        )
+        # Radiative forcing induced in year j by the species emitted in year i
+        for i in range(0, len(species_quantities)):
+            for j in range(0, len(species_quantities)):
+                if i <= j:
+                    radiative_forcing_from_year[i, j] = (
+                            A_co2[i] * a[0]
+                    )
+                    for k in [1, 2, 3]:
+                        radiative_forcing_from_year[i, j] += (
+                                A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
+                        )
+        radiative_forcing = np.zeros(len(species_quantities))
+        for k in range(0, len(species_quantities)):
+            radiative_forcing[k] = np.sum(
+                radiative_forcing_from_year[:, k]
             )
+        effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
     else:
         effective_radiative_forcing = sensitivity_erf * species_quantities
+        radiative_forcing = effective_radiative_forcing / ratio_erf_rf
 
         if (
             species == "Aviation contrails"
@@ -118,7 +145,6 @@ def species_gwpstar_climate_model(
             / 10**12
         )  # Conversion from kgCO2-we to GtCO2-we
 
-    radiative_forcing = effective_radiative_forcing / ratio_erf_rf
     cumulative_equivalent_emissions = np.zeros(len(species_quantities))
     cumulative_equivalent_emissions[0] = equivalent_emissions[0]
     for k in range(1, len(cumulative_equivalent_emissions)):
