@@ -325,6 +325,10 @@ def species_run_fair(
             )  # W m-2 MtC-1 yr
             fill(f.species_configs["aci_shape"], 0.0, specie=specie)
 
+        if specie == "Aviation NOx - CH4 decrease and induced":
+            pass
+
+
     # Run
     f.run(progress=False)
 
