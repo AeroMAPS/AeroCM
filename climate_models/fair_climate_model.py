@@ -425,8 +425,10 @@ def species_fair_climate_model(
         erf = sensitivity_erf * species_quantities
         studied_species_quantities = erf  # W/m2
     elif species == "Aviation NOx - CH4 decrease and induced":
-        tau_reference_year = [1940, 1980, 1994, 2004, 2050, 2300]
-        tau_reference_values = [11, 10.1, 10, 9.85, 10.25, 10.25]
+        min_year = min(start_year, 1939)
+        max_year = max(end_year, 2051)
+        tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
+        tau_reference_values = [11, 11, 10.1, 10, 9.85, 10.25, 10.25]
         tau_function = interp1d(tau_reference_year, tau_reference_values, kind="linear")
         years = list(range(start_year, end_year + 1))
         tau = tau_function(years)
