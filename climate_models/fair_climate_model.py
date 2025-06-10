@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from fair import FAIR
 from fair.interface import fill, initialise
+from scipy.interpolate import interp1d
 
 
 def species_run_fair(
@@ -328,7 +329,6 @@ def species_run_fair(
         if specie == "Aviation NOx - CH4 decrease and induced":
             pass
 
-
     # Run
     f.run(progress=False)
 
@@ -377,7 +377,7 @@ def background_fair_climate_model(
         start_year,
         end_year,
         species="None",
-        studied_species_quantities=0,
+        studied_species_quantities=np.zeros(end_year - start_year + 1),
         species_settings=species_settings,
         model_settings=model_settings,
     )
@@ -425,7 +425,11 @@ def species_fair_climate_model(
         erf = sensitivity_erf * species_quantities
         studied_species_quantities = erf  # W/m2
     elif species == "Aviation NOx - CH4 decrease and induced":
-        tau = 11.8
+        tau_reference_year = [1940, 1980, 1994, 2004, 2050, 2300]
+        tau_reference_values = [11, 10.1, 10, 9.85, 10.25, 10.25]
+        tau_function = interp1d(tau_reference_year, tau_reference_values, kind="linear")
+        years = list(range(start_year, end_year + 1))
+        tau = tau_function(years)
         A_CH4_unit = 5.7e-4
         A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities
         f1 = 0.5  # Indirect effect on ozone
@@ -433,12 +437,12 @@ def species_fair_climate_model(
         effective_radiative_forcing_from_year = np.zeros(
             (len(species_quantities), len(species_quantities))
         )
-        # Effective radiative forcing induced in year j by the species emitted in year i
+        # Radiative forcing induced in year j by the species emitted in year i
         for i in range(0, len(species_quantities)):
             for j in range(0, len(species_quantities)):
                 if i <= j:
                     effective_radiative_forcing_from_year[i, j] = (
-                        (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau)
+                        (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                     )
         effective_radiative_forcing = np.zeros(len(species_quantities))
         for k in range(0, len(species_quantities)):
@@ -469,17 +473,27 @@ def species_fair_climate_model(
                 start_year,
                 end_year,
                 species="None",
-                studied_species_quantities=0,
+                studied_species_quantities=np.zeros(end_year - start_year + 1),
                 species_settings=species_settings,
                 model_settings=model_settings,
             )
         )
 
     temperature = temperature_with_species - temperature_without_species
-    effective_radiative_forcing = (
-        effective_radiative_forcing_with_species
-        - effective_radiative_forcing_without_species
-    )
+
+    if species in [
+        "Aviation contrails",
+        "Aviation NOx - ST O3 increase",
+        "Aviation NOx - CH4 decrease and induced",
+        "Aviation H2O",
+    ]:
+        effective_radiative_forcing = studied_species_quantities.reshape(-1, 1)
+    else:
+        effective_radiative_forcing = (
+            effective_radiative_forcing_with_species
+            - effective_radiative_forcing_without_species
+        )
+
     radiative_forcing = effective_radiative_forcing / ratio_erf_rf
 
     return radiative_forcing, effective_radiative_forcing, temperature

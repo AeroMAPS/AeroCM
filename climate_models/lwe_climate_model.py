@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg import solve_triangular
+from scipy.interpolate import interp1d
 from metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
@@ -31,10 +32,10 @@ def species_lwe_climate_model(
         atmosphere_total_mass = 5.1352e18  # [kg]
         radiative_efficiency = 1.37e-2 * 1e9  # radiative efficiency [mW/m^2]
         A_co2_unit = (
-                radiative_efficiency
-                * air_molar_mass
-                / (co2_molar_mass * atmosphere_total_mass)
-                * 1e-3
+            radiative_efficiency
+            * air_molar_mass
+            / (co2_molar_mass * atmosphere_total_mass)
+            * 1e-3
         )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
         A_co2 = A_co2_unit * species_quantities
         a = [0.2173, 0.2240, 0.2824, 0.2763]
@@ -47,43 +48,43 @@ def species_lwe_climate_model(
         for i in range(0, len(species_quantities)):
             for j in range(0, len(species_quantities)):
                 if i <= j:
-                    radiative_forcing_from_year[i, j] = (
-                            A_co2[i] * a[0]
-                    )
+                    radiative_forcing_from_year[i, j] = A_co2[i] * a[0]
                     for k in [1, 2, 3]:
                         radiative_forcing_from_year[i, j] += (
-                                A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
+                            A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
                         )
         radiative_forcing = np.zeros(len(species_quantities))
         for k in range(0, len(species_quantities)):
-            radiative_forcing[k] = np.sum(
-                radiative_forcing_from_year[:, k]
-            )
+            radiative_forcing[k] = np.sum(radiative_forcing_from_year[:, k])
         effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
     else:
         if species == "Aviation NOx - CH4 decrease and induced":
-            tau = 11.8
+            tau_reference_year = [1940, 1980, 1994, 2004, 2050, 2300]
+            tau_reference_values = [11, 10.1, 10, 9.85, 10.25, 10.25]
+            tau_function = interp1d(
+                tau_reference_year, tau_reference_values, kind="linear"
+            )
+            years = list(range(start_year, end_year + 1))
+            tau = tau_function(years)
             A_CH4_unit = 5.7e-4
             A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities
             f1 = 0.5  # Indirect effect on ozone
             f2 = 0.15  # Indirect effect on stratospheric water
-            radiative_forcing_from_year = np.zeros(
+            effective_radiative_forcing_from_year = np.zeros(
                 (len(species_quantities), len(species_quantities))
             )
             # Radiative forcing induced in year j by the species emitted in year i
             for i in range(0, len(species_quantities)):
                 for j in range(0, len(species_quantities)):
                     if i <= j:
-                        radiative_forcing_from_year[i, j] = (
-                            (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau)
+                        effective_radiative_forcing_from_year[i, j] = (
+                            (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                         )
-            radiative_forcing = np.zeros(len(species_quantities))
+            effective_radiative_forcing = np.zeros(len(species_quantities))
             for k in range(0, len(species_quantities)):
-                radiative_forcing[k] = np.sum(
-                    radiative_forcing_from_year[:, k]
-                )
-            effective_radiative_forcing = radiative_forcing * ratio_erf_rf
+                effective_radiative_forcing[k] = np.sum(effective_radiative_forcing_from_year[:, k])
+            radiative_forcing = effective_radiative_forcing / ratio_erf_rf
 
         else:
             effective_radiative_forcing = sensitivity_erf * species_quantities
