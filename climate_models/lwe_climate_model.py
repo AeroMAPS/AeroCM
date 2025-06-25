@@ -9,7 +9,7 @@ def species_lwe_climate_model(
 ):
 
     # species_settings = {
-    #     "sensitivity_erf": sensitivity_erf,
+    #     "sensitivity_rf": sensitivity_rf,
     #     "ratio_erf_rf": ratio_erf_rf,
     #     "efficacy_erf": efficacy_erf
     # }
@@ -17,7 +17,7 @@ def species_lwe_climate_model(
     #     "tcre": tcre
     # }
 
-    sensitivity_erf = species_settings["sensitivity_erf"]
+    sensitivity_rf = species_settings["sensitivity_rf"]
     ratio_erf_rf = species_settings["ratio_erf_rf"]
     efficacy_erf = species_settings["efficacy_erf"]
     tcre = model_settings["tcre"]
@@ -70,27 +70,27 @@ def species_lwe_climate_model(
             years = list(range(start_year, end_year + 1))
             tau = tau_function(years)
             A_CH4_unit = 5.7e-4
-            A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities
+            A_CH4 = A_CH4_unit * sensitivity_rf * species_quantities
             f1 = 0.5  # Indirect effect on ozone
             f2 = 0.15  # Indirect effect on stratospheric water
-            effective_radiative_forcing_from_year = np.zeros(
+            radiative_forcing_from_year = np.zeros(
                 (len(species_quantities), len(species_quantities))
             )
             # Radiative forcing induced in year j by the species emitted in year i
             for i in range(0, len(species_quantities)):
                 for j in range(0, len(species_quantities)):
                     if i <= j:
-                        effective_radiative_forcing_from_year[i, j] = (
+                        radiative_forcing_from_year[i, j] = (
                             (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                         )
-            effective_radiative_forcing = np.zeros(len(species_quantities))
+            radiative_forcing = np.zeros(len(species_quantities))
             for k in range(0, len(species_quantities)):
-                effective_radiative_forcing[k] = np.sum(effective_radiative_forcing_from_year[:, k])
-            radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+                radiative_forcing[k] = np.sum(radiative_forcing_from_year[:, k])
+            effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         else:
-            effective_radiative_forcing = sensitivity_erf * species_quantities
-            radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+            radiative_forcing = sensitivity_rf * species_quantities
+            effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         size = end_year - start_year + 1
         F_co2 = np.zeros((size, size))

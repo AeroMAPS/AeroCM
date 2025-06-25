@@ -63,7 +63,7 @@ def species_gwpstar_climate_model(
 ):
 
     # species_settings = {
-    #     "sensitivity_erf": sensitivity_erf,
+    #     "sensitivity_rf": sensitivity_rf,
     #     "ratio_erf_rf": ratio_erf_rf,
     #     "efficacy_erf": efficacy_erf
     # }
@@ -71,7 +71,7 @@ def species_gwpstar_climate_model(
     #     "tcre": tcre
     # }
 
-    sensitivity_erf = species_settings["sensitivity_erf"]
+    sensitivity_rf = species_settings["sensitivity_rf"]
     ratio_erf_rf = species_settings["ratio_erf_rf"]
     efficacy_erf = species_settings["efficacy_erf"]
     tcre = model_settings["tcre"]
@@ -113,8 +113,8 @@ def species_gwpstar_climate_model(
         effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
     else:
-        effective_radiative_forcing = sensitivity_erf * species_quantities
-        radiative_forcing = effective_radiative_forcing / ratio_erf_rf
+        radiative_forcing = sensitivity_rf * species_quantities
+        effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         if (
             species == "Aviation contrails"

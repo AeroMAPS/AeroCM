@@ -16,12 +16,12 @@ def aviation_climate_model(
 ):
 
     params_species = {}
-    sensitivity_erf = species_settings["sensitivity_erf"]
+    sensitivity_rf = species_settings["sensitivity_rf"]
     ratio_erf_rf = species_settings["ratio_erf_rf"]
     efficacy_erf = species_settings["efficacy_erf"]
     for k in range(0, 7):
         params_species[k] = {
-            "sensitivity_erf": sensitivity_erf[k],
+            "sensitivity_rf": sensitivity_rf[k],
             "ratio_erf_rf": ratio_erf_rf[k],
             "efficacy_erf": efficacy_erf[k],
         }

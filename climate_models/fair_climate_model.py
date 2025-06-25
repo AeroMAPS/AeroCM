@@ -390,7 +390,7 @@ def species_fair_climate_model(
 ):
 
     # species_settings = {
-    #     "sensitivity_erf": sensitivity_erf,
+    #     "sensitivity_rf": sensitivity_rf,
     #     "ratio_erf_rf": ratio_erf_rf,
     #     "efficacy_erf": efficacy_erf,
     # }
@@ -400,7 +400,7 @@ def species_fair_climate_model(
     #     "background_temperature": background_temperature,
     # }
 
-    sensitivity_erf = species_settings["sensitivity_erf"]
+    sensitivity_rf = species_settings["sensitivity_rf"]
     ratio_erf_rf = species_settings["ratio_erf_rf"]
 
     if species == "Aviation CO2":
@@ -416,13 +416,16 @@ def species_fair_climate_model(
             species_quantities / 10**9
         )  # Conversion from kgBC to MtBC
     elif species == "Aviation contrails":
-        erf = sensitivity_erf * species_quantities
+        rf = sensitivity_rf * species_quantities
+        erf = rf * ratio_erf_rf
         studied_species_quantities = erf  # W/m2
     elif species == "Aviation H2O":
-        erf = sensitivity_erf * species_quantities
+        rf = sensitivity_rf * species_quantities
+        erf = rf * ratio_erf_rf
         studied_species_quantities = erf  # W/m2
     elif species == "Aviation NOx - ST O3 increase":
-        erf = sensitivity_erf * species_quantities
+        rf = sensitivity_rf * species_quantities
+        erf = rf * ratio_erf_rf
         studied_species_quantities = erf  # W/m2
     elif species == "Aviation NOx - CH4 decrease and induced":
         min_year = min(start_year, 1939)
@@ -433,24 +436,25 @@ def species_fair_climate_model(
         years = list(range(start_year, end_year + 1))
         tau = tau_function(years)
         A_CH4_unit = 5.7e-4
-        A_CH4 = A_CH4_unit * sensitivity_erf * species_quantities
+        A_CH4 = A_CH4_unit * sensitivity_rf * species_quantities
         f1 = 0.5  # Indirect effect on ozone
         f2 = 0.15  # Indirect effect on stratospheric water
-        effective_radiative_forcing_from_year = np.zeros(
+        radiative_forcing_from_year = np.zeros(
             (len(species_quantities), len(species_quantities))
         )
         # Radiative forcing induced in year j by the species emitted in year i
         for i in range(0, len(species_quantities)):
             for j in range(0, len(species_quantities)):
                 if i <= j:
-                    effective_radiative_forcing_from_year[i, j] = (
+                    radiative_forcing_from_year[i, j] = (
                         (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                     )
-        effective_radiative_forcing = np.zeros(len(species_quantities))
+        radiative_forcing = np.zeros(len(species_quantities))
         for k in range(0, len(species_quantities)):
-            effective_radiative_forcing[k] = np.sum(
-                effective_radiative_forcing_from_year[:, k]
+            radiative_forcing[k] = np.sum(
+                radiative_forcing_from_year[:, k]
             )
+        effective_radiative_forcing = radiative_forcing * ratio_erf_rf
         studied_species_quantities = effective_radiative_forcing  # W/m2
 
     temperature_with_species, effective_radiative_forcing_with_species = (
