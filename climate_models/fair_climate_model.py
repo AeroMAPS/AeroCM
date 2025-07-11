@@ -308,6 +308,12 @@ def species_run_fair(
         if specie == "Aviation contrails":
             fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
 
+        if specie == "Aviation NOx - ST O3 increase":
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
+
+        if specie == "Aviation H2O":
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
+
         if specie == "Aviation sulfur":
             erf_aci_sulfur = 0.0
             fill(
@@ -316,6 +322,7 @@ def species_run_fair(
                 specie=specie,
             )  # W m-2 MtSO2-1 yr
             fill(f.species_configs["aci_shape"], 0.0, specie=specie)
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
 
         if specie == "Aviation soot":
             erf_aci_BC = 0.0
@@ -325,9 +332,10 @@ def species_run_fair(
                 specie=specie,
             )  # W m-2 MtC-1 yr
             fill(f.species_configs["aci_shape"], 0.0, specie=specie)
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
 
         if specie == "Aviation NOx - CH4 decrease and induced":
-            pass
+            fill(f.species_configs["forcing_efficacy"], efficacy_erf, specie=specie)
 
     # Run
     f.run(progress=False)
