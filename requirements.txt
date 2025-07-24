@@ -5,3 +5,7 @@ jupyterlab
 salib
 cartopy
 scikit-learn
+seaborn
+xarray
+netCDF4
+openpyxl
