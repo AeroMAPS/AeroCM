@@ -1,5 +1,5 @@
 import numpy as np
-from metrics.metrics import co2_ipcc_pulse_absolute_metrics
+from aerometrics.metrics.metrics import co2_ipcc_pulse_absolute_metrics
 
 
 def gwpstar_equivalent_emissions_function(

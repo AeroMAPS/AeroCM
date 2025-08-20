@@ -1,6 +1,6 @@
-from climate_models.gwpstar_climate_model import species_gwpstar_climate_model
-from climate_models.lwe_climate_model import species_lwe_climate_model
-from climate_models.fair_climate_model import (
+from aerometrics.climate_models.gwpstar_climate_model import species_gwpstar_climate_model
+from aerometrics.climate_models.lwe_climate_model import species_lwe_climate_model
+from aerometrics.climate_models.fair_climate_model import (
     species_fair_climate_model,
     background_fair_climate_model,
 )

@@ -1,4 +1,4 @@
-from climate_data import RCP
+from aerometrics.climate_data import RCP
 import os.path as pth
 import numpy as np
 import pandas as pd

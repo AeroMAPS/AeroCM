@@ -5,9 +5,25 @@ description = ""
 authors = ["t.planes <thomas.planes@isae-supaero.fr>"]
 readme = "README.md"
 
+packages = [
+    { include = "aerometrics" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.10"
-
+numpy = "*"
+pandas = "*"
+fair = "*"
+jupyterlab = "*"
+salib = "*"
+cartopy = "*"
+scikit-learn = "*"
+seaborn = "*"
+xarray = "*"
+netCDF4 = "*"
+openpyxl = "*"
+ipympl = "*"
+geographiclib = "*"
 
 [build-system]
 requires = ["poetry-core"]
