@@ -30,13 +30,14 @@ def species_lwe_climate_model(
         co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
         air_molar_mass = 28.97e-3  # [kg/mol]
         atmosphere_total_mass = 5.1352e18  # [kg]
-        radiative_efficiency = 1.37e-2 * 1e9  # radiative efficiency [mW/m^2]
+        radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
         A_co2_unit = (
-            radiative_efficiency
-            * air_molar_mass
-            / (co2_molar_mass * atmosphere_total_mass)
-            * 1e-3
+                radiative_efficiency
+                * 1e9
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
         )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
+
         A_co2 = A_co2_unit * species_quantities
         a = [0.2173, 0.2240, 0.2824, 0.2763]
         tau = [0, 394.4, 36.54, 4.304]
@@ -69,7 +70,16 @@ def species_lwe_climate_model(
             )
             years = list(range(start_year, end_year + 1))
             tau = tau_function(years)
-            A_CH4_unit = 5.7e-4
+            ch4_molar_mass = 16.04e-3  # [kg/mol]
+            air_molar_mass = 28.97e-3  # [kg/mol]
+            atmosphere_total_mass = 5.1352e18  # [kg]
+            radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
+            A_CH4_unit = (
+                    radiative_efficiency
+                    * 1e9
+                    * air_molar_mass
+                    / (ch4_molar_mass * atmosphere_total_mass)
+            )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
             A_CH4 = A_CH4_unit * sensitivity_rf * species_quantities
             f1 = 0.5  # Indirect effect on ozone
             f2 = 0.15  # Indirect effect on stratospheric water

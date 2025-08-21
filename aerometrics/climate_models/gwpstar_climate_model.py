@@ -84,13 +84,14 @@ def species_gwpstar_climate_model(
         co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
         air_molar_mass = 28.97e-3  # [kg/mol]
         atmosphere_total_mass = 5.1352e18  # [kg]
-        radiative_efficiency = 1.37e-2 * 1e9  # radiative efficiency [mW/m^2]
+        radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
         A_co2_unit = (
-            radiative_efficiency
-            * air_molar_mass
-            / (co2_molar_mass * atmosphere_total_mass)
-            * 1e-3
-        )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
+                radiative_efficiency
+                * 1e9
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
+        ) # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
+
         A_co2 = A_co2_unit * species_quantities
         a = [0.2173, 0.2240, 0.2824, 0.2763]
         tau = [0, 394.4, 36.54, 4.304]
