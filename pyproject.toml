@@ -11,19 +11,20 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-numpy = "*"
-pandas = "*"
-fair = "*"
-jupyterlab = "*"
-salib = "*"
-cartopy = "*"
-scikit-learn = "*"
-seaborn = "*"
-xarray = "*"
-netCDF4 = "*"
-openpyxl = "*"
-ipympl = "*"
-geographiclib = "*"
+numpy = "2.2.6"
+pandas = "2.3.3"
+fair = "2.2.2"
+jupyterlab = "4.4.9"
+salib = "1.5.1"
+cartopy = "0.25.0"
+scikit-learn = "1.7.2"
+seaborn = "0.13.2"
+xarray = "2025.6.1"
+netCDF4 = "1.7.2"
+openpyxl = "3.1.5"
+ipympl = "0.9.7"
+geographiclib = "2.1"
+
 
 [build-system]
 requires = ["poetry-core"]
