@@ -12,3 +12,5 @@ AVAILABLE_SPECIES = ['Aviation CO2',
                      'Aviation H2O'
                      ]
 SPECIES_SETTINGS = ['sensitivity_rf', 'ratio_erf_rf', 'efficacy_erf']
+RESULTS_VARIABLES = ['radiative_forcing', 'effective_radiative_forcing', 'temperature']
+RCP_START_YEAR = 1765

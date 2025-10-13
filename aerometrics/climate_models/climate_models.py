@@ -1,177 +1,214 @@
 """ Module containing generic climate model functions for aviation species """
 from typing import Union
 import numpy as np
-import warnings
+import xarray as xr
 
-from aerometrics.climate_models.gwpstar_climate_model import species_gwpstar_climate_model
-from aerometrics.climate_models.lwe_climate_model import species_lwe_climate_model
-from aerometrics.climate_models.fair_climate_model import (
-    species_fair_climate_model,
-    background_fair_climate_model,
-)
-from aerometrics.climate_models.constants import AVAILABLE_CLIMATE_MODELS, AVAILABLE_SPECIES, SPECIES_SETTINGS
+from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel, species_gwpstar_climate_model
+from aerometrics.climate_models.lwe_climate_model import LWEClimateModel, species_lwe_climate_model
+from aerometrics.climate_models.fair_climate_model import FairClimateModel
+from aerometrics.utils.classes import ClimateModel
 
 
-def aviation_climate_model(
-    start_year: int,
-    end_year: int,
-    climate_model: Union[str, callable],
-    species_quantities: dict,
-    species_settings: dict,
-    model_settings: dict,
-):
+class AviationClimateSimulation:
     """
-    Generic climate model calculating RF, ERF and temperature increase for all CO2 and non-CO2 species
-    from aviation emissions.
-    :param start_year: start year of the assessment
-    :param end_year: end year of the assessment
-    :param climate_model: climate model. Must be one of AVAILABLE_CLIMATE_MODELS or a callable function
-    :param species_quantities: dictionary {species: array of annual emissions/forcing values} with species as in AVAILABLE_SPECIES
-    :param species_settings: dictionary {species: {species_setting: value}} with species as in AVAILABLE_SPECIES and species_setting as in SPECIES_SETTINGS
-    :param model_settings: dictionary {model_setting: value}
-    :return:
+    Class to run a climate simulation for aviation emissions using a specified climate model.
+
+    Example usage
+    -------------
+    >>> import numpy as np
+    >>> from aerometrics.climate_models.climate_models import AviationClimateSimulation
+    >>> from aerometrics.utils.functions import plot_simulation_results
+    >>> start_year = 2020
+    >>> end_year = 2050
+    >>> climate_model = "GWP*"
+    >>> emission_profiles = {
+    ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
+    ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e-3,  # in W/m^2
+    ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "Soot": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "Sulfur": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ... }
+    >>> species_settings = {
+    ...     "CO2": {"sensitivity_rf": 1.0, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
+    ...     "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
+    ...     "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
+    ...     "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ... }
+    >>> model_settings = {"tcre": 0.00045}
+    >>> results = AviationClimateSimulation(
+    ...     climate_model,
+    ...     start_year,
+    ...     end_year,
+    ...     emission_profiles,
+    ...     species_settings,
+    ...     model_settings
+    ... ).run(return_xr=True)
+    >>> plot_simulation_results(results, data_var="temperature_change", species=["CO2", "Non-CO2"], stacked=True)
     """
 
-    # --- Check inputs ---
-    check_inputs(
-        start_year,
-        end_year,
-        climate_model,
-        species_quantities,
-        species_settings,
-        model_settings
-    )
+    # --- Variables for validation ---
+    available_climate_models = ['GWP*', 'LWE', 'FaIR']
 
-    # --- Prepare parameters ---
-    params_model = model_settings.copy()
-    if climate_model == "GWP*":
-        climate_model = species_gwpstar_climate_model
+    def __init__(
+            self,
+            climate_model: Union[str, ClimateModel, callable],
+            start_year: int,
+            end_year: int,
+            emission_profiles: dict,
+            species_settings: dict,
+            model_settings: dict
+    ):
+        self.climate_model = climate_model
+        self.start_year = start_year
+        self.end_year = end_year
+        self.emission_profiles = emission_profiles
+        self.species_settings = species_settings
+        self.model_settings = model_settings
 
-    elif climate_model == "LWE":
-        climate_model = species_lwe_climate_model
+        # --- Validate data ---
+        self.validate_model()
+        # Other checks (e.g. model and species settings) are done directly in the selected climate model
 
-    elif climate_model == "FaIR":
-        climate_model = species_fair_climate_model
-        background_effective_radiative_forcing, background_temperature = (
-            background_fair_climate_model(
-                start_year, end_year, species_settings['Aviation CO2'], model_settings
-            )
-        )
-        params_model["background_effective_radiative_forcing"] = (
-            background_effective_radiative_forcing
-        )
-        params_model["background_temperature"] = background_temperature
+    def run(self, return_xr: bool = False) -> Union[dict, xr.Dataset]:
+        """
+        Run the climate simulation.
 
-    # --- Run model for all species ---
-    results = {}
-    for species in species_quantities.keys():
-        rf, erf, temperature_increase = climate_model(
-            start_year,
-            end_year,
-            species,
-            species_quantities[species],
-            species_settings[species],
-            params_model,
-        )
-        results[species] = {
-            "rf": rf,
-            "erf": erf,
-            "temperature increase": temperature_increase
-        }
-    # Species not included in the assessment are set to zero
-    for species in AVAILABLE_SPECIES:
-        if species not in results:
-            warnings.warn(f"{species} not provided, setting contribution to zero")
-            results[species] = {
-                "rf": np.zeros(end_year - start_year + 1),
-                "erf": np.zeros(end_year - start_year + 1),
-                "temperature increase": np.zeros(end_year - start_year + 1)
+       Parameters
+        ----------
+        return_xr : bool
+            If True, return results as an xarray Dataset. Default is False (returns a dictionary).
+
+        Returns
+        -------
+        Union[dict, xr.Dataset]
+            Results of the climate simulation.
+        """
+
+        # --- Extract model and its settings ---
+        climate_model = self.climate_model
+        model_settings = self.model_settings
+        if climate_model == "GWP*":
+            climate_model = GWPStarClimateModel
+        elif climate_model == "LWE":
+            climate_model = LWEClimateModel
+        elif climate_model == "FaIR":
+            climate_model = FairClimateModel
+
+        # --- Extract species and their settings ---
+        species_list = list(self.emission_profiles.keys())
+        species_settings = self.species_settings
+
+        # --- Extract simulation parameters ---
+        start_year = self.start_year
+        end_year = self.end_year
+        emission_profiles = self.emission_profiles
+        years = list(range(start_year, end_year + 1))
+
+        # -- Run model for all species ---
+        results = {}
+        for specie in species_list:
+            if isinstance(climate_model, type) and issubclass(climate_model, ClimateModel):
+                model_instance = climate_model(
+                    start_year,
+                    end_year,
+                    specie,
+                    emission_profiles[specie],
+                    species_settings[specie],
+                    model_settings,
+                )
+                results[specie] = model_instance.run()
+            elif callable(climate_model):
+                results[specie] = climate_model(
+                    start_year,
+                    end_year,
+                    specie,
+                    emission_profiles[specie],
+                    species_settings[specie],
+                    model_settings,
+                )
+
+        # --- NOX-CH4: discriminate between direct CH4 decrease and O3/H2O variations induced by CH4 decrease ---
+        nox_ch4_results = results.get("NOx - CH4 decrease and induced")
+        if nox_ch4_results:
+            f1 = 0.5  # Indirect effect of CH4 decrease on ozone
+            f2 = 0.15  # Indirect effect of CH4 decrease on stratospheric water
+            total_effect = 1 + f1 + f2
+
+            factors = {
+                "NOX - CH4 decrease": 1 / total_effect,
+                "NOX - CH4 induced O3": f1 / total_effect,
+                "NOX - CH4 induced H2O": f2 / total_effect,
             }
 
-    # --- NOX-CH4 effects: discriminate between direct CH4 decrease and O3/H2O variations induced by CH4 decrease ---
-    f1 = 0.5  # Indirect effect of CH4 decrease on ozone
-    f2 = 0.15  # Indirect effect of CH4 decrease on stratospheric water
-    results["Aviation NOX - CH4 decrease"] = {
-        quantity: results["Aviation NOx - CH4 decrease and induced"][quantity] * (1 / (1 + f1 + f2)) for quantity in
-        ["rf", "erf", "temperature increase"]
-    }
-    results["Aviation NOX - CH4 induced O3"] = {
-        quantity: results["Aviation NOx - CH4 decrease and induced"][quantity] * (f1 / (1 + f1 + f2)) for quantity in
-        ["rf", "erf", "temperature increase"]
-    }
-    results["Aviation NOX - CH4 induced H2O"] = {
-        quantity: results["Aviation NOx - CH4 decrease and induced"][quantity] * (f2 / (1 + f1 + f2)) for quantity in
-        ["rf", "erf", "temperature increase"]
-    }
+            for name, factor in factors.items():
+                results[name] = {k: v * factor for k, v in nox_ch4_results.items()}
 
-    # --- Aggregate intermediate results ---
-    nox_keys = ["Aviation NOx - ST O3 increase", "Aviation NOx - CH4 decrease and induced"]
-    results["Aviation NOx"] = {
-        quantity: sum(results[key][quantity] for key in nox_keys)
-        for quantity in ["rf", "erf", "temperature increase"]
-    }
+        # --- Aggregate results ---
+        aggregations = {}
+        if "NOx - CH4 decrease and induced" in results:
+            aggregations["NOx"] = ["NOx - ST O3 increase", "NOx - CH4 decrease and induced"]
+        if "Soot" in results or "Sulfur" in results:
+            aggregations["Aerosols"] = [s for s in ["Soot", "Sulfur"] if s in results]
+        if "Contrails" in results or "NOx" in results or "H2O" in results or "Aerosols" in aggregations:
+            aggregations["Non-CO2"] = [s for s in ["Contrails", "NOx", "H2O", "Aerosols"] if s in results or s in aggregations]
+        if "CO2" in results or "Non-CO2" in aggregations:
+            aggregations["Total"] = [s for s in ["CO2", "Non-CO2"] if s in results or s in aggregations]
 
-    aerosol_keys = ["Aviation soot", "Aviation sulfur"]
-    results["Aviation aerosols"] = {
-        quantity: sum(results[key][quantity] for key in aerosol_keys)
-        for quantity in ["rf", "erf", "temperature increase"]
-    }
+        for agg_name, names in aggregations.items():
+            results[agg_name] = {
+                key: sum(results[name][key] for name in names)
+                for key in results[names[0]].keys()
+            }
 
-    # --- Aggregate results ---
-    non_co2_keys = ["Aviation contrails", "Aviation NOx", "Aviation H2O", "Aviation aerosols"]
-    results["Aviation non-CO2"] = {
-        quantity: sum(results[key][quantity] for key in non_co2_keys)
-        for quantity in ["rf", "erf", "temperature increase"]
-    }
+        # --- Convert to xarray if requested ---
+        if return_xr:
+            results = to_xarray(data=results, timesteps=years)
 
-    total_keys = ["Aviation CO2", "Aviation non-CO2"]
-    results["Aviation total"] = {
-        quantity: sum(results[key][quantity] for key in total_keys)
-        for quantity in ["rf", "erf", "temperature increase"]
-    }
+        return results
 
-    return results
+    def validate_model(self):
+        model = self.climate_model
+
+        is_registered_name = model in self.available_climate_models
+        is_callable = callable(model)
+        is_climate_subclass = isinstance(model, type) and issubclass(model, ClimateModel)
+
+        if not (is_registered_name or is_callable or is_climate_subclass):
+            raise ValueError(
+                f"Climate model must be one of {self.available_climate_models}, "
+                f"a subclass of ClimateModel, or a callable function"
+            )
 
 
-def check_inputs(
-        start_year: int,
-        end_year: int,
-        climate_model: Union[str, callable],
-        species_quantities: dict,
-        species_settings: dict,
-        model_settings: dict
-):
-    # Check consistency of start and end year
-    if end_year <= start_year:
-        raise ValueError("end_year must be greater than start_year")
+def to_xarray(data: dict, timesteps: list):
+    """
+    Convert results dictionary to xarray Dataset
+    :param data: dictionary {species: {variable: array of values}}
+    :param years: list of years corresponding to the time dimension
+    """
+    # Extract species and variable names
+    species = list(data.keys())  # e.g. 'Aviation CO2', 'Aviation NOx', 'Aviation total'
+    variables = sorted({k for d in data.values() for k in d.keys()})  # e.g. 'rf', 'erf', 'temperature increase'
 
-    # Check availability of climate model
-    if climate_model not in AVAILABLE_CLIMATE_MODELS and not callable(climate_model):
-        raise ValueError(
-            f"Climate model must be one of {AVAILABLE_CLIMATE_MODELS} or a callable function"
-        )
+    # Build xarray dataset
+    ds = xr.Dataset(
+        {
+            var: (("species", "year"),
+                  np.array([data[s].get(var, np.full(len(timesteps), np.nan)) for s in species]))
+            for var in variables
+        },
+        coords={
+            "species": species,
+            "year": timesteps
+        }
+    )
+    return ds
 
-    # Check species_quantities is in the form {species: array of annual emissions/forcing values}
-    for key, value in species_quantities.items():
-        if key not in AVAILABLE_SPECIES:
-            raise ValueError(f"species_quantities key {key} must be one of {AVAILABLE_SPECIES}")
-        if not isinstance(value, (list, np.ndarray)):
-            raise ValueError(f"species_quantities for {key} must be an array")
-        if len(value) != end_year - start_year + 1:
-            raise ValueError(f"species_quantities for {key} must have length {end_year - start_year + 1}")
 
-    # Check species_settings is in the form {species: {species_setting: value}}
-    for key, value in species_settings.items():
-        if key not in AVAILABLE_SPECIES:
-            raise ValueError(f"species_settings key {key} must be one of {AVAILABLE_SPECIES}")
-        for setting in SPECIES_SETTINGS:
-            if setting not in value:
-                raise ValueError(f"species_settings for {key} must contain {setting}")
-            if not isinstance(value[setting], float):
-                raise ValueError(f"species_settings for {key} and {setting} must be a float")
 
-    # Check consistency of species contained in species_quantities and species_settings
-    if set(species_quantities.keys()) != set(species_settings.keys()):
-        raise ValueError("species_quantities and species_settings must contain the same species")
 
-    return

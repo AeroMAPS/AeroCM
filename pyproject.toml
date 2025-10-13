@@ -24,7 +24,7 @@ netCDF4 = "1.7.2"
 openpyxl = "3.1.5"
 ipympl = "0.9.7"
 geographiclib = "2.1"
-
+scipy = "1.15.3"
 
 [build-system]
 requires = ["poetry-core"]
