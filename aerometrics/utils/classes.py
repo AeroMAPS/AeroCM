@@ -3,7 +3,6 @@ Module containing the ClimateModel class for climate model implementations.
 """
 
 import numpy as np
-from typing import Union
 import logging
 from abc import ABC, abstractmethod
 import pandas as pd
@@ -13,35 +12,32 @@ class ClimateModel(ABC):
     """Super class for climate model implementations."""
 
     # --- Variables for model validation ---
-    available_species = dict()
+    available_species = list()
     available_species_settings = dict()
-    mandatory_model_settings = dict()
-    optional_model_settings = dict()
+    available_model_settings = dict()
 
     def __init__(
             self,
             start_year: int,
             end_year: int,
-            species: str,
-            emission_profile: Union[list, np.ndarray],
-            species_settings: dict,
+            specie_name: str,
+            specie_inventory: list | np.ndarray,
+            specie_settings: dict,
             model_settings: dict,
     ):
         """Initialize the climate model with the provided settings.
 
         Parameters
         ----------
-        model_settings : dict
-            Dictionary containing model settings.
         start_year : int
             Start year of the simulation.
         end_year : int
             End year of the simulation.
-        species : str
+        specie_name : str
             Name of the species.
-        emission_profile : list or np.ndarray
+        specie_inventory : list or np.ndarray
             Emission profile for the species.
-        species_settings : dict
+        specie_settings : dict
             Dictionary containing species settings.
         model_settings : dict
             Dictionary containing model settings.
@@ -49,15 +45,15 @@ class ClimateModel(ABC):
 
         # --- Validate parameters ---
         self.validate_model_settings(model_settings)
-        self.validate_species_settings(species, species_settings)
-        self.validate_emission_profile(start_year, end_year, emission_profile)
+        self.validate_specie_settings(specie_name, specie_settings)
+        self.validate_inventory(start_year, end_year, specie_inventory)
 
         # --- Store parameters ---
         self.start_year = start_year
         self.end_year = end_year
-        self.species = species
-        self.emission_profile = emission_profile
-        self.species_settings = species_settings
+        self.specie_name = specie_name
+        self.specie_inventory = specie_inventory
+        self.specie_settings = specie_settings
         self.model_settings = model_settings
 
     @abstractmethod
@@ -85,31 +81,24 @@ class ClimateModel(ABC):
 
         Raises
         ------
-        ValueError
-            If any mandatory setting is missing.
         TypeError
             If any setting has an incorrect type.
         """
-        for key in self.mandatory_model_settings:
-            if key not in model_settings:
-                raise ValueError(f"Missing mandatory model setting: {key}")
-            if not isinstance(model_settings[key], self.mandatory_model_settings[key]):
-                raise TypeError(f"Model setting {key} must be of type {self.mandatory_model_settings[key]}")
-        for key in self.optional_model_settings:
-            if key in model_settings and not isinstance(model_settings[key], self.optional_model_settings[key]):
-                raise TypeError(f"Model setting {key} must be of type {self.optional_model_settings[key]}")
         for key in model_settings:
-            if key not in self.mandatory_model_settings and key not in self.optional_model_settings:
+            if key in self.available_model_settings:
+                if not isinstance(model_settings[key], self.available_model_settings[key]):
+                    raise TypeError(f"Model setting {key} must be of type {self.available_model_settings[key]}")
+            else:
                 logging.info(f"Unknown model setting: {key}. Will be ignored.")
 
-    def validate_species_settings(self, species: str, species_settings: dict):
+    def validate_specie_settings(self, specie_name: str, specie_settings: dict):
         """Validate the provided species settings.
 
         Parameters
         ----------
-        species : str
+        specie_name : str
             Name of the species.
-        species_settings : dict
+        specie_settings : dict
             Dictionary containing species settings.
 
         Raises
@@ -119,20 +108,20 @@ class ClimateModel(ABC):
         TypeError
             If any setting has an incorrect type.
         """
-        if species not in self.available_species:
-            raise ValueError(f"Species {species} is not supported. Available species: {self.available_species}")
-        mandatory_settings = self.available_species_settings[species]
-        for key in mandatory_settings:
-            if key not in species_settings:
-                raise ValueError(f"Missing mandatory setting for {species}: {key}")
-            if not isinstance(species_settings[key], mandatory_settings[key]):
-                raise TypeError(f"Setting {key} for {species} must be of type {mandatory_settings[key]}")
-        for key in species_settings:
-            if key not in mandatory_settings:
-                logging.info(f"Unknown setting for {species}: {key}. Will be ignored.")
+        if specie_name not in self.available_species:
+            raise ValueError(f"Species {specie_name} is not supported. Available species: {self.available_species}")
+        available_specie_settings = self.available_species_settings[specie_name]
+        for key in available_specie_settings:
+            if key not in specie_settings:
+                raise ValueError(f"Missing setting for {specie_name}: {key}")
+            if not isinstance(specie_settings[key], available_specie_settings[key]):
+                raise TypeError(f"Setting {key} for {specie_name} must be of type {available_specie_settings[key]}")
+        for key in specie_settings:
+            if key not in available_specie_settings:
+                logging.info(f"Unknown setting for {specie_name}: {key}. Will be ignored.")
 
-    def validate_emission_profile(self, start_year: int, end_year: int, emission_profile: Union[list, np.ndarray]):
-        """Validate the provided emission profile.
+    def validate_inventory(self, start_year: int, end_year: int, specie_inventory: list | np.ndarray):
+        """Validate the provided emission inventory.
 
         Parameters
         ----------
@@ -140,7 +129,7 @@ class ClimateModel(ABC):
             Start year of the simulation.
         end_year : int
             End year of the simulation.
-        emission_profile : list or np.ndarray
+        specie_inventory : list or np.ndarray
             Emission profile to validate.
 
         Raises
@@ -149,5 +138,5 @@ class ClimateModel(ABC):
             If the emission profile length does not match the simulation period.
         """
         expected_length = end_year - start_year + 1
-        if len(emission_profile) != expected_length:
-            raise ValueError(f"Emission profile length must be {expected_length} for the period {start_year}-{end_year}")
+        if len(specie_inventory) != expected_length:
+            raise ValueError(f"Inventory length must be {expected_length} for the period {start_year}-{end_year}")

@@ -10,7 +10,7 @@ class LWEClimateModel(ClimateModel):
     """Class for the Linear Warming Equivalent (LWE) climate model implementation."""
 
     # --- Variables for validation ---
-    available_species = {
+    available_species = [
         "CO2",
         "Contrails",
         "NOx - ST O3 increase",
@@ -18,7 +18,7 @@ class LWEClimateModel(ClimateModel):
         "Soot",
         "Sulfur",
         "H2O"
-    }
+    ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": float},
         "Contrails": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
@@ -28,8 +28,7 @@ class LWEClimateModel(ClimateModel):
         "Sulfur": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
         "H2O": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
     }
-    mandatory_model_settings = {"tcre": float}
-    optional_model_settings = {}
+    available_model_settings = {"tcre": float}
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
         """Run the LWE climate model with the assigned input data.
@@ -49,22 +48,22 @@ class LWEClimateModel(ClimateModel):
         tcre = self.model_settings["tcre"]
 
         # --- Extract species settings ---
-        sensitivity_rf = self.species_settings.get("sensitivity_rf", None)
-        ratio_erf_rf = self.species_settings["ratio_erf_rf"]
-        efficacy_erf = self.species_settings.get("efficacy_erf", 1.0)
-        ch4_loss_per_nox = self.species_settings.get("ch4_loss_per_nox", None)  # only for NOx - CH4 decrease and induced
+        sensitivity_rf = self.specie_settings.get("sensitivity_rf", None)
+        ratio_erf_rf = self.specie_settings["ratio_erf_rf"]
+        efficacy_erf = self.specie_settings.get("efficacy_erf", 1.0)
+        ch4_loss_per_nox = self.specie_settings.get("ch4_loss_per_nox", 0.0)  # only for NOx - CH4 decrease and induced
 
         # --- Extract simulation settings ---
         start_year = self.start_year
         end_year = self.end_year
-        species = self.species
-        emission_profile = self.emission_profile
+        specie_name = self.specie_name
+        specie_inventory = self.specie_inventory
         years = list(range(start_year, end_year + 1))
 
         # --- Run the LWE climate model ---
-        if species == "CO2":
+        if specie_name == "CO2":
             equivalent_emissions = (
-                    emission_profile / 10 ** 12
+                    specie_inventory / 10 ** 12
             )  # Conversion from kgCO2 to GtCO2
 
             co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
@@ -78,29 +77,29 @@ class LWEClimateModel(ClimateModel):
                     / (co2_molar_mass * atmosphere_total_mass)
             )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
 
-            A_co2 = A_co2_unit * emission_profile
+            A_co2 = A_co2_unit * specie_inventory
             a = [0.2173, 0.2240, 0.2824, 0.2763]
             tau = [0, 394.4, 36.54, 4.304]
 
             radiative_forcing_from_year = np.zeros(
-                (len(emission_profile), len(emission_profile))
+                (len(specie_inventory), len(specie_inventory))
             )
             # Radiative forcing induced in year j by the species emitted in year i
-            for i in range(0, len(emission_profile)):
-                for j in range(0, len(emission_profile)):
+            for i in range(0, len(specie_inventory)):
+                for j in range(0, len(specie_inventory)):
                     if i <= j:
                         radiative_forcing_from_year[i, j] = A_co2[i] * a[0]
                         for k in [1, 2, 3]:
                             radiative_forcing_from_year[i, j] += (
                                     A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
                             )
-            radiative_forcing = np.zeros(len(emission_profile))
-            for k in range(0, len(emission_profile)):
+            radiative_forcing = np.zeros(len(specie_inventory))
+            for k in range(0, len(specie_inventory)):
                 radiative_forcing[k] = np.sum(radiative_forcing_from_year[:, k])
             effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         else:
-            if species == "NOx - CH4 decrease and induced":
+            if specie_name == "NOx - CH4 decrease and induced":
                 min_year = min(start_year, 1939)
                 max_year = max(end_year, 2051)
                 tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
@@ -120,26 +119,26 @@ class LWEClimateModel(ClimateModel):
                         * air_molar_mass
                         / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-                A_CH4 = A_CH4_unit * ch4_loss_per_nox * emission_profile
+                A_CH4 = A_CH4_unit * ch4_loss_per_nox * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
                 f2 = 0.15  # Indirect effect on stratospheric water
                 radiative_forcing_from_year = np.zeros(
-                    (len(emission_profile), len(emission_profile))
+                    (len(specie_inventory), len(specie_inventory))
                 )
                 # Radiative forcing induced in year j by the species emitted in year i
-                for i in range(0, len(emission_profile)):
-                    for j in range(0, len(emission_profile)):
+                for i in range(0, len(specie_inventory)):
+                    for j in range(0, len(specie_inventory)):
                         if i <= j:
                             radiative_forcing_from_year[i, j] = (
                                     (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                             )
-                radiative_forcing = np.zeros(len(emission_profile))
-                for k in range(0, len(emission_profile)):
+                radiative_forcing = np.zeros(len(specie_inventory))
+                for k in range(0, len(specie_inventory)):
                     radiative_forcing[k] = np.sum(radiative_forcing_from_year[:, k])
                 effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
             else:
-                radiative_forcing = sensitivity_rf * emission_profile
+                radiative_forcing = sensitivity_rf * specie_inventory
                 effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
             size = end_year - start_year + 1
@@ -180,7 +179,7 @@ class LWEClimateModel(ClimateModel):
                     np.dot(F_co2_inv, effective_radiative_forcing) / 10 ** 12
             )  # Conversion from kgCO2-we to GtCO2-we
 
-        cumulative_equivalent_emissions = np.zeros(len(emission_profile))
+        cumulative_equivalent_emissions = np.zeros(len(specie_inventory))
         cumulative_equivalent_emissions[0] = equivalent_emissions[0]
         for k in range(1, len(cumulative_equivalent_emissions)):
             cumulative_equivalent_emissions[k] = (

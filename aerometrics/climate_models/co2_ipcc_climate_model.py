@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from typing import Union
 
 
 class CO2_IPCC_ClimateModel:
@@ -10,7 +9,7 @@ class CO2_IPCC_ClimateModel:
             self,
             start_year: int,
             end_year: int,
-            unit_value: Union[int, float] = 1.0
+            unit_value: int | float = 1.0
     ):
         """Initialize the CO2 IPCC climate model.
 

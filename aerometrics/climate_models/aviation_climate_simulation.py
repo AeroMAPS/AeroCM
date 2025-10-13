@@ -1,11 +1,11 @@
 """ Module containing generic climate model functions for aviation species """
-from typing import Union
 import numpy as np
 import xarray as xr
-
+from collections.abc import Callable
 from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel
 from aerometrics.climate_models.lwe_climate_model import LWEClimateModel
-from aerometrics.climate_models.fair_climate_model import FairClimateModel
+from aerometrics.climate_models.fair_climate_model import FairClimateModel, background_species_quantities_function, \
+    FairRunner
 from aerometrics.utils.classes import ClimateModel
 
 
@@ -16,12 +16,12 @@ class AviationClimateSimulation:
     Example usage
     -------------
     >>> import numpy as np
-    >>> from aerometrics.climate_models.climate_models import AviationClimateSimulation
+    >>> from aerometrics.climate_models.aviation_climate_simulation import AviationClimateSimulation
     >>> from aerometrics.utils.functions import plot_simulation_results
     >>> start_year = 2020
     >>> end_year = 2050
     >>> climate_model = "GWP*"
-    >>> emission_profiles = {
+    >>> species_inventory = {
     ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
     ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
@@ -44,7 +44,7 @@ class AviationClimateSimulation:
     ...     climate_model,
     ...     start_year,
     ...     end_year,
-    ...     emission_profiles,
+    ...     species_inventory,
     ...     species_settings,
     ...     model_settings
     ... ).run(return_xr=True)
@@ -56,17 +56,17 @@ class AviationClimateSimulation:
 
     def __init__(
             self,
-            climate_model: Union[str, ClimateModel, callable],
+            climate_model: str | ClimateModel | Callable,
             start_year: int,
             end_year: int,
-            emission_profiles: dict,
+            species_inventory: dict,
             species_settings: dict,
             model_settings: dict
     ):
         self.climate_model = climate_model
         self.start_year = start_year
         self.end_year = end_year
-        self.emission_profiles = emission_profiles
+        self.species_inventory = species_inventory
         self.species_settings = species_settings
         self.model_settings = model_settings
 
@@ -74,7 +74,7 @@ class AviationClimateSimulation:
         self.validate_model()
         # Other checks (e.g. model and species settings) are done directly in the selected climate model
 
-    def run(self, return_xr: bool = False) -> Union[dict, xr.Dataset]:
+    def run(self, return_xr: bool = False) -> dict | xr.Dataset:
         """
         Run the climate simulation.
 
@@ -85,29 +85,39 @@ class AviationClimateSimulation:
 
         Returns
         -------
-        Union[dict, xr.Dataset]
+        dict or xr.Dataset
             Results of the climate simulation.
         """
 
+        # --- Extract species and their settings ---
+        species_list = list(self.species_inventory.keys())
+        species_settings = self.species_settings
+
+        # --- Extract simulation parameters ---
+        start_year = self.start_year
+        end_year = self.end_year
+        species_inventory = self.species_inventory
+        years = list(range(start_year, end_year + 1))
+
         # --- Extract model and its settings ---
         climate_model = self.climate_model
-        model_settings = self.model_settings
+        model_settings = self.model_settings.copy()
         if climate_model == "GWP*":
             climate_model = GWPStarClimateModel
         elif climate_model == "LWE":
             climate_model = LWEClimateModel
         elif climate_model == "FaIR":
             climate_model = FairClimateModel
-
-        # --- Extract species and their settings ---
-        species_list = list(self.emission_profiles.keys())
-        species_settings = self.species_settings
-
-        # --- Extract simulation parameters ---
-        start_year = self.start_year
-        end_year = self.end_year
-        emission_profiles = self.emission_profiles
-        years = list(range(start_year, end_year + 1))
+            # -- Calculate background temperature and ERF only once here to improve calculation time ---
+            background_species_quantities = climate_model.get_background_species_quantities(
+                model_settings,
+                start_year,
+                end_year
+            )
+            fair_runner = FairRunner(start_year, end_year, background_species_quantities)  # Initialize FairRunner
+            results_background = fair_runner.run()  # Run with no additional species to get background state
+            model_settings["background_temperature"] = results_background["temperature"]
+            model_settings["background_effective_radiative_forcing"] = results_background["effective_radiative_forcing"]
 
         # -- Run model for all species ---
         results = {}
@@ -117,7 +127,7 @@ class AviationClimateSimulation:
                     start_year,
                     end_year,
                     specie,
-                    emission_profiles[specie],
+                    species_inventory[specie],
                     species_settings[specie],
                     model_settings,
                 )
@@ -127,7 +137,7 @@ class AviationClimateSimulation:
                     start_year,
                     end_year,
                     specie,
-                    emission_profiles[specie],
+                    species_inventory[specie],
                     species_settings[specie],
                     model_settings,
                 )
