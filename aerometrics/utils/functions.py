@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
+import inspect
+from aerometrics.climate_models.lwe_climate_model import LWEClimateModel
+from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel
+from aerometrics.climate_models.fair_climate_model import FairClimateModel
 
 
 def emission_profile_function(
@@ -110,3 +114,48 @@ def plot_simulation_results(
         ax.legend(loc="upper left")
 
     return ax
+
+
+def show_model_info(obj: type | str):
+    """
+    Pretty-print all public attributes (with current/default values)
+    and methods of a class or instance.
+    """
+    if isinstance(obj, str):
+        if obj == "LWE":
+            obj = LWEClimateModel
+        elif obj == "GWP*":
+            obj = GWPStarClimateModel
+        elif obj == "FaIR":
+            obj = FairClimateModel
+
+    # Determine the class
+    cls = obj if inspect.isclass(obj) else obj.__class__
+
+    # --- Collect attributes (class + instance) ---
+    attributes = {
+        k: v for k, v in vars(cls).items()
+        if not k.startswith("_") and not inspect.isroutine(v)
+    }
+
+    # --- Collect public methods ---
+    methods = [
+        name for name, func in inspect.getmembers(cls, predicate=inspect.isroutine)
+        if not name.startswith("_")
+    ]
+
+    # --- Pretty print ---
+    print(f"\nClass: {cls.__name__}")
+    print("Attributes:")
+    if attributes:
+        for name, value in attributes.items():
+            print(f"  • {name}: {value}")
+    else:
+        print("  (No public attributes)")
+
+    print("\nMethods:")
+    if methods:
+        for name in methods:
+            print(f"  • {name}()")
+    else:
+        print("  (No public methods)")
