@@ -3,8 +3,8 @@ from typing import Union
 import numpy as np
 import xarray as xr
 
-from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel, species_gwpstar_climate_model
-from aerometrics.climate_models.lwe_climate_model import LWEClimateModel, species_lwe_climate_model
+from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel
+from aerometrics.climate_models.lwe_climate_model import LWEClimateModel
 from aerometrics.climate_models.fair_climate_model import FairClimateModel
 from aerometrics.utils.classes import ClimateModel
 

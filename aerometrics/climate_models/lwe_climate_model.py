@@ -4,7 +4,6 @@ from scipy.linalg import solve_triangular
 from scipy.interpolate import interp1d
 from aerometrics.metrics.metrics import co2_ipcc_pulse_absolute_metrics
 from aerometrics.utils.classes import ClimateModel
-from typing import Union
 
 
 class LWEClimateModel(ClimateModel):
