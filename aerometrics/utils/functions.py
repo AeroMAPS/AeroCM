@@ -146,7 +146,7 @@ def show_model_info(obj: type | str):
 
     # --- Pretty print ---
     print(f"\nClass: {cls.__name__}")
-    print("Attributes:")
+    print("\nAttributes:")
     if attributes:
         for name, value in attributes.items():
             print(f"  • {name}: {value}")
