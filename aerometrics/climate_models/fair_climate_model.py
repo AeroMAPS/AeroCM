@@ -335,9 +335,9 @@ class FairRunner:
         f.allocate()
 
         # --- Fill climate configs ---
-        fill(f.climate_configs["ocean_heat_transfer"], [2, 2, 1.1], config="central")
-        fill(f.climate_configs["ocean_heat_capacity"], [6, 11, 75], config="central")
-        fill(f.climate_configs["deep_ocean_efficacy"], 0.8, config="central")
+        fill(f.climate_configs["ocean_heat_transfer"], [1.3, 1.6, 0.6], config="central")
+        fill(f.climate_configs["ocean_heat_capacity"], [8, 14, 100], config="central")
+        fill(f.climate_configs["deep_ocean_efficacy"], 1.1, config="central")
 
         # --- Fill default species configs ---
         # - CO2 -
@@ -351,24 +351,24 @@ class FairRunner:
             [1e9, 394.4, 36.54, 4.304],
             specie="CO2",
         )
-        fill(f.species_configs["baseline_concentration"], 278.3, specie="CO2")
-        fill(f.species_configs["forcing_reference_concentration"],278.3, specie="CO2")
+        fill(f.species_configs["baseline_concentration"], 310.4, specie="CO2") # Simulation from 1940 (EEA), 278.3 in 1765
+        fill(f.species_configs["forcing_reference_concentration"],310.4, specie="CO2") # Simulation from 1940 (EEA), 278.3 in 1765
         fill(f.species_configs["molecular_weight"], 44.009, specie="CO2")
         fill(f.species_configs["greenhouse_gas_radiative_efficiency"],1.37e-05, specie="CO2")
         f.calculate_iirf0()
         f.calculate_g()
         f.calculate_concentration_per_emission()
         fill(f.species_configs["iirf_0"], 29, specie="CO2")
-        fill(f.species_configs["iirf_airborne"], [0.000819 / 2], specie="CO2")
-        fill(f.species_configs["iirf_uptake"], [0.00846 / 2], specie="CO2")
-        fill(f.species_configs["iirf_temperature"], [4 / 2], specie="CO2")
-        fill(f.species_configs["aci_scale"], -3.14762148)
+        fill(f.species_configs["iirf_airborne"], [0.000819], specie="CO2")
+        fill(f.species_configs["iirf_uptake"], [0.00846], specie="CO2")
+        fill(f.species_configs["iirf_temperature"], [4], specie="CO2")
+        fill(f.species_configs["aci_scale"], -2.09841432)
 
         # - CH4 -
         fill(f.species_configs["partition_fraction"], [1, 0, 0, 0], specie="World CH4")
         fill(f.species_configs["unperturbed_lifetime"], 8.25, specie="World CH4")
-        fill(f.species_configs["baseline_concentration"], 729, specie="World CH4")
-        fill(f.species_configs["forcing_reference_concentration"], 729, specie="World CH4")
+        fill(f.species_configs["baseline_concentration"], 1102.4, specie="World CH4") # Simulation from 1940 (EEA), 729 in 1765
+        fill(f.species_configs["forcing_reference_concentration"], 1102.4, specie="World CH4") # Simulation from 1940 (EEA), 729 in 1765
         fill(f.species_configs["molecular_weight"], 16.043, specie="World CH4")
         fill(f.species_configs["greenhouse_gas_radiative_efficiency"],0.00038864402860869495, specie="World CH4")
         f.calculate_iirf0()
