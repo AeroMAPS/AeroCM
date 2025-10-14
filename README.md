@@ -28,7 +28,7 @@ $ pip install --upgrade aerocm[paper]
 Development
 ------------------
 
-As a developer, the use of poetry is recommended, even if a requirements file is also available.
+As a developer, the use of poetry is recommended.
 
 You can install the required packages with this command:
 
@@ -41,6 +41,8 @@ If you also want to run the Jupyter notebooks developed for the reference paper,
 ``` {.bash}
 $ poetry install -E paper
 ```
+
+The use of requirements files is also possible.
 
 
 Citation
