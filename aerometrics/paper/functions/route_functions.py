@@ -4,26 +4,26 @@ from scipy.interpolate import RegularGridInterpolator
 
 def great_circle_path(lat1, lon1, lat2, lon2, npoints=100, waypoint=None):
     """
-    Calcule une route orthodromique (great circle), avec possibilité d’un point de passage.
+    Calculates a great circle route, with the option of a waypoint.
     
     Args:
-        lat1, lon1 : coordonnées du point de départ (°)
-        lat2, lon2 : coordonnées du point d’arrivée (°)
-        npoints : nombre de points par segment
-        waypoint : tuple (lat, lon) pour forcer un point de passage (optionnel)
+        lat1, lon1: coordinates of the starting point (°)
+        lat2, lon2: coordinates of the destination point (°)
+        npoints: number of points per segment
+        waypoint: tuple (lat, lon) to force a waypoint (optional)
     
     Returns:
-        lats (np.array) : latitudes de la trajectoire
-        lons (np.array) : longitudes de la trajectoire
-        dists (np.array) : distances cumulées (km) le long de la trajectoire
-        total_distance_km (float) : distance totale de la trajectoire (km)
+        lats (np.array): latitudes of the trajectory
+        lons (np.array): longitudes of the trajectory
+        dists (np.array): cumulative distances (km) along the trajectory
+        total_distance_km (float): total distance of the trajectory (km)
     """
     geod = Geodesic.WGS84
     
     def segment(latA, lonA, latB, lonB, npoints):
         g = geod.Inverse(latA, lonA, latB, lonB)
         line = geod.Line(latA, lonA, g['azi1'])
-        total_dist = g['s12']  # mètres
+        total_dist = g['s12']  # m
         dists = np.linspace(0, total_dist, npoints)
         
         lats, lons = [], []
@@ -33,17 +33,17 @@ def great_circle_path(lat1, lon1, lat2, lon2, npoints=100, waypoint=None):
             lons.append(pos['lon2'])
         return np.array(lats), np.array(lons), dists / 1000.0, total_dist / 1000.0
     
-    # Cas sans waypoint
+    # Without waypoint
     if waypoint is None:
         lats, lons, dists, total_dist = segment(lat1, lon1, lat2, lon2, npoints)
         return lats, lons, total_dist
     
-    # Cas avec waypoint : deux segments
+    # With waypoint (two segments=
     latw, lonw = waypoint
     lats1, lons1, dists1, dist1 = segment(lat1, lon1, latw, lonw, npoints)
     lats2, lons2, dists2, dist2 = segment(latw, lonw, lat2, lon2, npoints)
     
-    # Fusionner en enlevant le doublon du waypoint
+    # Fusion
     lats = np.concatenate([lats1, lats2[1:]])
     lons = np.concatenate([lons1, lons2[1:]])
     dists = np.concatenate([dists1, dist1 + dists2[1:]])
@@ -54,45 +54,41 @@ def great_circle_path(lat1, lon1, lat2, lon2, npoints=100, waypoint=None):
     
 def mean_along_path(dataarray, lats, lons):
     """
-    Calcule la valeur moyenne d'un champ (lat, lon) le long d'une trajectoire,
-    en gérant automatiquement les conventions de coordonnées.
+    Calculates the average value of a field (lat, lon) along a trajectory,
+    automatically handling coordinate conventions.
     
     Args:
-        dataarray : xarray.DataArray 2D (lat, lon)
-        lats, lons : arrays des coordonnées de la route (sorties great_circle_path)
+        dataarray: xarray.DataArray 2D (lat, lon)
+        lats, lons: arrays of route coordinates (great_circle_path outputs)
         
     Returns:
-        float : moyenne des valeurs interpolées le long de la trajectoire
-        np.array : valeurs interpolées le long de la trajectoire
+        float: average of values interpolated along the trajectory
+        np.array: values interpolated along the trajectory
     """
-    # Extraire lat/lon
+    # Extraction of lat/lon
     lat_vals = dataarray['lat'].values
     lon_vals = dataarray['lon'].values
     field = dataarray.values
 
-    # 🔹 Vérif lat : doit être croissant pour l’interpolateur
+    # Lat verifications
     if lat_vals[0] > lat_vals[-1]:
         lat_vals = lat_vals[::-1]
-        field = field[::-1, :]  # inverser l’ordre des latitudes
+        field = field[::-1, :]
     
-    # 🔹 Vérif lon : uniformiser
+    # Lon verifications
     if np.all(lon_vals >= 0):  
-        # cas 0–360 → convertir les longitudes de la route
         lons_mod = np.mod(lons, 360)
     else:
-        # cas -180–180 → convertir dans ce système
         lons_mod = np.where(lons > 180, lons - 360, lons)
     
-    # Créer interpolateur
+    # Interpolation
     interp = RegularGridInterpolator(
         (lat_vals, lon_vals), field,
         bounds_error=False, fill_value=np.nan
     )
     
-    # Construire les points
     points = np.array([lats, lons_mod]).T
-    
-    # Interpoler
+
     values = interp(points)
     
     return np.nanmean(values), values
