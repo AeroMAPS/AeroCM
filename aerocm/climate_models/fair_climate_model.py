@@ -5,8 +5,8 @@ import pandas as pd
 from fair import FAIR
 from fair.interface import fill, initialise
 from scipy.interpolate import interp1d
-from aerometrics.utils.classes import ClimateModel
-from aerometrics.climate_data import RCP
+from aerocm.utils.classes import ClimateModel
+from aerocm.climate_data import RCP
 
 RCP_START_YEAR = 1765
 
@@ -504,7 +504,7 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
 
     ---
     Example usage:
-    >>> from aerometrics.climate_models.fair_climate_model import background_species_quantities_function
+    >>> from aerocm.climate_models.fair_climate_model import background_species_quantities_function
     >>> background_species_quantities = background_species_quantities_function(2020, 2050, 'RCP45')
     """
 

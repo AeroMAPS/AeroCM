@@ -5,7 +5,7 @@ Template for climate model implementations.
 import numpy as np
 from typing import Union
 import pandas as pd
-from aerometrics.utils.classes import ClimateModel
+from aerocm.utils.classes import ClimateModel
 
 
 class MyClimateModel(ClimateModel):
@@ -14,7 +14,7 @@ class MyClimateModel(ClimateModel):
     Example usage
     -------------
     >>> import numpy as np
-    >>> from aerometrics.climate_models.template import MyClimateModel
+    >>> from aerocm.climate_models.template import MyClimateModel
     >>> start_year = 2020
     >>> end_year = 2050
     >>> specie_name = "species_1"

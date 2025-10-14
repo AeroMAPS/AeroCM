@@ -2,11 +2,11 @@
 import numpy as np
 import xarray as xr
 from collections.abc import Callable
-from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel
-from aerometrics.climate_models.lwe_climate_model import LWEClimateModel
-from aerometrics.climate_models.fair_climate_model import FairClimateModel, background_species_quantities_function, \
+from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
+from aerocm.climate_models.lwe_climate_model import LWEClimateModel
+from aerocm.climate_models.fair_climate_model import FairClimateModel, background_species_quantities_function, \
     FairRunner
-from aerometrics.utils.classes import ClimateModel
+from aerocm.utils.classes import ClimateModel
 
 
 class AviationClimateSimulation:
@@ -16,8 +16,8 @@ class AviationClimateSimulation:
     Example usage
     -------------
     >>> import numpy as np
-    >>> from aerometrics.climate_models.aviation_climate_simulation import AviationClimateSimulation
-    >>> from aerometrics.utils.functions import plot_simulation_results
+    >>> from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
+    >>> from aerocm.utils.functions import plot_simulation_results
     >>> start_year = 2020
     >>> end_year = 2050
     >>> climate_model = "GWP*"

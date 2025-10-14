@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
 import inspect
-from aerometrics.climate_models.lwe_climate_model import LWEClimateModel
-from aerometrics.climate_models.gwpstar_climate_model import GWPStarClimateModel
-from aerometrics.climate_models.fair_climate_model import FairClimateModel
+from aerocm.climate_models.lwe_climate_model import LWEClimateModel
+from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
+from aerocm.climate_models.fair_climate_model import FairClimateModel
 
 
 def emission_profile_function(
