@@ -17,30 +17,38 @@ class FairClimateModel(ClimateModel):
     https://docs.fairmodel.net/en/latest/
     """
 
-    # --- Variables for validation ---
+    # --- Default parameters ---
     available_species = [
         "CO2",
         "Contrails",
         "NOx - ST O3 increase",
         "NOx - CH4 decrease and induced",
+        "H2O",
         "Soot",
-        "Sulfur",
-        "H2O"
+        "Sulfur"
     ]
     available_species_settings = {
-        "CO2": {"ratio_erf_rf": float},
-        "Contrails": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "NOx - ST O3 increase": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "Soot": {"ratio_erf_rf": float, "efficacy_erf": float},
-        "Sulfur": {"ratio_erf_rf": float, "efficacy_erf": float},
-        "H2O": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
+        "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
+        "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
+                      "ratio_erf_rf": {"type": float, "default": 0.42},
+                      "efficacy_erf": {"type": float, "default": 1.0}},
+        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.6e-12},
+                                 "ratio_erf_rf": {"type": float, "default": 1.37},
+                                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": {"type": float, "default": -3.9},
+                                           "ratio_erf_rf": {"type": float, "default": 1.18},
+                                           "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
+                "efficacy_erf": {"type": float, "default": 1.0}},
+        "Soot": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {
-        "rcp": str | None,
-        "background_species_quantities": dict,  # overrode by rcp if rcp is provided
-        "background_effective_radiative_forcing": list | np.ndarray,
-        "background_temperature": list | np.ndarray
+        "rcp": {"type": (str, type(None)), "default": "RCP45"},
+        # overrode by background_species_quantities if background_species_quantities is provided
+        "background_species_quantities": {"type": dict},
+        "background_effective_radiative_forcing": {"type": (list, np.ndarray)},
+        "background_temperature": {"type": (list, np.ndarray)}
     }
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
@@ -201,18 +209,18 @@ class FairClimateModel(ClimateModel):
         :return: background_species_quantities: dictionary with annual emission values for the background species (CO2, CH4), from start_year to end_year
         """
         rcp = model_settings.get("rcp", None)
-        if "rcp" in model_settings.keys():
-            if "background_species_quantities" in model_settings.keys():
+        if "background_species_quantities" in model_settings.keys():
+            if "rcp" in model_settings.keys():
                 warnings.warn(
                     f"Both RCP scenario and background species provided in model_settings. "
-                    f"RCP scenario '{rcp}' will override background_species_quantities.")
+                    f"The background species provided will override RCP scenario '{rcp}'.")
+            background_species_quantities = model_settings["background_species_quantities"]
+        elif "rcp" in model_settings.keys():
             background_species_quantities = background_species_quantities_function(
                 start_year,
                 end_year,
                 rcp
             )
-        elif "background_species_quantities" in model_settings.keys():
-            background_species_quantities = model_settings["background_species_quantities"]
         else:
             raise ValueError("Either 'rcp' or 'background_species_quantities' must be provided in model_settings.")
 

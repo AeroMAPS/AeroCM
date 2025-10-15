@@ -1,5 +1,6 @@
 """ Module containing generic climate model functions for aviation species """
 import numpy as np
+from copy import deepcopy
 import xarray as xr
 from collections.abc import Callable
 from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
@@ -31,10 +32,10 @@ class AviationClimateSimulation:
     ...     "Sulfur": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ... }
     >>> species_settings = {
-    ...     "CO2": {"sensitivity_rf": 1.0, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "CO2": {"ratio_erf_rf": 1.0},
+    ...     "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
     ...     "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
     ...     "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
-    ...     "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
     ...     "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
     ...     "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
     ...     "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
@@ -60,15 +61,15 @@ class AviationClimateSimulation:
             start_year: int,
             end_year: int,
             species_inventory: dict,
-            species_settings: dict,
-            model_settings: dict
+            species_settings: dict | None = None,
+            model_settings: dict | None = None
     ):
         self.climate_model = climate_model
         self.start_year = start_year
         self.end_year = end_year
         self.species_inventory = species_inventory
-        self.species_settings = species_settings
-        self.model_settings = model_settings
+        self.species_settings = species_settings or {}
+        self.model_settings = model_settings or {}
 
         # --- Validate data ---
         self.validate_model()
@@ -99,9 +100,14 @@ class AviationClimateSimulation:
         species_inventory = self.species_inventory
         years = list(range(start_year, end_year + 1))
 
-        # --- Extract model and its settings ---
+        # --- Update species and model settings ---
         climate_model = self.climate_model
         model_settings = self.model_settings.copy()
+        if climate_model == "GWP*" or climate_model == "LWE" or climate_model == "FaIR":
+            species_settings = add_default_species_settings(climate_model, species_settings)
+            model_settings = add_default_model_settings(climate_model, model_settings)
+
+        # --- Extract model ---
         if climate_model == "GWP*":
             climate_model = GWPStarClimateModel
         elif climate_model == "LWE":
@@ -218,6 +224,64 @@ def to_xarray(data: dict, timesteps: list):
         }
     )
     return ds
+
+def add_default_species_settings(climate_model_name, species_settings):
+    if climate_model_name == "GWP*":
+        default_species_settings = {
+            "CO2": {"ratio_erf_rf": 1.0},
+            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
+            "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
+            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
+            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+        }
+    elif climate_model_name == "LWE":
+        default_species_settings = {
+            "CO2": {"ratio_erf_rf": 1.0},
+            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
+            "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": -3.9, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
+            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
+            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+        }
+    elif climate_model_name == "FaIR":
+        default_species_settings = {
+            "CO2": {"ratio_erf_rf": 1.0},
+            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
+            "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": -3.9, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
+            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
+            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Soot": {"ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+            "Sulfur": {"ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+        }
+
+    updated_species_settings = deepcopy(default_species_settings)
+
+    for specie, params in (species_settings or {}).items():
+        if specie not in updated_species_settings:
+            updated_species_settings[specie] = deepcopy(params)
+        else:
+            updated_species_settings[specie].update(params)
+
+    return updated_species_settings
+
+def add_default_model_settings(climate_model_name, model_settings):
+
+    if climate_model_name == "GWP*":
+        default_model_settings = {"tcre": 0.00045}
+    elif climate_model_name == "LWE":
+        default_model_settings = {"tcre": 0.00045}
+    elif climate_model_name == "FaIR":
+        default_model_settings = {"rcp": "RCP45"}
+
+    updated_model_settings = deepcopy(default_model_settings)
+
+    for key, value in (model_settings or {}).items():
+        updated_model_settings[key] = value
+
+    return updated_model_settings
 
 
 

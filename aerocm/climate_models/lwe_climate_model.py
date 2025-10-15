@@ -9,26 +9,35 @@ from aerocm.utils.classes import ClimateModel
 class LWEClimateModel(ClimateModel):
     """Class for the Linear Warming Equivalent (LWE) climate model implementation."""
 
-    # --- Variables for validation ---
+    # --- Default parameters ---
     available_species = [
         "CO2",
         "Contrails",
         "NOx - ST O3 increase",
         "NOx - CH4 decrease and induced",
+        "H2O",
         "Soot",
-        "Sulfur",
-        "H2O"
+        "Sulfur"
     ]
     available_species_settings = {
-        "CO2": {"ratio_erf_rf": float},
-        "Contrails": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "NOx - ST O3 increase": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "Soot": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "Sulfur": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
-        "H2O": {"sensitivity_rf": float, "ratio_erf_rf": float, "efficacy_erf": float},
+        "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
+        "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
+                      "ratio_erf_rf": {"type": float, "default": 0.42},
+                      "efficacy_erf": {"type": float, "default": 1.0}},
+        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.6e-12},
+                                 "ratio_erf_rf": {"type": float, "default": 1.37},
+                                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": {"type": float, "default": -3.9},
+                                           "ratio_erf_rf": {"type": float, "default": 1.18},
+                                           "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
+                "efficacy_erf": {"type": float, "default": 1.0}},
+        "Soot": {"sensitivity_rf": {"type": float, "default": 1.0e-10}, "ratio_erf_rf": {"type": float, "default": 1.0},
+                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
-    available_model_settings = {"tcre": float}
+    available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
         """Run the LWE climate model with the assigned input data.

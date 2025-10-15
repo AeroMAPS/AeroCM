@@ -86,8 +86,8 @@ class ClimateModel(ABC):
         """
         for key in model_settings:
             if key in self.available_model_settings:
-                if not isinstance(model_settings[key], self.available_model_settings[key]):
-                    raise TypeError(f"Model setting {key} must be of type {self.available_model_settings[key]}")
+                if not isinstance(model_settings[key], self.available_model_settings[key]["type"]):
+                    raise TypeError(f"Model setting {key} must be of type {self.available_model_settings[key]['type']}")
             else:
                 logging.info(f"Unknown model setting: {key}. Will be ignored.")
 
@@ -114,8 +114,8 @@ class ClimateModel(ABC):
         for key in available_specie_settings:
             if key not in specie_settings:
                 raise ValueError(f"Missing setting for {specie_name}: {key}")
-            if not isinstance(specie_settings[key], available_specie_settings[key]):
-                raise TypeError(f"Setting {key} for {specie_name} must be of type {available_specie_settings[key]}")
+            if not isinstance(specie_settings[key], available_specie_settings[key]["type"]):
+                raise TypeError(f"Setting {key} for {specie_name} must be of type {available_specie_settings[key]['type']}")
         for key in specie_settings:
             if key not in available_specie_settings:
                 logging.info(f"Unknown setting for {specie_name}: {key}. Will be ignored.")
