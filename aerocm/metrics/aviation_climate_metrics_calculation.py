@@ -224,10 +224,10 @@ class AviationClimateMetricsCalculation:
             absolute_metrics_results_H = {}
             # CO2
             agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, agtp_co2, iagtp_co2, atr_co2 = absolute_metrics(
-                co2_climate_simulation_results["CO2"]["radiative_forcing"],
-                co2_climate_simulation_results["CO2"]["effective_radiative_forcing"],
+                co2_climate_simulation_results["CO2"]["radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
+                co2_climate_simulation_results["CO2"]["effective_radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
                 1.0,
-                co2_climate_simulation_results["CO2"]["temperature"],
+                co2_climate_simulation_results["CO2"]["temperature"][:end_year-start_year+1-(time_horizon_max-H)],
                 H)
             absolute_metrics_results_H["CO2"] = {"agwp_rf": agwp_rf_co2,
                                                  "agwp_erf": agwp_erf_co2,
@@ -239,10 +239,10 @@ class AviationClimateMetricsCalculation:
             # Species
             for specie in species_list:
                 agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr = absolute_metrics(
-                    non_co2_climate_simulation_results[specie]["radiative_forcing"],
-                    non_co2_climate_simulation_results[specie]["effective_radiative_forcing"],
+                    non_co2_climate_simulation_results[specie]["radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
+                    non_co2_climate_simulation_results[specie]["effective_radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
                     1.0, # TODO
-                    non_co2_climate_simulation_results[specie]["temperature"],
+                    non_co2_climate_simulation_results[specie]["temperature"][:end_year-start_year+1-(time_horizon_max-H)],
                     H)
                 absolute_metrics_results_H[specie] = {"agwp_rf": agwp_rf,
                                                      "agwp_erf": agwp_erf,
@@ -255,10 +255,8 @@ class AviationClimateMetricsCalculation:
 
         # -- Calculate relative metrics ---
         relative_metrics_results = []
-        print(time_horizon)
         for k in range(0, len(time_horizon)):
             relative_metrics_results_H = {}
-            print(absolute_metrics_results[k]["CO2"]["agwp_rf"])
             for specie in species_list:
                 gwp_rf, gwp_erf, egwp_rf, egwp_erf, gtp, igtp, ratr = relative_metrics(
                     absolute_metrics_results[k]["CO2"]["agwp_rf"],
