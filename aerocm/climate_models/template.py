@@ -19,7 +19,7 @@ class MyClimateModel(ClimateModel):
     >>> end_year = 2050
     >>> specie_name = "species_1"
     >>> specie_inventory = np.random.rand(end_year - start_year + 1) * 1e9  # Example emission profile
-    >>> specie_settings = {"param1": 1.0, "param2": 0.5}
+    >>> specie_settings = {"param2": 0.5}
     >>> model_settings = {"model_setting_1": np.array([0.1, 0.2, 0.3])}
     >>> climate_model = MyClimateModel(
     ...     start_year,
@@ -39,11 +39,12 @@ class MyClimateModel(ClimateModel):
         "species_3"
     ]
     available_species_settings = {
-        "species_1": {"param1": float, "param2": float},
-        "species_2": {"param3": int},
+        "species_1": {"param1": {"type": float, "default": 1.0},
+                      "param2": {"type": float, "default": 1.0}},
+        "species_2": {"param3": {"type": int, "default": 1}},
         "species_3": {},
     }
-    available_model_settings = {"model_setting_1": Union[list, np.ndarray]}
+    available_model_settings = {"model_setting_1": {"type": (list, np.ndarray)}}
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
         """Run the climate model with the assigned input data.
@@ -59,7 +60,7 @@ class MyClimateModel(ClimateModel):
 
         # --- Extract species settings ---
         specie_settings = self.specie_settings
-        param1 = specie_settings.get("param1", 0.0)  # replace 2nd argument with default if needed
+        param1 = specie_settings.get("param1", 1.0)  # replace 2nd argument with default if needed
         param2 = specie_settings.get("param2", 1.0)
         param3 = specie_settings.get("param3", 1)
 

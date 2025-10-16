@@ -24,9 +24,9 @@ class AviationClimateSimulation:
     >>> climate_model = "GWP*"
     >>> species_inventory = {
     ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
+    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e-3,  # in W/m^2
     ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e-3,  # in W/m^2
     ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "Soot": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "Sulfur": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
@@ -100,20 +100,26 @@ class AviationClimateSimulation:
         species_inventory = self.species_inventory
         years = list(range(start_year, end_year + 1))
 
-        # --- Update species and model settings ---
+        # --- Extract model and update species and model settings ---
         climate_model = self.climate_model
         model_settings = self.model_settings.copy()
-        if climate_model == "GWP*" or climate_model == "LWE" or climate_model == "FaIR":
+
+        known_model = False
+        if climate_model == "GWP*":
+            climate_model = GWPStarClimateModel
+            known_model = True
+        elif climate_model == "LWE":
+            climate_model = LWEClimateModel
+            known_model = True
+        elif climate_model == "FaIR":
+            climate_model = FairClimateModel
+            known_model = True
+
+        if known_model:
             species_settings = add_default_species_settings(climate_model, species_settings)
             model_settings = add_default_model_settings(climate_model, model_settings)
 
-        # --- Extract model ---
-        if climate_model == "GWP*":
-            climate_model = GWPStarClimateModel
-        elif climate_model == "LWE":
-            climate_model = LWEClimateModel
-        elif climate_model == "FaIR":
-            climate_model = FairClimateModel
+        if climate_model == FairClimateModel and known_model:
             # -- Calculate background temperature and ERF only once here to improve calculation time ---
             background_species_quantities = climate_model.get_background_species_quantities(
                 model_settings,
@@ -225,40 +231,21 @@ def to_xarray(data: dict, timesteps: list):
     )
     return ds
 
-def add_default_species_settings(climate_model_name, species_settings):
-    if climate_model_name == "GWP*":
-        default_species_settings = {
-            "CO2": {"ratio_erf_rf": 1.0},
-            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
-            "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
-            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
-            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+def add_default_species_settings(climate_model, species_settings):
+
+    # Extract the default values from the available species settings of the climate model
+    default_species_settings = {
+        specie: {
+            param: value["default"]
+            for param, value in specie_param.items()
+            if "default" in value
         }
-    elif climate_model_name == "LWE":
-        default_species_settings = {
-            "CO2": {"ratio_erf_rf": 1.0},
-            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
-            "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": -3.9, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
-            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
-            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-        }
-    elif climate_model_name == "FaIR":
-        default_species_settings = {
-            "CO2": {"ratio_erf_rf": 1.0},
-            "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
-            "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": -3.9, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
-            "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
-            "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Soot": {"ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-            "Sulfur": {"ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-        }
+        for specie, specie_param in climate_model.available_species_settings.items()
+    }
 
     updated_species_settings = deepcopy(default_species_settings)
 
+    # Update the values with the one provided by the user
     for specie, params in (species_settings or {}).items():
         if specie not in updated_species_settings:
             updated_species_settings[specie] = deepcopy(params)
@@ -267,17 +254,18 @@ def add_default_species_settings(climate_model_name, species_settings):
 
     return updated_species_settings
 
-def add_default_model_settings(climate_model_name, model_settings):
+def add_default_model_settings(climate_model, model_settings):
 
-    if climate_model_name == "GWP*":
-        default_model_settings = {"tcre": 0.00045}
-    elif climate_model_name == "LWE":
-        default_model_settings = {"tcre": 0.00045}
-    elif climate_model_name == "FaIR":
-        default_model_settings = {"rcp": "RCP45"}
+    # Extract the default values from the available model settings of the climate model
+    default_model_settings = {
+        key: value["default"]
+        for key, value in climate_model.available_model_settings.items()
+        if "default" in value
+    }
 
     updated_model_settings = deepcopy(default_model_settings)
 
+    # Update the values with the one provided by the user
     for key, value in (model_settings or {}).items():
         updated_model_settings[key] = value
 
