@@ -7,6 +7,7 @@ from fair.interface import fill, initialise
 from scipy.interpolate import interp1d
 from aerocm.utils.classes import ClimateModel
 from aerocm.climate_data import RCP
+from aerocm.climate_data import concentration
 
 RCP_START_YEAR = 1765
 
@@ -359,8 +360,24 @@ class FairRunner:
             [1e9, 394.4, 36.54, 4.304],
             specie="CO2",
         )
-        fill(f.species_configs["baseline_concentration"], 310.4, specie="CO2") # Simulation from 1940 (EEA), 278.3 in 1765
-        fill(f.species_configs["forcing_reference_concentration"],310.4, specie="CO2") # Simulation from 1940 (EEA), 278.3 in 1765
+
+        # Update concentration data depending on the start year of the simulation
+        # Use of EEA data (5-year linear interpolation between 1765 and 1975)
+        concentration_data_path = pth.join(concentration.__path__[0], "concentration_data.csv")
+        df = pd.read_csv(concentration_data_path, sep=";")
+        df["Year"] = df["Year"].astype(int)
+        row = df.loc[df["Year"] == start_year]
+        if not row.empty:
+            co2_concentration = row["CO2"].values[0] # 278.3 ppm per default in FaIR
+            ch4_concentration = row["CH4"].values[0] # 729 ppb per default in FaIR
+        else:
+            raise ValueError(
+                f"{self.start_year} is not a start year usable with the climate model parametrisation. "
+                f"Choose a start year between 1765 and 2017."
+            )
+
+        fill(f.species_configs["baseline_concentration"], co2_concentration, specie="CO2")
+        fill(f.species_configs["forcing_reference_concentration"],co2_concentration, specie="CO2")
         fill(f.species_configs["molecular_weight"], 44.009, specie="CO2")
         fill(f.species_configs["greenhouse_gas_radiative_efficiency"],1.37e-05, specie="CO2")
         f.calculate_iirf0()
@@ -375,8 +392,8 @@ class FairRunner:
         # - CH4 -
         fill(f.species_configs["partition_fraction"], [1, 0, 0, 0], specie="World CH4")
         fill(f.species_configs["unperturbed_lifetime"], 8.25, specie="World CH4")
-        fill(f.species_configs["baseline_concentration"], 1102.4, specie="World CH4") # Simulation from 1940 (EEA), 729 in 1765
-        fill(f.species_configs["forcing_reference_concentration"], 1102.4, specie="World CH4") # Simulation from 1940 (EEA), 729 in 1765
+        fill(f.species_configs["baseline_concentration"], ch4_concentration, specie="World CH4")
+        fill(f.species_configs["forcing_reference_concentration"], ch4_concentration, specie="World CH4")
         fill(f.species_configs["molecular_weight"], 16.043, specie="World CH4")
         fill(f.species_configs["greenhouse_gas_radiative_efficiency"],0.00038864402860869495, specie="World CH4")
         f.calculate_iirf0()
