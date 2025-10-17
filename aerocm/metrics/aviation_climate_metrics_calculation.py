@@ -1,11 +1,6 @@
 """ Module containing generic climate metrics functions """
-import numpy as np
-import xarray as xr
 import warnings
 from collections.abc import Callable
-from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
-from aerocm.climate_models.lwe_climate_model import LWEClimateModel
-from aerocm.climate_models.fair_climate_model import FairClimateModel, FairRunner
 from aerocm.utils.classes import ClimateModel
 from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
 from aerocm.utils.functions import emission_profile_function
@@ -20,37 +15,20 @@ class AviationClimateMetricsCalculation:
     -------------
     >>> import numpy as np
     >>> from aerocm.metrics.aviation_climate_metrics_calculation import AviationClimateMetricsCalculation
-    >>> start_year = 1940
-    >>> end_year = 2050
     >>> climate_model = "FaIR"
-    >>> species_inventory = {
-    ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
-    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e-3,  # in W/m^2
-    ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "Soot": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "Sulfur": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ... }
-    >>> species_settings = {
-    ...     "CO2": {"sensitivity_rf": 1.0, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ...     "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
-    ...     "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
-    ...     "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
-    ...     "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ...     "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ...     "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ... }
-    >>> model_settings = {"tcre": 0.00045}
+    >>> start_year = 1940
+    >>> time_horizon = [20, 50, 100]
+    >>> species_profile = 'pulse'
+    >>> profile_start_year = 2020
+    >>> species_list = ["Contrails", "Soot"]
     >>> results = AviationClimateMetricsCalculation(
     ...     climate_model,
     ...     start_year,
-    ...     end_year,
-    ...     species_inventory,
-    ...     species_settings,
-    ...     model_settings
-    ... ).run(return_xr=True)
-    >>> plot_simulation_results(results, data_var="temperature_change", species=["CO2", "Non-CO2"], stacked=True)
+    ...     time_horizon,
+    ...     species_profile,
+    ...     profile_start_year,
+    ...     species_list
+    ... ).run()
     """
 
     # --- Variables for validation ---
@@ -62,18 +40,16 @@ class AviationClimateMetricsCalculation:
             self,
             climate_model: str | ClimateModel | Callable,
             start_year: int,
-            metrics_list: list,
-            time_horizon: int | float | list,
-            species_profile: dict,
+            time_horizon: int | list,
+            species_profile: str,
             profile_start_year: int | None = None,
-            species_list: list | None = None,
+            species_list: list = [],
             species_inventory: dict | None = None,
             species_settings: dict | None = None,
             model_settings: dict | None = None
     ):
         self.climate_model = climate_model
         self.start_year = start_year
-        self.metrics_list = metrics_list
         self.time_horizon = time_horizon
         self.species_profile = species_profile
         self.profile_start_year = profile_start_year
@@ -86,25 +62,19 @@ class AviationClimateMetricsCalculation:
         self.validate_model_profile()
         # Other checks (e.g. model and species settings) are done directly in the selected climate model
 
-    def run(self, return_xr: bool = False) -> dict | xr.Dataset:
+    def run(self, ) -> dict:
         """
         Run the climate metric calculation.
 
-       Parameters
-        ----------
-        return_xr : bool
-            If True, return results as an xarray Dataset. Default is False (returns a dictionary).
-
         Returns
         -------
-        dict or xr.Dataset
-            Results of the climate simulation.
+        dict
+            Results of the climate metrics calculation.
         """
 
         # --- Extract simulation parameters ---
         climate_model = self.climate_model
         start_year = self.start_year
-        metrics_list = self.metrics_list
         time_horizon = self.time_horizon
         species_profile = self.species_profile
         profile_start_year = self.profile_start_year
@@ -175,9 +145,9 @@ class AviationClimateMetricsCalculation:
                 for specie in species_list
             }
         elif species_profile == "scenario":
-            co2_inventory = species_inventory["CO2"]
-            non_co2_inventory = {specie: params for specie, params in species_inventory.items()}
-            species_list = list(species_inventory.keys())
+            co2_inventory = {"CO2": species_inventory["CO2"]}
+            non_co2_inventory = {specie: params for specie, params in species_inventory.items() if specie != 'CO2'}
+            species_list = [k for k in species_inventory.keys() if k != "CO2"]
 
         if species_profile != "scenario":
             end_year = profile_start_year + time_horizon_max
@@ -188,7 +158,6 @@ class AviationClimateMetricsCalculation:
             end_year = size + start_year - 1
 
         # -- Run model for CO2 ---
-        full_co2_climate_simulation_results = {}
         full_co2_climate_simulation_results = AviationClimateSimulation(
             climate_model=climate_model,
             start_year=start_year,
@@ -198,14 +167,15 @@ class AviationClimateMetricsCalculation:
             model_settings=model_settings).run()
 
         # -- Run model for all species ---
-        full_non_co2_climate_simulation_results = {}
-        full_non_co2_climate_simulation_results = AviationClimateSimulation(
+        full_non_co2_climate_simulation = AviationClimateSimulation(
             climate_model=climate_model,
             start_year=start_year,
             end_year=end_year,
             species_inventory=non_co2_inventory,
             species_settings=species_settings,
-            model_settings=model_settings).run()
+            model_settings=model_settings)
+        full_non_co2_climate_simulation_results = full_non_co2_climate_simulation.run()
+        non_co2_species_settings = full_non_co2_climate_simulation.species_settings
 
         # -- Remove useless data and divide by unit values --
         co2_climate_simulation_results = {
@@ -241,7 +211,7 @@ class AviationClimateMetricsCalculation:
                 agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr = absolute_metrics(
                     non_co2_climate_simulation_results[specie]["radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
                     non_co2_climate_simulation_results[specie]["effective_radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
-                    1.0, # TODO
+                    non_co2_species_settings[specie]["efficacy_erf"],
                     non_co2_climate_simulation_results[specie]["temperature"][:end_year-start_year+1-(time_horizon_max-H)],
                     H)
                 absolute_metrics_results_H[specie] = {"agwp_rf": agwp_rf,
@@ -283,7 +253,9 @@ class AviationClimateMetricsCalculation:
 
             relative_metrics_results += [relative_metrics_results_H]
 
-        return absolute_metrics_results, relative_metrics_results
+        results_dict = {"Relative metrics" : relative_metrics_results, "Absolute metrics": absolute_metrics_results}
+
+        return results_dict
 
 
     def validate_model_profile(self):
