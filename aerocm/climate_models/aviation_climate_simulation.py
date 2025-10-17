@@ -117,7 +117,9 @@ class AviationClimateSimulation:
 
         if known_model:
             species_settings = add_default_species_settings(climate_model, species_settings)
+            self.species_settings = species_settings # For accessing to the final species settings
             model_settings = add_default_model_settings(climate_model, model_settings)
+            self.model_settings = model_settings  # For accessing to the final model settings
 
         if climate_model == FairClimateModel and known_model:
             # -- Calculate background temperature and ERF only once here to improve calculation time ---
