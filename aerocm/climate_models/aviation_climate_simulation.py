@@ -24,7 +24,7 @@ class AviationClimateSimulation:
     >>> climate_model = "GWP*"
     >>> species_inventory = {
     ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
-    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e-3,  # in W/m^2
+    ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e9,  # in km
     ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
