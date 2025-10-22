@@ -64,7 +64,7 @@ class AviationClimateMetricsCalculation:
         self.validate_model_profile()
         # Other checks (e.g. model and species settings) are done directly in the selected climate model
 
-    def run(self, return_df: bool = False) -> dict | pd.DataFrame:
+    def run(self, include_absolute_metrics: bool = False, return_df: bool = False) -> dict | pd.DataFrame:
         """
         Run the climate metric calculation.
 
@@ -194,9 +194,10 @@ class AviationClimateMetricsCalculation:
         results = {}
 
         for H in time_horizon:
-            results_H = {}
 
             # --- Absolute metrics ---
+            results_H_absolute = {}
+
             # CO2
             agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, agtp_co2, iagtp_co2, atr_co2 = absolute_metrics(
                 co2_climate_simulation_results["CO2"]["radiative_forcing"][
@@ -209,7 +210,7 @@ class AviationClimateMetricsCalculation:
                 H
             )
 
-            results_H["CO2"] = {
+            results_H_absolute["CO2"] = {
                 "agwp_rf": agwp_rf_co2,
                 "agwp_erf": agwp_erf_co2,
                 "aegwp_rf": aegwp_rf_co2,
@@ -231,7 +232,8 @@ class AviationClimateMetricsCalculation:
                     :end_year - start_year + 1 - (time_horizon_max - H)],
                     H
                 )
-                results_H[specie] = {
+
+                results_H_absolute[specie] = {
                     "agwp_rf": agwp_rf,
                     "agwp_erf": agwp_erf,
                     "aegwp_rf": aegwp_rf,
@@ -242,25 +244,27 @@ class AviationClimateMetricsCalculation:
                 }
 
             # --- Relative metrics ---
+            results_H_relative = {}
+
             for specie in species_list + ["CO2"]:
                 gwp_rf, gwp_erf, egwp_rf, egwp_erf, gtp, igtp, ratr = relative_metrics(
-                    results_H["CO2"]["agwp_rf"],
-                    results_H["CO2"]["agwp_erf"],
-                    results_H["CO2"]["aegwp_rf"],
-                    results_H["CO2"]["aegwp_erf"],
-                    results_H["CO2"]["agtp"],
-                    results_H["CO2"]["iagtp"],
-                    results_H["CO2"]["atr"],
-                    results_H[specie]["agwp_rf"],
-                    results_H[specie]["agwp_erf"],
-                    results_H[specie]["aegwp_rf"],
-                    results_H[specie]["aegwp_erf"],
-                    results_H[specie]["agtp"],
-                    results_H[specie]["iagtp"],
-                    results_H[specie]["atr"]
+                    results_H_absolute["CO2"]["agwp_rf"],
+                    results_H_absolute["CO2"]["agwp_erf"],
+                    results_H_absolute["CO2"]["aegwp_rf"],
+                    results_H_absolute["CO2"]["aegwp_erf"],
+                    results_H_absolute["CO2"]["agtp"],
+                    results_H_absolute["CO2"]["iagtp"],
+                    results_H_absolute["CO2"]["atr"],
+                    results_H_absolute[specie]["agwp_rf"],
+                    results_H_absolute[specie]["agwp_erf"],
+                    results_H_absolute[specie]["aegwp_rf"],
+                    results_H_absolute[specie]["aegwp_erf"],
+                    results_H_absolute[specie]["agtp"],
+                    results_H_absolute[specie]["iagtp"],
+                    results_H_absolute[specie]["atr"]
                 )
 
-                results_H[specie].update({
+                results_H_relative[specie] = {
                     "gwp_rf": gwp_rf,
                     "gwp_erf": gwp_erf,
                     "egwp_rf": egwp_rf,
@@ -268,9 +272,18 @@ class AviationClimateMetricsCalculation:
                     "gtp": gtp,
                     "igtp": igtp,
                     "ratr": ratr
-                })
+                }
 
-            results[H] = results_H
+            if include_absolute_metrics:
+                results[H] = {
+                    specie: {
+                        **results_H_absolute[specie],
+                        **results_H_relative[specie]
+                    }
+                    for specie in species_list + ["CO2"]
+                }
+            else:
+                results[H] = results_H_relative
 
         if return_df:
             flatten_dicts = []
