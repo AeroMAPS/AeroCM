@@ -21,7 +21,7 @@ $ pip install --upgrade aerocm
 If you also want to run the Jupyter notebooks developed for the reference paper, use the following command:
 
 ``` {.bash}
-$ pip install --upgrade aerocm[paper]
+$ pip install --upgrade aerocm[publications]
 ```
 
 
@@ -39,7 +39,7 @@ $ poetry install
 If you also want to run the Jupyter notebooks developed for the reference paper, use the following command:
 
 ``` {.bash}
-$ poetry install -E paper
+$ poetry install -E publications
 ```
 
 The use of requirements files is also possible.
