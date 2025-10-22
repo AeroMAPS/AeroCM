@@ -28,7 +28,7 @@ geographiclib = {version = "2.1", optional = true}
 scipy = {version = "1.15.3", optional = true}
 
 [tool.poetry.extras]
-paper = ["salib", "cartopy", "scikit-learn", "seaborn", "netCDF4", "openpyxl", "geographiclib", "scipy"]
+publications = ["salib", "cartopy", "scikit-learn", "seaborn", "netCDF4", "openpyxl", "geographiclib", "scipy"]
 
 [build-system]
 requires = ["poetry-core"]
