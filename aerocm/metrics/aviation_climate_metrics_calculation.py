@@ -283,7 +283,12 @@ class AviationClimateMetricsCalculation:
                     for specie in species_list + ["CO2"]
                 }
             else:
-                results[H] = results_H_relative
+                results[H] = {
+                    specie: {
+                        **results_H_relative[specie]
+                    }
+                    for specie in species_list  # Exclude CO2 if only relative metrics are requested (values are 1.0)
+                }
 
         if return_df:
             flatten_dicts = []
