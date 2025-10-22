@@ -1,5 +1,7 @@
 """ Module containing generic climate metrics functions """
 import warnings
+
+import pandas as pd
 from collections.abc import Callable
 from aerocm.utils.classes import ClimateModel
 from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
@@ -62,7 +64,7 @@ class AviationClimateMetricsCalculation:
         self.validate_model_profile()
         # Other checks (e.g. model and species settings) are done directly in the selected climate model
 
-    def run(self, ) -> dict:
+    def run(self, return_df: bool = False) -> dict | pd.DataFrame:
         """
         Run the climate metric calculation.
 
@@ -188,75 +190,98 @@ class AviationClimateMetricsCalculation:
             for specie in species_list
         }
 
-        # -- Calculate absolute metrics ---
-        absolute_metrics_results = []
+        # --- Calculate metrics for each time horizon ---
+        results = {}
+
         for H in time_horizon:
-            absolute_metrics_results_H = {}
+            results_H = {}
+
+            # --- Absolute metrics ---
             # CO2
             agwp_rf_co2, agwp_erf_co2, aegwp_rf_co2, aegwp_erf_co2, agtp_co2, iagtp_co2, atr_co2 = absolute_metrics(
-                co2_climate_simulation_results["CO2"]["radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
-                co2_climate_simulation_results["CO2"]["effective_radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
+                co2_climate_simulation_results["CO2"]["radiative_forcing"][
+                :end_year - start_year + 1 - (time_horizon_max - H)],
+                co2_climate_simulation_results["CO2"]["effective_radiative_forcing"][
+                :end_year - start_year + 1 - (time_horizon_max - H)],
                 1.0,
-                co2_climate_simulation_results["CO2"]["temperature"][:end_year-start_year+1-(time_horizon_max-H)],
-                H)
-            absolute_metrics_results_H["CO2"] = {"agwp_rf": agwp_rf_co2,
-                                                 "agwp_erf": agwp_erf_co2,
-                                                 "aegwp_rf": aegwp_rf_co2,
-                                                 "aegwp_erf": aegwp_erf_co2,
-                                                 "agtp": agtp_co2,
-                                                 "iagtp": iagtp_co2,
-                                                 "atr": atr_co2}
-            # Species
+                co2_climate_simulation_results["CO2"]["temperature"][
+                :end_year - start_year + 1 - (time_horizon_max - H)],
+                H
+            )
+
+            results_H["CO2"] = {
+                "agwp_rf": agwp_rf_co2,
+                "agwp_erf": agwp_erf_co2,
+                "aegwp_rf": aegwp_rf_co2,
+                "aegwp_erf": aegwp_erf_co2,
+                "agtp": agtp_co2,
+                "iagtp": iagtp_co2,
+                "atr": atr_co2
+            }
+
+            # Non-CO2 species
             for specie in species_list:
                 agwp_rf, agwp_erf, aegwp_rf, aegwp_erf, agtp, iagtp, atr = absolute_metrics(
-                    non_co2_climate_simulation_results[specie]["radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
-                    non_co2_climate_simulation_results[specie]["effective_radiative_forcing"][:end_year-start_year+1-(time_horizon_max-H)],
+                    non_co2_climate_simulation_results[specie]["radiative_forcing"][
+                    :end_year - start_year + 1 - (time_horizon_max - H)],
+                    non_co2_climate_simulation_results[specie]["effective_radiative_forcing"][
+                    :end_year - start_year + 1 - (time_horizon_max - H)],
                     non_co2_species_settings[specie]["efficacy_erf"],
-                    non_co2_climate_simulation_results[specie]["temperature"][:end_year-start_year+1-(time_horizon_max-H)],
-                    H)
-                absolute_metrics_results_H[specie] = {"agwp_rf": agwp_rf,
-                                                     "agwp_erf": agwp_erf,
-                                                     "aegwp_rf": aegwp_rf,
-                                                     "aegwp_erf": aegwp_erf,
-                                                     "agtp": agtp,
-                                                     "iagtp": iagtp,
-                                                     "atr": atr}
-            absolute_metrics_results += [absolute_metrics_results_H]
+                    non_co2_climate_simulation_results[specie]["temperature"][
+                    :end_year - start_year + 1 - (time_horizon_max - H)],
+                    H
+                )
+                results_H[specie] = {
+                    "agwp_rf": agwp_rf,
+                    "agwp_erf": agwp_erf,
+                    "aegwp_rf": aegwp_rf,
+                    "aegwp_erf": aegwp_erf,
+                    "agtp": agtp,
+                    "iagtp": iagtp,
+                    "atr": atr
+                }
 
-        # -- Calculate relative metrics ---
-        relative_metrics_results = []
-        for k in range(0, len(time_horizon)):
-            relative_metrics_results_H = {}
-            for specie in species_list:
+            # --- Relative metrics ---
+            for specie in species_list + ["CO2"]:
                 gwp_rf, gwp_erf, egwp_rf, egwp_erf, gtp, igtp, ratr = relative_metrics(
-                    absolute_metrics_results[k]["CO2"]["agwp_rf"],
-                    absolute_metrics_results[k]["CO2"]["agwp_erf"],
-                    absolute_metrics_results[k]["CO2"]["aegwp_rf"],
-                    absolute_metrics_results[k]["CO2"]["aegwp_erf"],
-                    absolute_metrics_results[k]["CO2"]["agtp"],
-                    absolute_metrics_results[k]["CO2"]["iagtp"],
-                    absolute_metrics_results[k]["CO2"]["atr"],
-                    absolute_metrics_results[k][specie]["agwp_rf"],
-                    absolute_metrics_results[k][specie]["agwp_erf"],
-                    absolute_metrics_results[k][specie]["aegwp_rf"],
-                    absolute_metrics_results[k][specie]["aegwp_erf"],
-                    absolute_metrics_results[k][specie]["agtp"],
-                    absolute_metrics_results[k][specie]["iagtp"],
-                    absolute_metrics_results[k][specie]["atr"])
-                relative_metrics_results_H[specie] = {"gwp_rf": gwp_rf,
-                                                      "gwp_erf": gwp_erf,
-                                                      "egwp_rf": egwp_rf,
-                                                      "egwp_erf": egwp_erf,
-                                                      "gtp": gtp,
-                                                      "igtp": igtp,
-                                                      "ratr": ratr}
+                    results_H["CO2"]["agwp_rf"],
+                    results_H["CO2"]["agwp_erf"],
+                    results_H["CO2"]["aegwp_rf"],
+                    results_H["CO2"]["aegwp_erf"],
+                    results_H["CO2"]["agtp"],
+                    results_H["CO2"]["iagtp"],
+                    results_H["CO2"]["atr"],
+                    results_H[specie]["agwp_rf"],
+                    results_H[specie]["agwp_erf"],
+                    results_H[specie]["aegwp_rf"],
+                    results_H[specie]["aegwp_erf"],
+                    results_H[specie]["agtp"],
+                    results_H[specie]["iagtp"],
+                    results_H[specie]["atr"]
+                )
 
-            relative_metrics_results += [relative_metrics_results_H]
+                results_H[specie].update({
+                    "gwp_rf": gwp_rf,
+                    "gwp_erf": gwp_erf,
+                    "egwp_rf": egwp_rf,
+                    "egwp_erf": egwp_erf,
+                    "gtp": gtp,
+                    "igtp": igtp,
+                    "ratr": ratr
+                })
 
-        results_dict = {"Relative metrics" : relative_metrics_results, "Absolute metrics": absolute_metrics_results}
+            results[H] = results_H
 
-        return results_dict
+        if return_df:
+            flatten_dicts = []
+            for H, species_dict in results.items():
+                for specie, metrics in species_dict.items():
+                    flatten_dict = {"time_horizon": H, "species": specie, **{k: float(v) for k, v in metrics.items()}}
+                    flatten_dicts.append(flatten_dict)
 
+            results = pd.DataFrame(flatten_dicts)
+
+        return results
 
     def validate_model_profile(self):
         model = self.climate_model

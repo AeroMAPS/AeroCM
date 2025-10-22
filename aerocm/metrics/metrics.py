@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def co2_ipcc_pulse_absolute_metrics(time_horizon):
+def co2_ipcc_pulse_absolute_metrics(time_horizon: int) -> tuple:
     co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
     air_molar_mass = 28.97e-3  # [kg/mol]
     atmosphere_total_mass = 5.1352e18  # [kg]
@@ -57,12 +57,12 @@ def co2_ipcc_pulse_absolute_metrics(time_horizon):
 
 
 def absolute_metrics(
-    radiative_forcing,
-    effective_radiative_forcing,
-    efficacy_erf,
-    temperature,
-    time_horizon,
-):
+        radiative_forcing: np.ndarray | list,
+        effective_radiative_forcing: np.ndarray | list,
+        efficacy_erf: float,
+        temperature: np.ndarray | list,
+        time_horizon: int,
+) -> tuple:
 
     agwp_rf = np.sum(radiative_forcing)
     agwp_erf = np.sum(effective_radiative_forcing)
@@ -77,21 +77,21 @@ def absolute_metrics(
 
 
 def relative_metrics(
-    agwp_rf_co2,
-    agwp_erf_co2,
-    aegwp_rf_co2,
-    aegwp_erf_co2,
-    agtp_co2,
-    iagtp_co2,
-    atr_co2,
-    agwp_rf,
-    agwp_erf,
-    aegwp_rf,
-    aegwp_erf,
-    agtp,
-    iagtp,
-    atr,
-):
+    agwp_rf_co2: float,
+    agwp_erf_co2: float,
+    aegwp_rf_co2: float,
+    aegwp_erf_co2: float,
+    agtp_co2: float,
+    iagtp_co2: float,
+    atr_co2: float,
+    agwp_rf: float,
+    agwp_erf: float,
+    aegwp_rf: float,
+    aegwp_erf: float,
+    agtp: float,
+    iagtp: float,
+    atr: float,
+) -> tuple:
 
     gwp_rf = agwp_rf / agwp_rf_co2
     gwp_erf = agwp_erf / agwp_erf_co2
