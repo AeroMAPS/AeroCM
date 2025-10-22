@@ -22,7 +22,7 @@ class GWPStarClimateModel(ClimateModel):
         "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
                       "ratio_erf_rf": {"type": float, "default": 0.42},
                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.6e-12},
+        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
                                  "ratio_erf_rf": {"type": float, "default": 1.37},
                                  "efficacy_erf": {"type": float, "default": 1.0}},
         "NOx - CH4 decrease and induced": {"sensitivity_rf": {"type": float, "default": -6.1e-12},
