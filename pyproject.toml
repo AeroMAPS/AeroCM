@@ -9,7 +9,7 @@ readme = "README.md"
 license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
-python = ">=3.10, <3.11"
+python = ">=3.11.5,<3.12"
 numpy = "2.2.6"
 pandas = "2.3.3"
 fair = "2.2.2"
@@ -26,9 +26,11 @@ netCDF4 = {version = "1.7.2", optional = true}
 openpyxl = {version = "3.1.5", optional = true}
 geographiclib = {version = "2.1", optional = true}
 scipy = {version = "1.15.3", optional = true}
+openairclim = {git = "https://github.com/dlr-pa/oac.git", optional = true}
 
 [tool.poetry.extras]
 paper = ["salib", "cartopy", "scikit-learn", "seaborn", "netCDF4", "openpyxl", "geographiclib", "scipy"]
+oac = ["openairclim", "cartopy", "seaborn", "netCDF4", "openpyxl", "geographiclib"]
 
 [build-system]
 requires = ["poetry-core"]
