@@ -582,7 +582,8 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
             constant_ch4 = (rcp_data_df["CH4"].values[-1]) * np.ones(end_year - RCP_END_YEAR)
             background_species_quantities["background_CH4"] = np.append(background_species_quantities["background_CH4"],
                                                                         constant_ch4)
-            print(background_species_quantities)
+
+            # Warning
             warnings.warn("RCP scenario has no emission data after 2500. "
                           "Constant emissions were considered for after 2500.")
 
