@@ -575,12 +575,12 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
             # World CO2
             constant_co2 = (rcp_data_df["FossilCO2"].values[-1] + rcp_data_df["OtherCO2"].values[-1]) * np.ones(
                 end_year - RCP_END_YEAR)
-            background_species_quantities["background_CO2"] = np.append(background_species_quantities["background_CO2"],
+            background_species_quantities["background_CO2"] = np.concatenate(background_species_quantities["background_CO2"],
                                                                         constant_co2)
 
             # World CH4
             constant_ch4 = (rcp_data_df["CH4"].values[-1]) * np.ones(end_year - RCP_END_YEAR)
-            background_species_quantities["background_CH4"] = np.append(background_species_quantities["background_CH4"],
+            background_species_quantities["background_CH4"] = np.concatenate(background_species_quantities["background_CH4"],
                                                                         constant_ch4)
 
             # Warning
