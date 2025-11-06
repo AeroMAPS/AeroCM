@@ -157,9 +157,7 @@ class LWEClimateModel(ClimateModel):
             # for i in range(0, size):
             #     for j in range(0, size):
             #         if i > j:
-            #             start = time.time()
             #             agwp_rf_co2_1, *rest = co2_ipcc_pulse_absolute_metrics(i - j + 1)
-            #             print("Matrix creation:", time.time() - start)
             #             agwp_rf_co2, *rest = co2_ipcc_pulse_absolute_metrics(i - j)
             #             F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
             #
