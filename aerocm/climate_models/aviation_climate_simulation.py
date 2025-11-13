@@ -3,10 +3,10 @@ import numpy as np
 from copy import deepcopy
 import xarray as xr
 from collections.abc import Callable
+from aerocm.climate_models.ipcc_climate_model import IPCCClimateModel
 from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
 from aerocm.climate_models.lwe_climate_model import LWEClimateModel
-from aerocm.climate_models.fair_climate_model import FairClimateModel, background_species_quantities_function, \
-    FairRunner
+from aerocm.climate_models.fair_climate_model import FairClimateModel, FairRunner
 from aerocm.utils.classes import ClimateModel
 
 
@@ -53,7 +53,7 @@ class AviationClimateSimulation:
     """
 
     # --- Variables for validation ---
-    available_climate_models = ['GWP*', 'LWE', 'FaIR']
+    available_climate_models = ['IPCC', 'GWP*', 'LWE', 'FaIR']
 
     def __init__(
             self,
@@ -105,7 +105,10 @@ class AviationClimateSimulation:
         model_settings = self.model_settings.copy()
 
         known_model = False
-        if climate_model == "GWP*":
+        if climate_model == 'IPCC':
+            climate_model = IPCCClimateModel
+            known_model = True
+        elif climate_model == "GWP*":
             climate_model = GWPStarClimateModel
             known_model = True
         elif climate_model == "LWE":

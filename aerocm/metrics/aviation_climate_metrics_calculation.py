@@ -34,7 +34,7 @@ class AviationClimateMetricsCalculation:
     """
 
     # --- Variables for validation ---
-    available_climate_models = ['GWP*', 'LWE', 'FaIR']
+    available_climate_models = ['IPCC', 'GWP*', 'LWE', 'FaIR']
 
     available_species_profile = ['pulse', 'step', 'combined', 'scenario']
 
