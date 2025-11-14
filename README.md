@@ -15,13 +15,13 @@ The use of the Python Package Index ([PyPI](https://pypi.org/)) is the simplest 
 You can install the latest version with this command:
 
 ``` {.bash}
-$ pip install --upgrade aerocm
+pip install --upgrade aerocm
 ```
 
 If you also want to run the Jupyter notebooks developed for the reference paper, use the following command:
 
 ``` {.bash}
-$ pip install --upgrade aerocm[publications]
+pip install --upgrade aerocm[publications]
 ```
 
 
@@ -33,13 +33,13 @@ As a developer, the use of poetry is recommended.
 You can install the required packages with this command:
 
 ``` {.bash}
-$ poetry install
+poetry install
 ```
 
 If you also want to run the Jupyter notebooks developed for the reference paper, use the following command:
 
 ``` {.bash}
-$ poetry install -E publications
+poetry install -E publications
 ```
 
 The use of requirements files is also possible.

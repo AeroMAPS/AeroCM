@@ -31,5 +31,5 @@ scipy = {version = "1.15.3", optional = true}
 publications = ["salib", "cartopy", "scikit-learn", "seaborn", "netCDF4", "openpyxl", "geographiclib", "scipy"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
