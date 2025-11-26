@@ -6,9 +6,21 @@ repo_name: AeroCM
 nav:
   - Home: index.md
   - Installation: books/installation.md
-  - API Reference:
+  - Python API:
       - Overview: api/index.md
-  - AeroCM Code and Models:
+      - Climate Simulation: api/aerocm.climate_models.aviation_climate_simulation.md
+      - Climate Metrics: api/aerocm.metrics.aviation_climate_metrics_calculation.md
+      - Available Climate Models:
+          - FaIR: api/aerocm.climate_models.fair_climate_model.md
+          - GWP*: api/aerocm.climate_models.gwpstar_climate_model.md
+          - LWE: api/aerocm.climate_models.lwe_climate_model.md
+          - IPCC: api/aerocm.climate_models.ipcc_climate_model.md
+          - Template for developers: api/aerocm.climate_models.template.md
+      - Utilities:
+          - Helper functions: api/aerocm.utils.functions.md
+  - Tutorials:
+      - Run a Climate Simulation: notebooks/example_climate_simulation.ipynb
+      - Calculate Climate Metrics: notebooks/example_climate_metrics.ipynb
 
 theme:
   name: material

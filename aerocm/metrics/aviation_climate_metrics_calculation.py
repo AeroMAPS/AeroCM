@@ -1,4 +1,6 @@
-""" Module containing generic climate metrics functions """
+"""
+Main interface to calculate climate metrics for aviation emissions using different climate models.
+"""
 import warnings
 
 import pandas as pd

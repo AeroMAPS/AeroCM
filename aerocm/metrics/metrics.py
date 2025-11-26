@@ -1,5 +1,5 @@
 """
-Module to calculate absolute and relative climate metrics for greenhouse gases.
+Helper functions to calculate absolute and relative climate metrics.
 """
 
 import numpy as np

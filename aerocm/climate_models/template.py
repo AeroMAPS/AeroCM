@@ -11,8 +11,8 @@ from aerocm.utils.classes import ClimateModel
 class MyClimateModel(ClimateModel):
     """ Template class for climate model implementations.
 
-    Example usage
-    -------------
+    Example
+    -------
     >>> import numpy as np
     >>> from aerocm.climate_models.template import MyClimateModel
     >>> start_year = 2020
