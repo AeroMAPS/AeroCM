@@ -608,8 +608,10 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
 
     Example
     -------
+    ```python
     >>> from aerocm.climate_models.fair_climate_model import background_species_quantities_function
     >>> background_species_quantities = background_species_quantities_function(2020, 2050, 'RCP45')
+    ```
     """
 
     # --- Validate inputs ---

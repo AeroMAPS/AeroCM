@@ -38,6 +38,7 @@ class AviationClimateSimulation:
 
     Example
     -------
+    ```python
     >>> import numpy as np
     >>> from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
     >>> from aerocm.utils.functions import plot_simulation_results
@@ -72,6 +73,7 @@ class AviationClimateSimulation:
     ...     model_settings
     ... ).run(return_xr=True)
     >>> plot_simulation_results(results, data_var="temperature_change", species=["CO2", "Non-CO2"], stacked=True)
+    ```
     """
 
     # --- Variables for validation ---

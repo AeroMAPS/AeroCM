@@ -4,7 +4,7 @@ This module contains the GWP* climate model implementation.
 
 import numpy as np
 import pandas as pd
-from aerocm.metrics.metrics import co2_ipcc_pulse_absolute_metrics
+from aerocm.metrics.metrics_utils import co2_ipcc_pulse_absolute_metrics
 from aerocm.utils.classes import ClimateModel
 
 

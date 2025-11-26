@@ -1,6 +1,6 @@
-# `aerocm.metrics.metrics`
+# `aerocm.metrics.metrics_utils`
 
-::: aerocm.metrics.aviation_climate_metrics_calculation
+::: aerocm.metrics.metrics_utils
     handler: python
     options:
       docstring_style: numpy

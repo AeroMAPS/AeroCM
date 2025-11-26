@@ -13,6 +13,7 @@ class MyClimateModel(ClimateModel):
 
     Example
     -------
+    ```python
     >>> import numpy as np
     >>> from aerocm.climate_models.template import MyClimateModel
     >>> start_year = 2020
@@ -30,6 +31,7 @@ class MyClimateModel(ClimateModel):
     ...     model_settings
     ... )
     >>> results = climate_model.run(return_df=True)
+    ```
     """
 
     # --- Variables for validation ---

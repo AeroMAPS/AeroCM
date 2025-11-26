@@ -8,7 +8,7 @@ from collections.abc import Callable
 from aerocm.utils.classes import ClimateModel
 from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
 from aerocm.utils.functions import emission_profile_function
-from aerocm.metrics.metrics import absolute_metrics, relative_metrics
+from aerocm.metrics.metrics_utils import absolute_metrics, relative_metrics
 
 
 class AviationClimateMetricsCalculation:
@@ -46,6 +46,7 @@ class AviationClimateMetricsCalculation:
 
     Example
     -------
+    ```python
     >>> import numpy as np
     >>> from aerocm.metrics.aviation_climate_metrics_calculation import AviationClimateMetricsCalculation
     >>> climate_model = "FaIR"
@@ -62,6 +63,7 @@ class AviationClimateMetricsCalculation:
     ...     profile_start_year,
     ...     species_list
     ... ).run()
+    ```
     """
 
     # --- Variables for validation ---

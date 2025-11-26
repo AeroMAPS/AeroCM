@@ -18,6 +18,8 @@ nav:
           - Template for developers: api/aerocm.climate_models.template.md
       - Utilities:
           - Helper functions: api/aerocm.utils.functions.md
+          - Metrics utils: api/aerocm.metrics.metrics_utils.md
+          - Super class for climate models: api/aerocm.utils.classes.md
   - Tutorials:
       - Run a Climate Simulation: notebooks/example_climate_simulation.ipynb
       - Calculate Climate Metrics: notebooks/example_climate_metrics.ipynb
