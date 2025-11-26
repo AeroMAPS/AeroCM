@@ -1,7 +1,31 @@
+"""
+Module to calculate absolute and relative climate metrics for greenhouse gases.
+"""
+
 import numpy as np
 
 
 def co2_ipcc_pulse_absolute_metrics(time_horizon: int) -> tuple:
+    """
+    Calculate absolute climate metrics for a CO2 pulse emission based on IPCC.
+
+    Parameters
+    ----------
+    time_horizon : int
+        Time horizon in years for the metrics calculation.
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - agwp_rf_co2 : float
+        - agwp_erf_co2 : float
+        - aegwp_rf_co2 : float
+        - aegwp_erf_co2 : float
+        - agtp_co2 : float
+        - iagtp_co2 : float
+        - atr_co2 : float
+    """
     co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
     air_molar_mass = 28.97e-3  # [kg/mol]
     atmosphere_total_mass = 5.1352e18  # [kg]
@@ -63,6 +87,34 @@ def absolute_metrics(
         temperature: np.ndarray | list,
         time_horizon: int,
 ) -> tuple:
+    """
+    Calculate absolute climate metrics for a given greenhouse gas.
+
+    Parameters
+    ----------
+    radiative_forcing : np.ndarray | list
+        Radiative forcing time series.
+    effective_radiative_forcing : np.ndarray | list
+        Effective radiative forcing time series.
+    efficacy_erf : float
+        Efficacy based on effective radiative forcing.
+    temperature : np.ndarray | list
+        Temperature time series.
+    time_horizon : int
+        Time horizon in years for the metrics calculation.
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - agwp_rf : float
+        - agwp_erf : float
+        - aegwp_rf : float
+        - aegwp_erf : float
+        - agtp : float
+        - iagtp : float
+        - atr : float
+    """
 
     agwp_rf = np.sum(radiative_forcing)
     agwp_erf = np.sum(effective_radiative_forcing)
@@ -92,6 +144,52 @@ def relative_metrics(
     iagtp: float,
     atr: float,
 ) -> tuple:
+    """
+    Calculate relative climate metrics for a given greenhouse gas compared to CO2.
+
+    Parameters
+    ----------
+    agwp_rf_co2 : float
+        AGWP based on radiative forcing for CO2.
+    agwp_erf_co2 : float
+        AGWP based on effective radiative forcing for CO2.
+    aegwp_rf_co2 : float
+        AEGWP based on radiative forcing for CO2.
+    aegwp_erf_co2 : float
+        AEGWP based on effective radiative forcing for CO2.
+    agtp_co2 : float
+        AGTP for CO2.
+    iagtp_co2 : float
+        iAGTP for CO2.
+    atr_co2 : float
+        ATR for CO2.
+    agwp_rf : float
+        AGWP based on radiative forcing for the greenhouse gas.
+    agwp_erf : float
+        AGWP based on effective radiative forcing for the greenhouse gas.
+    aegwp_rf : float
+        AEGWP based on radiative forcing for the greenhouse gas.
+    aegwp_erf : float
+        AEGWP based on effective radiative forcing for the greenhouse gas.
+    agtp : float
+        AGTP for the greenhouse gas.
+    iagtp : float
+        iAGTP for the greenhouse gas.
+    atr : float
+        ATR for the greenhouse gas.
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - gwp_rf : float
+        - gwp_erf : float
+        - egwp_rf : float
+        - egwp_erf : float
+        - gtp : float
+        - igtp : float
+        - ratr : float
+    """
 
     gwp_rf = agwp_rf / agwp_rf_co2
     gwp_erf = agwp_erf / agwp_erf_co2

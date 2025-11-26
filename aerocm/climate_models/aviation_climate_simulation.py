@@ -14,8 +14,28 @@ class AviationClimateSimulation:
     """
     Class to run a climate simulation for aviation emissions using a specified climate model.
 
-    Example usage
-    -------------
+    Parameters
+    ----------
+    climate_model : str | ClimateModel | Callable
+        The climate model to use. Can be a registered name ('IPCC', 'GWP*', 'LWE', 'FaIR'), a subclass of ClimateModel, or a callable function
+    start_year : int
+        The starting year of the simulation.
+    end_year : int
+        The ending year of the simulation.
+    species_inventory : dict
+        A dictionary where keys are species names and values are arrays of emissions over time.
+    species_settings : dict, optional
+        A dictionary where keys are species names and values are dictionaries of settings for each species.
+    model_settings : dict, optional
+        A dictionary of settings for the climate model.
+
+    Attributes
+    ----------
+    available_climate_models : list
+        List of registered climate model names.
+
+    Example
+    -------
     >>> import numpy as np
     >>> from aerocm.climate_models.aviation_climate_simulation import AviationClimateSimulation
     >>> from aerocm.utils.functions import plot_simulation_results
@@ -79,7 +99,7 @@ class AviationClimateSimulation:
         """
         Run the climate simulation.
 
-       Parameters
+        Parameters
         ----------
         return_xr : bool
             If True, return results as an xarray Dataset. Default is False (returns a dictionary).
@@ -199,6 +219,10 @@ class AviationClimateSimulation:
         return results
 
     def validate_model(self):
+        """
+        Validate the climate model provided.
+        Specifically, check if it's a registered name, a subclass of ClimateModel, or a callable function.
+        """
         model = self.climate_model
 
         is_registered_name = model in self.available_climate_models
@@ -215,8 +239,14 @@ class AviationClimateSimulation:
 def to_xarray(data: dict, timesteps: list):
     """
     Convert results dictionary to xarray Dataset
-    :param data: dictionary {species: {variable: array of values}}
-    :param years: list of years corresponding to the time dimension
+
+    Parameters
+    ----------
+    data: dict
+        dictionary with species as keys and another dictionary as values,
+        where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arrays as values
+    timesteps: list
+        Years corresponding to the data arrays
     """
     # Extract species and variable names
     species = list(data.keys())  # e.g. 'Aviation CO2', 'Aviation NOx', 'Aviation total'
@@ -236,7 +266,26 @@ def to_xarray(data: dict, timesteps: list):
     )
     return ds
 
-def add_default_species_settings(climate_model, species_settings):
+
+def add_default_species_settings(
+        climate_model: ClimateModel,
+        species_settings: dict | None = None
+):
+    """
+    Complete the species settings with default values from the climate model for the ones that are not provided.
+
+    Parameters
+    ----------
+    climate_model : ClimateModel
+        The climate model class containing available species settings and their default values.
+    species_settings : dict, optional
+        The dictionary of species settings provided by the user. Defaults to None.
+
+    Returns
+    -------
+    dict
+        Updated species settings dictionary with default values filled in.
+    """
 
     # Extract the default values from the available species settings of the climate model
     default_species_settings = {
@@ -259,7 +308,23 @@ def add_default_species_settings(climate_model, species_settings):
 
     return updated_species_settings
 
+
 def add_default_model_settings(climate_model, model_settings):
+    """
+    Complete the model settings with default values from the climate model for the ones that are not provided.
+
+    Parameters
+    ----------
+    climate_model : ClimateModel
+        The climate model class containing available model settings and their default values.
+    model_settings : dict, optional
+        The dictionary of model settings provided by the user. Defaults to None.
+
+    Returns
+    -------
+    dict
+        Updated model settings dictionary with default values filled in.
+    """
 
     # Extract the default values from the available model settings of the climate model
     default_model_settings = {

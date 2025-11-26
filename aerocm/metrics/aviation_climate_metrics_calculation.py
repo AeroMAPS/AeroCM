@@ -13,8 +13,37 @@ class AviationClimateMetricsCalculation:
     """
     Class to calculate climate metrics for aviation emissions using a specified climate model.
 
-    Example usage
-    -------------
+    Parameters
+    ----------
+    climate_model : str | ClimateModel | Callable
+        The climate model to use. Can be a registered name (e.g. "FaIR), an instance of a ClimateModel subclass,
+        or a custom callable function.
+    start_year : int
+        The start year of the simulation.
+    time_horizon : int | list
+        The time horizon(s) for the climate metrics calculation (in years).
+    species_profile : str
+        The type of emission profile to use for non-CO2 species. Options are 'pulse', 'step', 'combined', or 'scenario'.
+    profile_start_year : int | None, optional
+        The year when the emission profile starts. Required for 'pulse', 'step', and 'combined' profiles.
+    species_list : list, optional
+        List of non-CO2 species to include in the calculation (e.g. ["Contrails", "Soot"]).
+    species_inventory : dict | None, optional
+        A dictionary containing emission profiles for each species when using the 'scenario' profile.
+    species_settings : dict | None, optional
+        A dictionary containing settings for each species.
+    model_settings : dict | None, optional
+        A dictionary containing settings for the climate model.
+
+    Attributes
+    ----------
+    available_climate_models : list
+        List of supported climate model names.
+    available_species_profile : list
+        List of supported species profile types.
+
+    Example
+    -------
     >>> import numpy as np
     >>> from aerocm.metrics.aviation_climate_metrics_calculation import AviationClimateMetricsCalculation
     >>> climate_model = "FaIR"
@@ -68,9 +97,17 @@ class AviationClimateMetricsCalculation:
         """
         Run the climate metric calculation.
 
+        Parameters
+        ----------
+        include_absolute_metrics : bool, optional
+            If True, includes absolute metrics in the output, by default False (only relative metrics).
+
+        return_df : bool, optional
+            If True, returns the results as a pandas DataFrame, by default False (returns a dictionary).
+
         Returns
         -------
-        dict
+        dict | pd.DataFrame
             Results of the climate metrics calculation.
         """
 
@@ -302,6 +339,14 @@ class AviationClimateMetricsCalculation:
         return results
 
     def validate_model_profile(self):
+        """
+        Validate the selected climate model and species profile.
+
+        Raises
+        ------
+        ValueError
+            If the climate model or species profile is not recognized.
+        """
         model = self.climate_model
         species_profile = self.species_profile
 
