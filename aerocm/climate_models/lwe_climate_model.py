@@ -1,13 +1,23 @@
+"""
+This module contains the LWE climate model implementation.
+"""
+
 import numpy as np
 import pandas as pd
 from scipy.linalg import solve_triangular
 from scipy.interpolate import interp1d
-from aerocm.metrics.metrics import co2_ipcc_pulse_absolute_metrics
+from aerocm.metrics.metrics_utils import co2_ipcc_pulse_absolute_metrics
 from aerocm.utils.classes import ClimateModel
 
 
 class LWEClimateModel(ClimateModel):
-    """Class for the Linear Warming Equivalent (LWE) climate model implementation."""
+    """
+    Class for the Linear Warming Equivalent (LWE) climate model implementation.
+
+    Notes
+    -----
+    Reference: Allen et al. (2021), https://doi.org/10.1088/1748-9326/abfcf9
+    """
 
     # --- Default parameters ---
     available_species = [

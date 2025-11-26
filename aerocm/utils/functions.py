@@ -1,3 +1,7 @@
+"""
+Utility functions for the AeroCM package.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
@@ -16,12 +20,29 @@ def emission_profile_function(
 ):
     """
     Generate an emission profile based on the specified type (e.g. pulse) and time horizon.
-    :param start_year: start of the simulation
-    :param t0: year of the emission event
-    :param time_horizon: time horizon of the simulation after the emission event
-    :param profile: type of emission profile ("pulse", "step", "1% growth")
-    :param unit_value: magnitude of the emission event
-    :return: emission profile as a numpy array
+
+    Parameters
+    ----------
+    start_year : int
+        Start year of the simulation.
+    t0 : int
+        Year when the emission event occurs.
+    time_horizon : int
+        Duration of the emission profile in years.
+    profile : str
+        Type of emission profile: "pulse", "step", or "1% growth".
+    unit_value : float
+        Magnitude of the emission event.
+
+    Returns
+    -------
+    emissions : np.ndarray
+        Emission profile array.
+
+    Raises
+    ------
+    ValueError
+        If an invalid profile type is provided.
     """
     if profile not in ["pulse", "step", "1% growth"]:
         raise ValueError(f"Invalid profile '{profile}'. Choose from 'pulse', 'step', or '1% growth'.")
@@ -68,9 +89,18 @@ def plot_simulation_results(
         Existing matplotlib Axes to draw on. If None, a new figure is created.
     label_prefix : str, optional
         Optional prefix to add to species labels (useful when plotting multiple datasets).
+
+    Raises
+    ------
+    TypeError
+        If 'ds' is not an xarray.Dataset.
+    ValueError
+        If 'data_var' is not found in the dataset or if specified species are missing.
     """
 
     # --- Validation ---
+    if not isinstance(ds, xr.Dataset):
+        raise TypeError("Input 'ds' must be an xarray.Dataset.")
     if data_var not in ds.data_vars:
         raise ValueError(f"'{data_var}' not found in dataset. Available: {list(ds.data_vars)}")
 

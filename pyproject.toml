@@ -33,3 +33,11 @@ publications = ["salib", "cartopy", "scikit-learn", "seaborn", "netCDF4", "openp
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
 build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry.group.doc.dependencies]
+mkdocs = "^1.6.1"
+mkdocs-bibtex = "^2.16.0"
+mkdocs-jupyter = "^0.25.1"
+mkdocs-material = "^9.7.0"
+mkdocstrings = { version = "^0.30.0", extras = ["python"] }
+mike = "^2.0.0"

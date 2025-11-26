@@ -1,3 +1,7 @@
+"""
+This module contains the FairClimateModel class, which implements a climate model using the FaIR (Finite Amplitude Impulse Response) model.
+"""
+
 import warnings
 import os.path as pth
 import numpy as np
@@ -15,8 +19,14 @@ RCP_END_YEAR = 2500
 
 class FairClimateModel(ClimateModel):
     """
-    Climate model using FaIR to compute the RF, ERF and temperature increase for a given species and its emission profile.
-    https://docs.fairmodel.net/en/latest/
+    Climate model using FaIR to compute the RF, ERF and temperature increase for a given species and its emission
+    profile, accounting for the background scenario.
+
+    Notes
+    -----
+    References:
+        - Leach et al. (2021). https://doi.org/10.5194/gmd-14-3007-2021
+        - Model implementation https://docs.fairmodel.net/en/latest/
     """
 
     # --- Default parameters ---
@@ -65,7 +75,7 @@ class FairClimateModel(ClimateModel):
         Returns
         -------
         output_data : dict
-            Dictionary containing the results of the LWE climate model.
+            Dictionary containing the results of the FaIR climate model.
         """
 
         # --- Extract species settings ---
@@ -208,7 +218,21 @@ class FairClimateModel(ClimateModel):
     def get_background_species_quantities(model_settings: dict = None, start_year: int = None, end_year: int = None) -> dict:
         """
         Get the background species quantities from the model settings or from the RCP scenario.
-        :return: background_species_quantities: dictionary with annual emission values for the background species (CO2, CH4), from start_year to end_year
+
+        Parameters
+        ----------
+        model_settings : dict
+            Dictionary containing model settings.
+        start_year : int
+            Start year of the simulation.
+        end_year : int
+            End year of the simulation.
+
+        Returns
+        -------
+        background_species_quantities : dict
+            Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
+
         """
         rcp = model_settings.get("rcp", None)
         if "background_species_quantities" in model_settings.keys():
@@ -231,7 +255,35 @@ class FairClimateModel(ClimateModel):
 
 class FairRunner:
     """
-    Class to run FaIR climate model for a (single) given species and its emission profile.
+    Class to run the FaIR climate model for a (single) given species and its emission profile.
+
+    Parameters
+    ----------
+    start_year : int
+        Start year of the simulation.
+    end_year : int
+        End year of the simulation.
+    background_species_quantities : dict, optional
+        Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
+
+    Attributes
+    ----------
+    start_year : int
+        Start year of the simulation.
+    end_year : int
+        End year of the simulation.
+    background_species_quantities : dict
+        Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
+    species_list : list
+        List of species included in the simulation.
+    properties : dict
+        Dictionary containing the properties of each species.
+    f : FAIR
+        Instance of the FAIR model.
+
+    Notes
+    -----
+    This class is used internally by the FairClimateModel class, and is not intended to be used directly.
     """
     def __init__(self, start_year: int, end_year: int, background_species_quantities: dict = None):
         self.start_year = start_year
@@ -242,6 +294,9 @@ class FairRunner:
         self.f = None
 
     def _setup_model(self):
+        """
+        Setup and configure the FaIR climate model instance.
+        """
         # --- Initialize FaIR instance ---
         f = self.f = FAIR()
         start_year = self.start_year
@@ -444,10 +499,20 @@ class FairRunner:
         """
         Run FaIR climate model previously configured, for a (single) given species and its emission profile.
 
-        :param specie_name: name of the species to be studied. If None, run background scenario with no additional species.
-        :param efficacy_erf: efficacy of the species for effective radiative forcing (default: 1.0)
-        :param specie_inventory: array of annual emissions/forcing values for the species.
-        :return: results: dict with 'effective_radiative_forcing' and 'temperature' (arrays of annual values)
+        Parameters
+        ----------
+        specie_name: str, optional
+            Name of the species to be studied. If None, run background scenario with no additional species.
+        efficacy_erf: int | float, optional
+            Efficacy of the species for effective radiative forcing (default: 1.0)
+        specie_inventory: list | np.ndarray, optional
+            Array of annual emissions/forcing values for the species.
+
+        Returns
+        -------
+        results : dict
+            Dictionary containing the results of the FaIR climate model run for the effective radiative forcing
+            and temperature.
         """
         # --- Setup model for fresh start ---
         self._setup_model()
@@ -512,6 +577,9 @@ class FairRunner:
         return results
 
     def initialise_emissions_and_forcing(self):
+        """
+        Initialise all emissions and forcing to zero for all species.
+        """
         f = self.f
         for specie in self.species_list:
             if self.properties[specie]["input_mode"] == "forcing":
@@ -523,15 +591,27 @@ class FairRunner:
 def background_species_quantities_function(start_year: int, end_year: int, rcp: str = None) -> dict:
     """
     Get background species quantities (CO2 and CH4) from RCP scenarios.
-    :param start_year: start year of the simulation
-    :param end_year: end year of the simulation
-    :param rcp: Representative Concentration Pathway. Must be one of 'RCP26', 'RCP45', 'RCP60', 'RCP85', or 'None' for no background species.
-    :return: background_species_quantities: dict of annual emission values for the background species (CO2, CH4), from start_year to end_year
 
-    ---
-    Example usage:
+    Parameters
+    ----------
+    start_year : int
+        Start year of the simulation.
+    end_year : int
+        End year of the simulation.
+    rcp : str
+        RCP scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85'). Select None to set background species to zero.
+
+    Returns
+    -------
+    background_species_quantities : dict
+        Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
+
+    Example
+    -------
+    ```python
     >>> from aerocm.climate_models.fair_climate_model import background_species_quantities_function
     >>> background_species_quantities = background_species_quantities_function(2020, 2050, 'RCP45')
+    ```
     """
 
     # --- Validate inputs ---

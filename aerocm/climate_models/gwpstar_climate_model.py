@@ -1,11 +1,21 @@
+"""
+This module contains the GWP* climate model implementation.
+"""
+
 import numpy as np
 import pandas as pd
-from aerocm.metrics.metrics import co2_ipcc_pulse_absolute_metrics
+from aerocm.metrics.metrics_utils import co2_ipcc_pulse_absolute_metrics
 from aerocm.utils.classes import ClimateModel
 
 
 class GWPStarClimateModel(ClimateModel):
-    """GWP* climate model implementation."""
+    """
+    Class for the GWP* climate model implementation.
+
+    Notes
+    -----
+    Reference: Lynch et al. (2020), https://doi.org/10.1088/1748-9326/ab6d7e
+    """
 
     # --- Default parameters ---
     available_species = [
@@ -159,13 +169,37 @@ class GWPStarClimateModel(ClimateModel):
 
 
 def gwpstar_equivalent_emissions_function(
-    start_year,
-    end_year,
-    emissions_erf,
-    gwpstar_variation_duration,
-    gwpstar_s_coefficient,
+    start_year: int,
+    end_year: int,
+    emissions_erf: np.ndarray,
+    gwpstar_variation_duration: int,
+    gwpstar_s_coefficient: float,
 ):
-    # Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8
+    """GWP* equivalent emissions function.
+
+    Parameters
+    ----------
+    start_year : int
+        Start year of the simulation.
+    end_year : int
+        End year of the simulation.
+    emissions_erf : np.ndarray
+        Emissions effective radiative forcing profile.
+    gwpstar_variation_duration : int
+        GWP* variation duration.
+    gwpstar_s_coefficient : float
+        GWP* s coefficient.
+
+    Returns
+    -------
+    emissions_equivalent_emissions : np.ndarray
+        Emissions equivalent emissions profile.
+
+    Notes
+    -----
+    Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8
+    """
+
     # Global
     climate_time_horizon = 100
     (

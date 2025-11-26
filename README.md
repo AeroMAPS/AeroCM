@@ -4,6 +4,8 @@ AeroCM is a package storing several climate models dedicated to aviation. It cur
 
 AeroCM is licensed under the [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
 
+A [documentation](https://aeromaps.github.io/AeroCM/) is available for more details on AeroCM.
+
 
 Installation
 ------------------

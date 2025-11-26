@@ -1,13 +1,22 @@
+"""
+This module contains the IPCC climate model implementation.
+"""
+
 import numpy as np
 import pandas as pd
-from scipy.linalg import solve_triangular
 from scipy.interpolate import interp1d
-from aerocm.metrics.metrics import co2_ipcc_pulse_absolute_metrics
 from aerocm.utils.classes import ClimateModel
 
 
 class IPCCClimateModel(ClimateModel):
-    """Class for the IPCC climate model implementation."""
+    """Class for the IPCC climate model implementation.
+
+    Notes
+    -----
+    References:
+        - Myhre et al. (2013). https://doi.org/10.1017/CBO9781107415324.018
+        - Forster et al. (2021). https://doi.org/10.1017/9781009157896.009
+    """
 
     # --- Default parameters ---
     available_species = [
