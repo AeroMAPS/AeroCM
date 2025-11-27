@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aerocm"
-version = "0.1.0-beta"
+version = "0.1.1-beta"
 description = "AeroCM: standardised climate models dedicated to aviation"
 authors = [
     "Thomas PLANES <thomas.planes@isae-supaero.fr>",
