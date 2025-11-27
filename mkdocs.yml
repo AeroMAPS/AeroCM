@@ -23,6 +23,7 @@ nav:
   - Tutorials:
       - Run a Climate Simulation: notebooks/example_climate_simulation.ipynb
       - Calculate Climate Metrics: notebooks/example_climate_metrics.ipynb
+  - Developers: books/developers.md
 
 theme:
   name: material
