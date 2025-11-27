@@ -5,12 +5,13 @@ repo_name: AeroCM
 
 nav:
   - Home: index.md
+  - Overview: books/overview.md
   - Installation: books/installation.md
   - Python API:
       - Overview: api/index.md
-      - Climate Simulation: api/aerocm.climate_models.aviation_climate_simulation.md
-      - Climate Metrics: api/aerocm.metrics.aviation_climate_metrics_calculation.md
-      - Available Climate Models:
+      - Climate simulation: api/aerocm.climate_models.aviation_climate_simulation.md
+      - Climate metrics calculation: api/aerocm.metrics.aviation_climate_metrics_calculation.md
+      - Available climate models:
           - FaIR: api/aerocm.climate_models.fair_climate_model.md
           - GWP*: api/aerocm.climate_models.gwpstar_climate_model.md
           - LWE: api/aerocm.climate_models.lwe_climate_model.md
@@ -21,8 +22,10 @@ nav:
           - Metrics utils: api/aerocm.metrics.metrics_utils.md
           - Super class for climate models: api/aerocm.utils.classes.md
   - Tutorials:
-      - Run a Climate Simulation: notebooks/example_climate_simulation.ipynb
-      - Calculate Climate Metrics: notebooks/example_climate_metrics.ipynb
+      - Run a climate simulation: notebooks/example_climate_simulation.ipynb
+      - Calculate climate metrics: notebooks/example_climate_metrics.ipynb
+  - Developers: books/developers.md
+  - Changelog: books/CHANGELOG.md
 
 theme:
   name: material
@@ -80,11 +83,19 @@ plugins:
             inherited_members: false
             members_order: source
   - mkdocs-jupyter
+  - bibtex:
+        bib_file: "docs/references.bib"
 
 markdown_extensions:
   - admonition
   - toc:
       permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
   version:
