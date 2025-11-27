@@ -7,7 +7,7 @@ Changed:
 - Notebooks. (#9)
 
 Fixed:
-- Handles pd.series. (#10)
+- Handles pd.series. (#10) 
 
 ## Version 0.1.0-beta
 
