@@ -1,22 +1,21 @@
 """
-This module contains the LWE climate model implementation.
+This module contains the IPCC climate model implementation.
 """
 
 import numpy as np
 import pandas as pd
-from scipy.linalg import solve_triangular
 from scipy.interpolate import interp1d
-from aerocm.metrics.metrics_utils import co2_ipcc_pulse_absolute_metrics
 from aerocm.utils.classes import ClimateModel
 
 
-class LWEClimateModel(ClimateModel):
-    """
-    Class for the Linear Warming Equivalent (LWE) climate model implementation.
+class IPCCClimateModel(ClimateModel):
+    """Class for the IPCC climate model implementation.
 
     Notes
     -----
-    Reference: Allen et al. (2021), https://doi.org/10.1088/1748-9326/abfcf9
+    References:
+        - Myhre et al. (2013). https://doi.org/10.1017/CBO9781107415324.018
+        - Forster et al. (2021). https://doi.org/10.1017/9781009157896.009
     """
 
     # --- Default parameters ---
@@ -47,10 +46,10 @@ class LWEClimateModel(ClimateModel):
         "Sulfur": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
                    "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
-    available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
+    available_model_settings = {}
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
-        """Run the LWE climate model with the assigned input data.
+        """Run the IPCC climate model with the assigned input data.
 
         Parameters
         ----------
@@ -62,9 +61,6 @@ class LWEClimateModel(ClimateModel):
         output_data : dict
             Dictionary containing the results of the LWE climate model.
         """
-
-        # --- Extract model settings ---
-        tcre = self.model_settings["tcre"]
 
         # --- Extract species settings ---
         sensitivity_rf = self.specie_settings.get("sensitivity_rf", None)
@@ -79,7 +75,7 @@ class LWEClimateModel(ClimateModel):
         specie_inventory = self.specie_inventory
         years = list(range(start_year, end_year + 1))
 
-        # --- Run the LWE climate model ---
+        # --- Run the IPCC climate model ---
         if specie_name == "CO2":
             equivalent_emissions = (
                     specie_inventory / 10 ** 12
@@ -160,49 +156,36 @@ class LWEClimateModel(ClimateModel):
                 radiative_forcing = sensitivity_rf * specie_inventory
                 effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
-            size = end_year - start_year + 1
-            F_co2 = np.zeros((size, size))
+        ## Temperature
+        temperature = np.zeros(len(effective_radiative_forcing))
+        c = [0.631, 0.429]
+        d = [8.4, 409.5]
 
-            # Old version for filling F_CO2 (long calculation time)
-            # for i in range(0, size):
-            #     for j in range(0, size):
-            #         if i > j:
-            #             agwp_rf_co2_1, *rest = co2_ipcc_pulse_absolute_metrics(i - j + 1)
-            #             agwp_rf_co2, *rest = co2_ipcc_pulse_absolute_metrics(i - j)
-            #             F_co2[i, j] = agwp_rf_co2_1 - agwp_rf_co2
-            #
-            #         elif i == j:
-            #             agwp_rf_co2, *rest = co2_ipcc_pulse_absolute_metrics(1)
-            #             F_co2[i, j] = agwp_rf_co2
+        if specie_name == "CO2":
+            for k in range(0, len(temperature)):
+                for ki in range(0, k + 1):
+                    term = 0
+                    for j in [0, 1]:
+                        term += a[0] * c[j] * (1-np.exp((ki-k)/d[j]))
+                        for i in [1,2,3]:
+                            term += a[i] * tau[i] * c[j] / (tau[i] - d[j]) * (np.exp((ki - k) / tau[i]) - np.exp((ki - k) / d[j]))
+                    temperature[k] += A_co2[ki] * term
+        elif specie_name == "NOx - CH4 decrease and induced":
+            for k in range(0, len(temperature)):
+                for ki in range(0, k + 1):
+                    term = 0
+                    for j in [0, 1]:
+                        term += tau[k] * c[j] / (tau[k] - d[j]) * (np.exp((ki - k) / tau[k]) - np.exp((ki - k) / d[j]))
+                    temperature[k] += efficacy_erf * (1 + f1 + f2) * A_CH4[ki] * term
+        else:
+            tau = 1
+            for k in range(0, len(temperature)):
+                for ki in range(0, k + 1):
+                    term = 0
+                    for j in [0,1]:
+                        term += tau * c[j] / (tau-d[j]) * (np.exp((ki-k)/tau) - np.exp((ki-k)/d[j]))
+                    temperature[k] += efficacy_erf * effective_radiative_forcing[ki] * term
 
-            agwp_data = {}
-            for delta in range(1, size + 1):
-                agwp, *rest = co2_ipcc_pulse_absolute_metrics(delta)
-                agwp_data[delta] = agwp
-
-            for i in range(size):
-                for j in range(size):
-                    delta = i - j
-                    if delta > 0:
-                        F_co2[i, j] = agwp_data[delta + 1] - agwp_data[delta]
-                    elif delta == 0:
-                        F_co2[i, j] = agwp_data[1]
-
-            # Inverting F_CO2 by using solve_triangular function (more efficient than np.linalg.inv)
-            Identity = np.eye(F_co2.shape[0])
-            F_co2_inv = solve_triangular(F_co2, Identity, lower=True)
-
-            equivalent_emissions = (
-                    np.dot(F_co2_inv, effective_radiative_forcing) / 10 ** 12
-            )  # Conversion from kgCO2-we to GtCO2-we
-
-        cumulative_equivalent_emissions = np.zeros(len(specie_inventory))
-        cumulative_equivalent_emissions[0] = equivalent_emissions[0]
-        for k in range(1, len(cumulative_equivalent_emissions)):
-            cumulative_equivalent_emissions[k] = (
-                    cumulative_equivalent_emissions[k - 1] + equivalent_emissions[k]
-            )
-        temperature = tcre * cumulative_equivalent_emissions * efficacy_erf
 
         # --- Prepare output ---
         output_data = {

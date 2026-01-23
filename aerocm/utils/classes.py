@@ -9,7 +9,43 @@ import pandas as pd
 
 
 class ClimateModel(ABC):
-    """Super class for climate model implementations."""
+    """
+    Super class for climate model implementations.
+
+    Parameters
+    ----------
+    start_year : int
+        Start year of the simulation.
+    end_year : int
+        End year of the simulation.
+    specie_name : str
+        Name of the species.
+    specie_inventory : list or np.ndarray
+        Emission profile for the species.
+    specie_settings : dict
+        Dictionary containing species settings.
+    model_settings : dict
+        Dictionary containing model settings.
+
+    Attributes
+    ----------
+    available_species : list
+        Supported species names for the climate model.
+    available_species_settings : dict
+        Dictionary containing available settings for each species, their type and default value.
+    available_model_settings : dict
+        Dictionary containing available model settings, their type and default value.
+
+    Raises
+    ------
+    ValueError
+        If the species is not supported or if any mandatory setting is missing.
+    TypeError
+        If any setting has an incorrect type.
+    ValueError
+        If the emission profile length does not match the simulation period.
+
+    """
 
     # --- Variables for model validation ---
     available_species = list()
@@ -137,6 +173,8 @@ class ClimateModel(ABC):
         ValueError
             If the emission profile length does not match the simulation period.
         """
+        # Check length of inventory
         expected_length = end_year - start_year + 1
         if len(specie_inventory) != expected_length:
             raise ValueError(f"Inventory length must be {expected_length} for the period {start_year}-{end_year}")
+

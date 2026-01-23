@@ -1,0 +1,102 @@
+site_name: AeroCM Documentation
+site_url: https://aeromaps.github.io/AeroCM/
+repo_url: https://github.com/AeroMAPS/AeroCM
+repo_name: AeroCM
+
+nav:
+  - Home: index.md
+  - Overview: books/overview.md
+  - Installation: books/installation.md
+  - Python API:
+      - Overview: api/index.md
+      - Climate simulation: api/aerocm.climate_models.aviation_climate_simulation.md
+      - Climate metrics calculation: api/aerocm.metrics.aviation_climate_metrics_calculation.md
+      - Available climate models:
+          - FaIR: api/aerocm.climate_models.fair_climate_model.md
+          - GWP*: api/aerocm.climate_models.gwpstar_climate_model.md
+          - LWE: api/aerocm.climate_models.lwe_climate_model.md
+          - IPCC: api/aerocm.climate_models.ipcc_climate_model.md
+          - Template for developers: api/aerocm.climate_models.template.md
+      - Utilities:
+          - Helper functions: api/aerocm.utils.functions.md
+          - Metrics utils: api/aerocm.metrics.metrics_utils.md
+          - Super class for climate models: api/aerocm.utils.classes.md
+  - Tutorials:
+      - Run a climate simulation: notebooks/example_climate_simulation.ipynb
+      - Calculate climate metrics: notebooks/example_climate_metrics.ipynb
+  - Developers: books/developers.md
+  - Changelog: books/CHANGELOG.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.path
+    - search.highlight
+    - search.suggest
+    - toc.integrate
+    - content.code.annotate
+    - navigation.indexes
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+      primary: indigo
+      accent: teal
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+      primary: indigo
+      accent: teal
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+      primary: indigo
+      accent: teal
+  logo: assets/logo_white.png
+
+
+plugins:
+  - search
+  - mike
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_section_style: table
+            show_source: true
+            separate_signature: true
+            merge_init_into_class: true
+            show_private_members: true
+            inherited_members: false
+            members_order: source
+  - mkdocs-jupyter
+  - bibtex:
+        bib_file: "docs/references.bib"
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - footnotes
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra:
+  version:
+    provider: mike
