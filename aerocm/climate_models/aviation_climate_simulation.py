@@ -9,6 +9,8 @@ from aerocm.climate_models.ipcc_climate_model import IPCCClimateModel
 from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
 from aerocm.climate_models.lwe_climate_model import LWEClimateModel
 from aerocm.climate_models.fair_climate_model import FairClimateModel, FairRunner
+from aerocm.climate_models.oac_climate_model import OpenAirClim
+from aerocm.climate_models.oac.utils.utility import time_norm_ncdf
 from aerocm.utils.classes import ClimateModel
 
 
@@ -77,7 +79,7 @@ class AviationClimateSimulation:
     """
 
     # --- Variables for validation ---
-    available_climate_models = ['IPCC', 'GWP*', 'LWE', 'FaIR']
+    available_climate_models = ['IPCC', 'GWP*', 'LWE', 'FaIR', "OAC"]
 
     def __init__(
             self,
@@ -141,6 +143,9 @@ class AviationClimateSimulation:
         elif climate_model == "FaIR":
             climate_model = FairClimateModel
             known_model = True
+        elif climate_model == "OAC":
+            climate_model = OpenAirClim
+            known_model = True  
 
         if known_model:
             species_settings = add_default_species_settings(climate_model, species_settings)
@@ -160,6 +165,18 @@ class AviationClimateSimulation:
             model_settings["background_temperature"] = results_background["temperature"]
             model_settings["background_effective_radiative_forcing"] = results_background["effective_radiative_forcing"]
 
+        # --- In case of time norm evolution for OAC --- 
+        if climate_model == OpenAirClim and model_settings["scaling"] == "norm":
+           time_norm_ncdf(years , species_list, species_inventory, nc_name="time_norm_evo.nc")
+        else:
+            pass
+       
+        if climate_model == OpenAirClim:
+            step = model_settings.get("step", 1)   
+            years = list(range(int(start_year), int(end_year) + 1, int(step)))
+        else:
+            pass    
+            
         # -- Run model for all species ---
         results = {}
         for specie in species_list:

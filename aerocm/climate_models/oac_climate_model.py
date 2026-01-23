@@ -1,0 +1,186 @@
+"""
+Integration of OAC 
+
+"""
+import os
+import numpy as np
+import pandas as pd
+import xarray as xr
+from aerocm.utils.classes import ClimateModel
+from openairclim import oac
+from aerocm.climate_models.oac.utils.utility import read_nc, scaled_emissions_spc, scaled_emissions_to_nc, generate_toml, weighted_cont
+
+class OpenAirClim(ClimateModel):
+    """ 
+    Implementation of OpenAirClim climate model
+
+    
+    """
+
+    # --- Default parameters ---
+    available_species = [
+        "CO2",
+        "Contrails",
+        "NOx",
+        "H2O"
+    ]
+    # add different rf methods for co2
+    available_species_settings = { "CO2" :{"lambda": {"type": float, "default": 0.73}, "rf_method" : {"type": str,
+                                           "default" : "Etminan_2016"}} , 
+                                   "H2O" : {"efficacy": {"type": float, "default": 1.14}} , 
+                                   "O3" : {"efficacy": {"type": float, "default": 1.37}},
+                                      "PMO" : {"efficacy": {"type": float, "default": 1.37}},
+                                      "CH4" : {"efficacy": {"type": float, "default": 1.14}},
+                                      "Contrails" :{"efficacy": {"type": float, "default": 0.59}} 
+                                      
+    }
+    
+    
+    available_model_settings = { "step" : {"type": int, "default": 1},
+                                 "scaling" : {"type": str, "default" : None},
+                                 "weights" : {"type": dict, "default" : None}                                                                                                 
+                                }
+
+    """
+    Sample weights {"North America": 1.0,
+                       "Atlantic region": 1.0,
+                       "South America": 1.0,
+                       "Pacific": 1.0,
+                       "Far North": 1.0,
+                       "Europe": 1.0,
+                       "Africa and Middle East": 1.0,
+                       "Asia": 1.0,
+                       "Oceania": 1.0}
+    """
+
+
+    def run(self, return_df: bool = False) -> dict | pd.DataFrame:
+        """Run the oac climate model with the assigned input data.
+
+        Parameters
+        ----------
+        return_df : bool, optional
+            If True, returns the results as a pandas DataFrame, by default False.
+
+        Returns
+        -------
+        output_data : dict
+            Dictionary containing the results of the climate model.
+        """
+
+        # --- Extract simulation settings ---
+        start_year = self.start_year
+        end_year = self.end_year
+        specie_name = self.specie_name
+        specie_inventory = self.specie_inventory
+       
+
+        # --- Extract model settings ---
+        model_settings = self.model_settings
+        step = model_settings.get("step", 1)
+
+        # --- Extract specie settings ---
+        specie_settings = self.specie_settings
+        print(specie_settings)
+        
+        # --- Update with step ---
+        years = list(range(start_year, end_year + 1, step))
+        specie_inventory = specie_inventory[::step]
+
+        """
+            specie_inventory extracted from species_inventory from the aviation_climate_simulation class to run one by one each species
+            
+            Now need to convert input species list to ncdf
+
+            If we want to use time norm evolution we would need all species (or at least co2 to get fuel)
+            
+            For now using single species by generating ncdf file for each. should not run for too many years
+        """
+        scaling = model_settings.get("scaling", "")
+        weights = model_settings.get("weights","")
+
+
+        
+
+        if scaling == "norm" :
+            # --- Base inventory name ---
+            inventory_file = f"mat_generated_nc_{start_year}.nc"
+
+            # --- Base inventory generation ---
+            scaled_emissions_to_nc("oac/repository/emi_inv_2025.nc", inventory_file,specie_name,specie_inventory[0],start_year)
+            
+            # --- Create instruction toml file ---
+            # change specie name of contrails to distance which is oac readable
+            if specie_name == "Contrails":
+                specie_name = "distance"
+                out_name = "cont"
+                if weights is not None:
+                   weighted_cont(specie_inventory, start_year, end_year, weights,step, ref_inv = 'oac/repository/emi_inv_2025.nc')
+                   generate_toml(start_year, end_year+1, step, "oac_run.toml",specie_settings , [specie_name], [out_name], weighted='distance_weighted',inv_files = None, scaling = "norm", scale_file = "time_norm_evo.nc")
+                else:   
+                   generate_toml(start_year, end_year+1, step, "oac_run.toml",specie_settings , [specie_name], [out_name],inv_files = None, scaling = "norm", scale_file = "time_norm_evo.nc") 
+            else:
+                # Thing to note: OAC does not have output for NOx so will not work for it.
+                generate_toml(start_year, end_year+1, step, "oac_run.toml",specie_settings, [specie_name], [specie_name],inv_files = None, scaling = "norm", scale_file = "time_norm_evo.nc")  
+
+        elif scaling == "" :    
+            # --- inventory_files name list ---
+            inventory_files = [f"mat_generated_nc_{year}.nc" for year in range(start_year, end_year + 1, step)]
+
+            # --- Generate ncdf file for species ---
+            for y , year in enumerate(years):
+                # creates the inventories
+                scaled_emissions_to_nc("oac/repository/emi_inv_2025.nc", inventory_files[y],specie_name,specie_inventory[y], year)
+            
+            # --- Create instruction toml file ---
+            # change specie name of contrails to distance which is oac readable
+            if specie_name == "Contrails":
+                specie_name = "distance"
+                out_name = "cont"
+                generate_toml(start_year, end_year+1, step, "oac_run.toml",specie_settings, [specie_name], [out_name],inv_files = inventory_files) 
+            else:
+                # Thing to note: OAC does not have output for NOx so will not work for it.
+                generate_toml(start_year, end_year+1, step, "oac_run.toml",specie_settings, [specie_name], [specie_name],inv_files = inventory_files)       
+        # NOTE: right now the reference inventory for the distribution is 2025. Later on add options in model settings
+        #       to include the other DLR inventories.    
+        # --- Run OAC ---
+        oac.run("tomls/oac_run.toml")
+
+        # --- Prepare output ---
+        output_ds = xr.open_dataset(f"oac_results/gen_{start_year}s.nc")
+
+        if specie_name == "CO2":
+        # Aircraft type TOTAL since its default.
+            dT = output_ds.dT_CO2.sel(ac = "TOTAL")
+            RF = output_ds.RF_CO2.sel(ac = "TOTAL")
+
+        if specie_name == "H2O":
+            dT = output_ds.dT_H2O.sel(ac = "TOTAL")
+            RF = output_ds.RF_H2O.sel(ac = "TOTAL")   
+
+        if specie_name == "distance":
+            dT = output_ds.dT_cont.sel(ac = "TOTAL")
+            RF = output_ds.RF_cont.sel(ac = "TOTAL")  
+       
+        
+        output_data = {
+            "radiative_forcing": RF,
+            #"effective_radiative_forcing": effective_radiative_forcing,
+            "temperature": dT
+        }
+        
+        # --- Delete inputs to save space for next run ---
+        for filename in os.listdir("oac_inputs"):
+            os.remove(f"oac_inputs/{filename}")
+        os.rmdir("oac_inputs")    
+
+        if return_df:
+            output_data = pd.DataFrame(output_data, index=years)
+            output_data.index.name = 'Year'
+
+        return output_data       
+         
+
+
+
+         
