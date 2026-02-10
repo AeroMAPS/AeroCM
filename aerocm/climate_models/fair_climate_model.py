@@ -52,8 +52,10 @@ class FairClimateModel(ClimateModel):
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+        "Soot": {"sensitivity_rf": {"type": float, "default": 1.0e-10}, "ratio_erf_rf": {"type": float, "default": 1.0},
+                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {
         "rcp": {"type": (str, type(None)), "default": "RCP45"},
@@ -167,7 +169,7 @@ class FairClimateModel(ClimateModel):
 
         # --- Run FaIR model ---
         fair_runner = FairRunner(start_year, end_year, background_species_quantities)
-        results = fair_runner.run(specie_name, efficacy_erf, processed_inventory)
+        results = fair_runner.run(specie_name, sensitivity_rf, efficacy_erf, processed_inventory)
         temperature_with_species = results["temperature"]
         effective_radiative_forcing_with_species = results["effective_radiative_forcing"]
 
@@ -461,15 +463,8 @@ class FairRunner:
         fill(f.species_configs["erfari_radiative_efficiency"], -0.002653 / 1023.2219696044921, specie="World CH4")
         fill(f.species_configs["aci_scale"], -2.09841432)
 
-        # - Sulfur -
-        erf_aci_sulfur = 0.0
-        fill(f.species_configs["erfari_radiative_efficiency"], -0.0199 + erf_aci_sulfur, specie="Sulfur")
-        fill(f.species_configs["aci_shape"], 0.0, specie="Sulfur")
-
-        # - Soot -
-        erf_aci_BC = 0.0
-        fill(f.species_configs["erfari_radiative_efficiency"], 0.1007 + erf_aci_BC, specie="Soot")
-        fill(f.species_configs["aci_shape"], 0.0, specie="Soot")
+        # - Sulfur and soot -
+        # Directly in the run method as it depends on the sensitivity_rf parameter
 
         # --- Initialise all emissions and forcing to zero ---
         self.initialise_emissions_and_forcing()
@@ -494,6 +489,7 @@ class FairRunner:
 
     def run(self,
             specie_name: str = None,
+            sensitivity_rf: int | float = 0.0,
             efficacy_erf: int | float = 1.0,
             specie_inventory: list | np.ndarray = None) -> dict:
         """
@@ -523,6 +519,18 @@ class FairRunner:
         properties = self.properties
         if specie_name not in species_list + [None]:  # None is allowed for run with only background species
             warnings.warn(f"Species '{specie_name}' not recognized and won't have any effect. Available species: {species_list}")
+
+        if specie_name == "Sulfur":
+            erf_ari_sulfur = sensitivity_rf * 10**9 # W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr
+            erf_aci_sulfur = 0.0
+            fill(f.species_configs["erfari_radiative_efficiency"], erf_ari_sulfur + erf_aci_sulfur, specie="Sulfur")
+            fill(f.species_configs["aci_shape"], 0.0, specie="Sulfur")
+
+        if specie_name == "Soot":
+            erf_ari_soot = sensitivity_rf * 10**9 # W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr
+            erf_aci_soot = 0.0
+            fill(f.species_configs["erfari_radiative_efficiency"], erf_ari_soot + erf_aci_soot, specie="Soot")
+            fill(f.species_configs["aci_shape"], 0.0, specie="Soot")
 
         # --- Set efficacy erf for current species ---
         if specie_name in species_list:
