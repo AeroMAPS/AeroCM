@@ -131,8 +131,8 @@ def time_norm_ncdf(years, species_list, species_inventory, nc_name):
     EI_CO2 = np.array([3.15] * len(years))
     
     #EI_NOx = None
-    EI_H2O = species_inventory["H2O"] / (fuel *1e9)
-    dis_per_fuel = species_inventory["Contrails"] / (fuel *1e9)
+    EI_H2O = species_inventory["H2O"] / (fuel* 1e9)
+    dis_per_fuel = species_inventory["Contrails"] / (fuel* 1e9)
     #if "NOx" in species_list:    
     #    EI_NOx = (species_inventory["NOx"] * 27.79543563) / (fuel *1e9) * 0.03597713
     
@@ -140,9 +140,9 @@ def time_norm_ncdf(years, species_list, species_inventory, nc_name):
     ds = xr.Dataset(
         data_vars={
             "fuel":        (("time",), np.asarray(fuel, dtype=np.float32)),
-            "EI_CO2":      (("time",), np.asarray(EI_CO2, dtype=np.float32)),
+            #"EI_CO2":      (("time",), np.asarray(EI_CO2, dtype=np.float32)),
             #"EI_NOx":      (("time",), np.asarray(EI_NOx, dtype=np.float32)),
-            "EI_H2O":      (("time",), np.asarray(EI_H2O, dtype=np.float32)),
+            #"EI_H2O":      (("time",), np.asarray(EI_H2O, dtype=np.float32)),
             "dis_per_fuel":(("time",), np.asarray(dis_per_fuel, dtype=np.float32))
             
         },
@@ -159,9 +159,9 @@ def time_norm_ncdf(years, species_list, species_inventory, nc_name):
     
     
     ds["fuel"].attrs.update(units="Tg yr-1", long_name="fuel mass")
-    ds["EI_CO2"].attrs.update(units="", long_name="CO2 emission index")
+    #ds["EI_CO2"].attrs.update(units="", long_name="CO2 emission index")
     #ds["EI_NOx"].attrs.update(units="", long_name="NOx emission index")
-    ds["EI_H2O"].attrs.update(units="", long_name="H2O emission index")
+    #ds["EI_H2O"].attrs.update(units="", long_name="H2O emission index")
     ds["dis_per_fuel"].attrs.update(units="km kg-1", long_name="distance per fuel")
     ds["time"].attrs.update(long_name="year")
 
@@ -176,7 +176,7 @@ def time_norm_ncdf(years, species_list, species_inventory, nc_name):
     print(ds)
 
 # Function to read and generate species_inventory. Can be used for every climate model
-# Note: file path only correct when bein called in the climate_models folder
+# Note: file path only correct when being called in the climate_models folder
 def load_species_inventory(start_year, end_year, climate_model, csv_path="../climate_data/aviation_emissions_data.csv"):
     """
     Load species inventory for a given year range from the aviation emissions CSV.
@@ -385,10 +385,12 @@ def weighted_cont(dist, start_year, end_year, region_weights,  step = 1, ref_inv
 
 
 def generate_toml(start_year, end_year, step, output_file, specie_settings, 
-                       inv_species=None, out_species=None, weighted=None, scaling= None, scale_file = None, inv_files=None,):
+                       inv_species=None, out_species=None, weighted=None, scaling= None, scale_file = None, inv_files=None):
     """ Function to generate toml file to be able to run OAC
 
     Can be further edited to change species and model settings
+    
+    NOTE: Scaling time evolution not integrated since its deemed to be of no use (would still require all year inventory inputs)
 
     Parameters
     ---------
@@ -454,8 +456,8 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     co2_rf_method = "Etminan_2016"
     
 
-    h = end_year - start_year + 1
-
+    h = end_year - start_year #+ 1
+    print(h)
     if inv_species is None:
         inv_species = ["CO2","H2O", "NOx", "distance"]
     else:
@@ -468,35 +470,39 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     if inv_files is None:    
         if scaling == None:    
             if weighted is None:
-                inventory_files = [f"mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]
+                inventory_files = [f"mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]
             elif weighted == "distance_weighted":
-                inventory_files = [f"dist_weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]
+                inventory_files = [f"dist_weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]
             elif weighted  == "weighted":
-                inventory_files = [f"weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]   
+                inventory_files = [f"weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]   
             time_evo = ""    
 
         elif scaling == "norm":
             if weighted is None:
-                inventory_files = [f"mat_generated_nc_{start_year}.nc"]
+                inventory_files = [f"mat_generated_nc_{end_year}.nc"]
             elif weighted == "distance_weighted":
-                inventory_files = [f"dist_weighted_mat_generated_nc_{start_year}.nc"]
+                inventory_files = [f"dist_weighted_mat_generated_nc_{end_year}.nc"]
             elif weighted  == "weighted":
-                inventory_files = [f"weighted_mat_generated_nc_{start_year}.nc" ]    
+                inventory_files = [f"weighted_mat_generated_nc_{end_year}.nc" ]    
 
             time_evo = f'file = "{scale_file}"'
         
         elif scaling == "scale":
             if weighted is None:
-                inventory_files = [f"mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]
+                inventory_files = [f"mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]
             elif weighted == "distance_weighted":
-                inventory_files = [f"dist_weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]
+                inventory_files = [f"dist_weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]
             elif weighted  == "weighted":
-                inventory_files = [f"weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year, step)]  
+                inventory_files = [f"weighted_mat_generated_nc_{year}.nc" for year in range(start_year, end_year+1, step)]  
 
             time_evo = f'file = "{scale_file}"'
     elif inv_files is not None:
         inventory_files = inv_files
-        time_evo = ""        
+        if scaling == "norm":
+            time_evo = f'file = "{scale_file}"'  
+        else:
+            time_evo=""
+
 
     if "CO2" in inv_species:
         co2_lambda = specie_settings.get("lambda",co2_lambda)
@@ -528,17 +534,20 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     # base emission inventories, only considered if rel_to_base = true
     rel_to_base = false
     base.dir = "input/"
-    base.files = [
+    base.files = [ 
         "rnd_inv_2020.nc",
         "rnd_inv_2030.nc",
         "rnd_inv_2040.nc",
         "rnd_inv_2050.nc",
     ]
+    # change base files to the bg files
 
     # Output options
     [output]
     # Full simulation run = true, climate metrics only = false
-    full_run = true
+    run_oac = true
+    run_metrics = true
+    run_plots = true
     dir = "oac_results/"
     name = "gen_{start_year}s"
     overwrite = true
@@ -550,7 +559,7 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     [time]
     dir = "time_evo/"
     # Time range in years: t_start, t_end, step, (t_end not included)
-    range = [{start_year}, {end_year}, {step}]
+    range = [{start_year}, {end_year+1}, {step}]
     # Time evolution of emissions
     # either type "scaling" or type "norm"
     {time_evo}
@@ -561,7 +570,7 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     [background]
     dir = "oac/repository/"
     CO2.file = "co2_bg.nc"
-    CO2.scenario = "SSP2-4.5"
+    CO2.scenario = "SSP2-4.5" # DEFAULT, BUSINESS AS USUAL SCENARIO
     #CO2.scenario = "SSP1-1.9"
     #CO2.scenario = "SSP4-6.0"
     #CO2.scenario = "SSP3-7.0"

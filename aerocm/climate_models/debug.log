@@ -1,0 +1,7 @@
+read_config ln. 694 in _check_metrics WARNING: Last year in metrics time with t_0 = 1940 and H = 79 is earlier than last year in time range.
+read_config ln. 516 in check_config INFO: Configuration file checked.
+read_config ln. 556 in create_output_dir INFO: Overwrite existing output directory oac_results/
+read_netcdf ln. 161 in open_inventories INFO: Emission inventories openend, attribute sections and time constraints checked successfully.
+read_netcdf ln. 219 in split_inventory_by_aircraft INFO: No ac data variable found in the emission inventories. Reverting to 'DEFAULT' aircraft from config file.
+main ln. 120 in run WARNING: No species defined in config with 0D response grid.
+main ln. 238 in run WARNING: No species defined in config with 2D response_grid.
