@@ -121,7 +121,7 @@ class AviationClimateSimulation:
         # --- Extract simulation parameters ---
         start_year = self.start_year
         end_year = self.end_year
-        species_inventory = self.species_inventory
+        species_inventory = self.species_inventory.copy()
         years = list(range(start_year, end_year + 1))
 
         # --- Extract model and update species and model settings ---
@@ -162,8 +162,30 @@ class AviationClimateSimulation:
 
         # -- Run model for all species ---
         results = {}
-        for specie in species_list:
-            if isinstance(climate_model, type) and issubclass(climate_model, ClimateModel):
+        if isinstance(climate_model, type) and issubclass(climate_model, ClimateModel):
+            if "Contrails correction factors" in species_list:
+                species_inventory["Contrails"] = species_inventory["Contrails"] * species_inventory[
+                    "Contrails correction factors"]
+                species_list.remove("Contrails correction factors")
+            if "NOx" in species_list:
+                species_list.append("NOx - ST O3 increase")
+                species_list.append("NOx - CH4 decrease and induced")
+                species_inventory["NOx - ST O3 increase"] = species_inventory["NOx"]
+                species_inventory["NOx - CH4 decrease and induced"] = species_inventory["NOx"]
+                species_list.remove("NOx")
+            if "Soot" in species_list:
+                species_list.append("Soot - ARI")
+                species_list.append("Soot - ACI")
+                species_inventory["Soot - ARI"] = species_inventory["Soot"]
+                species_inventory["Soot - ACI"] = species_inventory["Soot"]
+                species_list.remove("Soot")
+            if "Sulfur" in species_list:
+                species_list.append("Sulfur - ARI")
+                species_list.append("Sulfur - ACI")
+                species_inventory["Sulfur - ARI"] = species_inventory["Sulfur"]
+                species_inventory["Sulfur - ACI"] = species_inventory["Sulfur"]
+                species_list.remove("Sulfur")
+            for specie in species_list:
                 model_instance = climate_model(
                     start_year,
                     end_year,
@@ -173,7 +195,8 @@ class AviationClimateSimulation:
                     model_settings,
                 )
                 results[specie] = model_instance.run()
-            elif callable(climate_model):
+        elif callable(climate_model):
+            for specie in species_list:
                 results[specie] = climate_model(
                     start_year,
                     end_year,
