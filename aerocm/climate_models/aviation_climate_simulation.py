@@ -51,8 +51,8 @@ class AviationClimateSimulation:
     ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "Soot": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "Sulfur": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "Soot - ARI": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "Sulfur - ARI": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ... }
     >>> species_settings = {
     ...     "CO2": {"ratio_erf_rf": 1.0},
@@ -60,8 +60,8 @@ class AviationClimateSimulation:
     ...     "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
     ...     "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
     ...     "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ...     "Soot": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
-    ...     "Sulfur": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "Soot - ARI": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
+    ...     "Sulfur - ARI": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
     ... }
     >>> model_settings = {"tcre": 0.00045}
     >>> results = AviationClimateSimulation(
@@ -203,8 +203,12 @@ class AviationClimateSimulation:
         aggregations = {}
         if "NOx - CH4 decrease and induced" in results:
             aggregations["NOx"] = ["NOx - ST O3 increase", "NOx - CH4 decrease and induced"]
-        if "Soot" in results or "Sulfur" in results:
-            aggregations["Aerosols"] = [s for s in ["Soot", "Sulfur"] if s in results]
+        if "Soot - ARI" in results or "Soot - ACI" in results:
+            aggregations["Soot"] = [s for s in ["Soot - ARI", "Soot - ACI"] if s in results]
+        if "Sulfur - ARI" in results or "Sulfur - ACI" in results:
+            aggregations["Sulfur"] = [s for s in ["Sulfur - ARI", "Sulfur - ACI"] if s in results]
+        if "Soot - ARI" in results or "Soot - ACI" in results or "Sulfur - ARI" in results or "Sulfur - ACI" in results:
+            aggregations["Aerosols"] = [s for s in ["Soot - ARI", "Soot - ACI", "Sulfur - ARI", "Sulfur - ACI"] if s in results]
         if "Contrails" in results or "NOx" in results or "H2O" in results or "Aerosols" in aggregations:
             aggregations["Non-CO2"] = [s for s in ["Contrails", "NOx", "H2O", "Aerosols"] if s in results or s in aggregations]
         if "CO2" in results or "Non-CO2" in aggregations:
