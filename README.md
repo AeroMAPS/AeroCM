@@ -10,7 +10,7 @@ A [documentation](https://aeromaps.github.io/AeroCM/) is available for more deta
 Quick start
 ------------------
 
-The use of the Python Package Index ([PyPI](https://pypi.org/)) is the simplest method for installing AeroCM.
+The use of the Python Package Index ([PyPI](https://pypi.org/project/aerocm/)) is the simplest method for installing AeroCM.
 
 **Prerequisite**: AeroMAPS needs at least Python 3.10.
 

@@ -18,7 +18,7 @@ class AviationClimateMetricsCalculation:
     Parameters
     ----------
     climate_model : str | ClimateModel | Callable
-        The climate model to use. Can be a registered name (e.g. "FaIR), an instance of a ClimateModel subclass,
+        The climate model to use. Can be a registered name (e.g. "FaIR"), an instance of a ClimateModel subclass,
         or a custom callable function.
     start_year : int
         The start year of the simulation.
@@ -29,7 +29,7 @@ class AviationClimateMetricsCalculation:
     profile_start_year : int | None, optional
         The year when the emission profile starts. Required for 'pulse', 'step', and 'combined' profiles.
     species_list : list, optional
-        List of non-CO2 species to include in the calculation (e.g. ["Contrails", "Soot"]).
+        List of non-CO2 species to include in the calculation (e.g. ["Contrails", "Soot - ARI"]).
     species_inventory : dict | None, optional
         A dictionary containing emission profiles for each species when using the 'scenario' profile.
     species_settings : dict | None, optional
@@ -54,7 +54,7 @@ class AviationClimateMetricsCalculation:
     >>> time_horizon = [20, 50, 100]
     >>> species_profile = 'pulse'
     >>> profile_start_year = 2020
-    >>> species_list = ["Contrails", "Soot"]
+    >>> species_list = ["Contrails", "Soot - ARI"]
     >>> results = AviationClimateMetricsCalculation(
     ...     climate_model,
     ...     start_year,
@@ -132,8 +132,10 @@ class AviationClimateMetricsCalculation:
                                   "NOx - ST O3 increase": 1*10**10,
                                   "NOx - CH4 decrease and induced": 1*10**10,
                                   "H2O": 1*10**12,
-                                  "Soot": 1*10**14,
-                                  "Sulfur": 1*10**10
+                                  "Soot - ARI": 1*10**14,
+                                  "Soot - ARI": 1*10**14,
+                                  "Sulfur - ARI": 1*10**10,
+                                  "Sulfur - ACI": 1*10**10
             }
         else:
             co2_unit_value = 1
@@ -141,8 +143,10 @@ class AviationClimateMetricsCalculation:
                                   "NOx - ST O3 increase": 1,
                                   "NOx - CH4 decrease and induced": 1,
                                   "H2O": 1,
-                                  "Soot": 1,
-                                  "Sulfur": 1
+                                  "Soot - ARI": 1,
+                                  "Soot - ACI": 1,
+                                  "Sulfur - ARI": 1,
+                                  "Sulfur - ACI": 1
             }
 
         if type(time_horizon) == int or type(time_horizon) == float:

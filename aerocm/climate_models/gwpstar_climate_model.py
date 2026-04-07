@@ -24,8 +24,10 @@ class GWPStarClimateModel(ClimateModel):
         "NOx - ST O3 increase",
         "NOx - CH4 decrease and induced",
         "H2O",
-        "Soot",
-        "Sulfur"
+        "Soot - ARI",
+        "Soot - ACI",
+        "Sulfur - ARI",
+        "Sulfur - ACI",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
@@ -40,9 +42,15 @@ class GWPStarClimateModel(ClimateModel):
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot": {"sensitivity_rf": {"type": float, "default": 1.0e-10}, "ratio_erf_rf": {"type": float, "default": 1.0},
-                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
+        "Soot - ARI": {"sensitivity_rf": {"type": float, "default": 1.0e-10},
+                       "ratio_erf_rf": {"type": float, "default": 1.0},
+                       "efficacy_erf": {"type": float, "default": 1.0}},
+        "Soot - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
+                       "ratio_erf_rf": {"type": float, "default": 1.0},
+                       "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
                    "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
@@ -124,9 +132,11 @@ class GWPStarClimateModel(ClimateModel):
             if (
                     specie_name == "Contrails"
                     or specie_name == "NOx - ST O3 increase"
-                    or specie_name == "Soot"
-                    or specie_name == "Sulfur"
                     or specie_name == "H2O"
+                    or specie_name == "Soot - ARI"
+                    or specie_name == "Soot - ACI"
+                    or specie_name == "Sulfur - ARI"
+                    or specie_name == "Sulfur - ACI"
             ):
                 gwpstar_variation_duration = 6
                 gwpstar_s_coefficient = 0.0
