@@ -10,12 +10,12 @@ from fair import FAIR
 from fair.interface import fill, initialise
 from scipy.interpolate import interp1d
 from aerocm.utils.classes import ClimateModel
-from aerocm.climate_data import RCP
+from aerocm.climate_data import background_scenarios
 from aerocm.climate_data import concentration
 
-RCP_START_YEAR = 1765
-RCP_END_YEAR = 2500
 
+BACKGROUND_SCENARIO_START_YEAR = 1750
+BACKGROUND_SCENARIO_END_YEAR = 2500
 
 class FairClimateModel(ClimateModel):
     """
@@ -26,7 +26,7 @@ class FairClimateModel(ClimateModel):
     -----
     References:
         - Leach et al. (2021). https://doi.org/10.5194/gmd-14-3007-2021
-        - Model implementation https://docs.fairmodel.net/en/latest/
+        - Model implementation https://(docs).fairmodel.net/en/latest/
     """
 
     # --- Default parameters ---
@@ -36,8 +36,10 @@ class FairClimateModel(ClimateModel):
         "NOx - ST O3 increase",
         "NOx - CH4 decrease and induced",
         "H2O",
-        "Soot",
-        "Sulfur"
+        "Soot - ARI",
+        "Soot - ACI",
+        "Sulfur - ARI",
+        "Sulfur - ACI",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
@@ -52,11 +54,21 @@ class FairClimateModel(ClimateModel):
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur": {"ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+        "Soot - ARI": {"sensitivity_rf": {"type": float, "default": 1.0e-10},
+                       "ratio_erf_rf": {"type": float, "default": 1.0},
+                       "efficacy_erf": {"type": float, "default": 1.0}},
+        "Soot - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
+                       "ratio_erf_rf": {"type": float, "default": 1.0},
+                       "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {
-        "rcp": {"type": (str, type(None)), "default": "RCP45"},
+        "contrails_saturation_factor": {"type": float, "default": 1.0},
+        "background_nox_correction_factor": {"type": float, "default": 0.0},
+        "background_scenario": {"type": (str, type(None)), "default": "RCP45"},
         # overrode by background_species_quantities if background_species_quantities is provided
         "background_species_quantities": {"type": dict},
         "background_effective_radiative_forcing": {"type": (list, np.ndarray)},
@@ -94,6 +106,8 @@ class FairClimateModel(ClimateModel):
 
         # --- Extract model settings ---
         model_settings = self.model_settings
+        contrails_saturation_factor = model_settings.get("contrails_saturation_factor", 1.0)
+        background_nox_correction_factor = model_settings.get("background_nox_correction_factor", 0.0)
         background_species_quantities = self.get_background_species_quantities(
             model_settings,
             start_year,
@@ -107,67 +121,88 @@ class FairClimateModel(ClimateModel):
             processed_inventory = (
                     specie_inventory / 10 ** 12
             )  # Conversion from kgCO2 to GtCO2
-        elif specie_name == "Soot":
+
+        elif specie_name == "Soot - ARI":
             processed_inventory = (
                     specie_inventory / 10 ** 9
             )  # Conversion from kgSO2 to MtSO2
-        elif specie_name == "Sulfur":
+
+        elif specie_name == "Sulfur - ARI":
             processed_inventory = (
                     specie_inventory / 10 ** 9
             )  # Conversion from kgBC to MtBC
+
         elif specie_name == "Contrails":
+            contrails_saturation_reference_year = 2018
+            years_array = np.array(years)
+            idx_ref_contrails = np.where(years_array == contrails_saturation_reference_year)[0][0]
+            inventory_ref = specie_inventory[idx_ref_contrails]
+            if inventory_ref == 0: #in case of pulse emissions etc. emissions/km may be zero
+                saturation_inventory = specie_inventory
+                inventory_ref = 1.0
+            else: 
+                saturation_inventory = (specie_inventory / inventory_ref) ** contrails_saturation_factor
+            rf = sensitivity_rf * inventory_ref * saturation_inventory
+            erf = rf * ratio_erf_rf
+            processed_inventory = erf  # W/m2
+
+        elif specie_name == "H2O" or specie_name == "Soot - ACI" or specie_name == "Sulfur - ACI":
             rf = sensitivity_rf * specie_inventory
             erf = rf * ratio_erf_rf
             processed_inventory = erf  # W/m2
-        elif specie_name == "H2O":
-            rf = sensitivity_rf * specie_inventory
-            erf = rf * ratio_erf_rf
-            processed_inventory = erf  # W/m2
-        elif specie_name == "NOx - ST O3 increase":
-            rf = sensitivity_rf * specie_inventory
-            erf = rf * ratio_erf_rf
-            processed_inventory = erf  # W/m2
-        elif specie_name == "NOx - CH4 decrease and induced":
-            min_year = min(start_year, 1939)
-            max_year = max(end_year, 2051)
-            tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
-            tau_reference_values = [11, 11, 10.1, 10, 9.85, 10.25, 10.25]
-            tau_function = interp1d(tau_reference_year, tau_reference_values, kind="linear")
-            tau = tau_function(years)
-            ch4_molar_mass = 16.04e-3  # [kg/mol]
-            air_molar_mass = 28.97e-3  # [kg/mol]
-            atmosphere_total_mass = 5.1352e18  # [kg]
-            radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
-            A_CH4_unit = (
-                    radiative_efficiency
-                    * 1e9
-                    * air_molar_mass
-                    / (ch4_molar_mass * atmosphere_total_mass)
-            )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-            A_CH4 = A_CH4_unit * ch4_loss_per_nox * specie_inventory
-            f1 = 0.5  # Indirect effect on ozone
-            f2 = 0.15  # Indirect effect on stratospheric water
-            radiative_forcing_from_year = np.zeros(
-                (len(specie_inventory), len(specie_inventory))
-            )
-            # Radiative forcing induced in year j by the species emitted in year i
-            for i in range(0, len(specie_inventory)):
-                for j in range(0, len(specie_inventory)):
-                    if i <= j:
-                        radiative_forcing_from_year[i, j] = (
-                                (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
-                        )
-            radiative_forcing = np.zeros(len(specie_inventory))
-            for k in range(0, len(specie_inventory)):
-                radiative_forcing[k] = np.sum(
-                    radiative_forcing_from_year[:, k]
+
+        else:
+            nox_background_reference_year = 2018
+            nox_background = background_species_quantities["background_NOx"]
+            dt_land = self.get_dt_land(nox_background, years, nox_background_reference_year)
+            nox_correction = (dt_land * background_nox_correction_factor + 1)
+
+            if specie_name == "NOx - ST O3 increase":
+                rf = sensitivity_rf * specie_inventory
+                erf = rf * ratio_erf_rf
+                processed_inventory =  erf * nox_correction # W/m2
+
+            elif specie_name == "NOx - CH4 decrease and induced":
+                min_year = min(start_year, 1939)
+                max_year = max(end_year, 2051)
+                tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
+                tau_reference_values = [11, 11, 10.1, 10, 9.85, 10.25, 10.25]
+                tau_function = interp1d(tau_reference_year, tau_reference_values, kind="linear")
+                tau = tau_function(years)
+                ch4_molar_mass = 16.04e-3  # [kg/mol]
+                air_molar_mass = 28.97e-3  # [kg/mol]
+                atmosphere_total_mass = 5.1352e18  # [kg]
+                radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
+                A_CH4_unit = (
+                        radiative_efficiency
+                        * 1e9
+                        * air_molar_mass
+                        / (ch4_molar_mass * atmosphere_total_mass)
+                )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
+                A_CH4 = A_CH4_unit * ch4_loss_per_nox * specie_inventory
+                f1 = 0.5  # Indirect effect on ozone
+                f2 = 0.15  # Indirect effect on stratospheric water
+                radiative_forcing_from_year = np.zeros(
+                    (len(specie_inventory), len(specie_inventory))
                 )
-            effective_radiative_forcing = radiative_forcing * ratio_erf_rf
-            processed_inventory = effective_radiative_forcing  # W/m2
+                # Radiative forcing induced in year j by the species emitted in year i
+                for i in range(0, len(specie_inventory)):
+                    for j in range(0, len(specie_inventory)):
+                        if i <= j:
+                            radiative_forcing_from_year[i, j] = (
+                                    (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
+                            )
+                radiative_forcing = np.zeros(len(specie_inventory))
+                for k in range(0, len(specie_inventory)):
+                    radiative_forcing[k] = np.sum(
+                        radiative_forcing_from_year[:, k]
+                    )
+                effective_radiative_forcing = radiative_forcing * ratio_erf_rf
+                processed_inventory = effective_radiative_forcing * nox_correction # W/m2
 
         # --- Run FaIR model ---
         fair_runner = FairRunner(start_year, end_year, background_species_quantities)
-        results = fair_runner.run(specie_name, efficacy_erf, processed_inventory)
+        results = fair_runner.run(specie_name, sensitivity_rf, ratio_erf_rf, efficacy_erf, processed_inventory)
         temperature_with_species = results["temperature"]
         effective_radiative_forcing_with_species = results["effective_radiative_forcing"]
 
@@ -191,6 +226,8 @@ class FairClimateModel(ClimateModel):
             "NOx - ST O3 increase",
             "NOx - CH4 decrease and induced",
             "H2O",
+            "Soot - ACI",
+            "Sulfur - ACI"
         ]:
             effective_radiative_forcing = processed_inventory.reshape(-1, 1)
         # For other species, the ERF is the difference between the FaIR runs with and without the species
@@ -215,9 +252,23 @@ class FairClimateModel(ClimateModel):
         return output_data
 
     @staticmethod
+    def get_dt_land(inventory, years, reference_year):
+        """
+        Computes a ratio of emissions growth versus a reference year, used to parametrse
+        
+        """
+        years_array = np.array(years)
+        idx_ref = np.where (years_array == reference_year)[0][0]
+        emission_ref = inventory[idx_ref]
+
+        dt_land = (inventory - emission_ref) / emission_ref
+        dt_land = np.nan_to_num(dt_land, 0.0) #remove NaNs (if no or null background emissions)
+        return dt_land
+
+    @staticmethod
     def get_background_species_quantities(model_settings: dict = None, start_year: int = None, end_year: int = None) -> dict:
         """
-        Get the background species quantities from the model settings or from the RCP scenario.
+        Get the background species quantities from the model settings or from the background scenario.
 
         Parameters
         ----------
@@ -234,21 +285,25 @@ class FairClimateModel(ClimateModel):
             Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
 
         """
-        rcp = model_settings.get("rcp", None)
-        if "background_species_quantities" in model_settings.keys():
-            if "rcp" in model_settings.keys():
+        scenario = model_settings.get("background_scenario")
+        
+        if "background_species_quantities" in model_settings:
+            if scenario:
                 warnings.warn(
-                    f"Both RCP scenario and background species provided in model_settings. "
-                    f"The background species provided will override RCP scenario '{rcp}'.")
+                    f"Both scenario and background species provided in model_settings. "
+                    f"The background species provided will override scenario '{scenario}'.")
+            
             background_species_quantities = model_settings["background_species_quantities"]
-        elif "rcp" in model_settings.keys():
+            
+        elif scenario:
             background_species_quantities = background_species_quantities_function(
                 start_year,
                 end_year,
-                rcp
+                scenario
             )
+            
         else:
-            raise ValueError("Either 'rcp' or 'background_species_quantities' must be provided in model_settings.")
+            raise ValueError("Either 'background_scenario' or 'background_species_quantities' must be provided in model_settings.")
 
         return background_species_quantities
 
@@ -321,8 +376,10 @@ class FairRunner:
             "NOx - ST O3 increase",
             "NOx - CH4 decrease and induced",
             "H2O",
-            "Sulfur",
-            "Soot",
+            "Soot - ARI",
+            "Soot - ACI",
+            "Sulfur - ARI",
+            "Sulfur - ACI",
             "Aerosols",
         ]
         properties = self.properties = {
@@ -368,18 +425,32 @@ class FairRunner:
                 "aerosol_chemistry_from_emissions": False,
                 "aerosol_chemistry_from_concentration": False,
             },
-            "Sulfur": {
+            "Soot - ARI": {
+                "type": "black carbon",
+                "input_mode": "emissions",
+                "greenhouse_gas": False,
+                "aerosol_chemistry_from_emissions": True,
+                "aerosol_chemistry_from_concentration": False,
+            },
+            "Soot - ACI": {
+                "type": "unspecified",
+                "input_mode": "forcing",
+                "greenhouse_gas": False,
+                "aerosol_chemistry_from_emissions": False,
+                "aerosol_chemistry_from_concentration": False,
+            },
+            "Sulfur - ARI": {
                 "type": "sulfur",
                 "input_mode": "emissions",
                 "greenhouse_gas": False,
                 "aerosol_chemistry_from_emissions": True,
                 "aerosol_chemistry_from_concentration": False,
             },
-            "Soot": {
-                "type": "black carbon",
-                "input_mode": "emissions",
+            "Sulfur - ACI": {
+                "type": "unspecified",
+                "input_mode": "forcing",
                 "greenhouse_gas": False,
-                "aerosol_chemistry_from_emissions": True,
+                "aerosol_chemistry_from_emissions": False,
                 "aerosol_chemistry_from_concentration": False,
             },
             "Aerosols": {
@@ -461,15 +532,8 @@ class FairRunner:
         fill(f.species_configs["erfari_radiative_efficiency"], -0.002653 / 1023.2219696044921, specie="World CH4")
         fill(f.species_configs["aci_scale"], -2.09841432)
 
-        # - Sulfur -
-        erf_aci_sulfur = 0.0
-        fill(f.species_configs["erfari_radiative_efficiency"], -0.0199 + erf_aci_sulfur, specie="Sulfur")
-        fill(f.species_configs["aci_shape"], 0.0, specie="Sulfur")
-
-        # - Soot -
-        erf_aci_BC = 0.0
-        fill(f.species_configs["erfari_radiative_efficiency"], 0.1007 + erf_aci_BC, specie="Soot")
-        fill(f.species_configs["aci_shape"], 0.0, specie="Soot")
+        # - Sulfur and soot ARI -
+        # Directly in the run method as it depends on the sensitivity_rf parameter
 
         # --- Initialise all emissions and forcing to zero ---
         self.initialise_emissions_and_forcing()
@@ -492,8 +556,19 @@ class FairRunner:
             scenario=f.scenarios[0],
         )
 
+        # Set background NOx emissions (without aviation)
+        #fill(
+        #    f.emissions,
+        #    background_species_quantities["background_NOx"][1:],
+        #    specie="NOx",
+        #    config=f.configs[0],
+        #    scenario=f.scenarios[0],
+        #)
+
     def run(self,
             specie_name: str = None,
+            sensitivity_rf: int | float = 0.0,
+            ratio_erf_rf: int | float = 1.0,
             efficacy_erf: int | float = 1.0,
             specie_inventory: list | np.ndarray = None) -> dict:
         """
@@ -523,6 +598,16 @@ class FairRunner:
         properties = self.properties
         if specie_name not in species_list + [None]:  # None is allowed for run with only background species
             warnings.warn(f"Species '{specie_name}' not recognized and won't have any effect. Available species: {species_list}")
+
+        if specie_name == "Soot - ARI":
+            erf_ari_soot = sensitivity_rf * ratio_erf_rf * 10**9 # W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr
+            fill(f.species_configs["erfari_radiative_efficiency"], erf_ari_soot, specie="Soot - ARI")
+            fill(f.species_configs["aci_shape"], 0.0, specie="Soot - ARI")
+
+        if specie_name == "Sulfur - ARI":
+            erf_ari_sulfur = sensitivity_rf * ratio_erf_rf * 10**9 # W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr
+            fill(f.species_configs["erfari_radiative_efficiency"], erf_ari_sulfur, specie="Sulfur - ARI")
+            fill(f.species_configs["aci_shape"], 0.0, specie="Sulfur - ARI")
 
         # --- Set efficacy erf for current species ---
         if specie_name in species_list:
@@ -588,9 +673,9 @@ class FairRunner:
                 fill(f.emissions, 0, specie=specie, config=f.configs[0], scenario=f.scenarios[0])
 
 
-def background_species_quantities_function(start_year: int, end_year: int, rcp: str = None) -> dict:
+def background_species_quantities_function(start_year: int, end_year: int, scenario: str = None) -> dict:
     """
-    Get background species quantities (CO2 and CH4) from RCP scenarios.
+    Get background species quantities (CO2 and CH4) from RCP or SSP scenarios.
 
     Parameters
     ----------
@@ -598,13 +683,12 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
         Start year of the simulation.
     end_year : int
         End year of the simulation.
-    rcp : str
-        RCP scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85'). Select None to set background species to zero.
+        Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'SSP126', 'SSP245', 'SSP370', 'SSP434', 'SSP460', 'SSP534-over', 'SSP585'). Select None to set background species to zero.
 
     Returns
     -------
     background_species_quantities : dict
-        Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.
+        Dictionary containing the background species quantities (CO2, CH4, NOx) for each year of the simulation.
 
     Example
     -------
@@ -615,56 +699,80 @@ def background_species_quantities_function(start_year: int, end_year: int, rcp: 
     """
 
     # --- Validate inputs ---
-    if start_year < RCP_START_YEAR:
-        raise ValueError(f"start_year must be >= {RCP_START_YEAR}")
+    if start_year < BACKGROUND_SCENARIO_START_YEAR:
+        raise ValueError(f"start_year must be >= {BACKGROUND_SCENARIO_START_YEAR}")
 
-    # --- Initialize variables ---
+    # --- Initialise variables ---
     background_species_quantities = {
         "background_CO2": np.zeros(end_year - start_year + 1),
-        "background_CH4": np.zeros(end_year - start_year + 1)
+        "background_CH4": np.zeros(end_year - start_year + 1),
+        "background_NOx": np.zeros(end_year - start_year + 1)
     }
-    rcp_data_path = None
+
+    background_scenario_data_path = None
 
     # --- Read data ---
-    if rcp == "RCP26":
-        rcp_data_path = pth.join(RCP.__path__[0], "RCP26.csv")
-    elif rcp == "RCP45":
-        rcp_data_path = pth.join(RCP.__path__[0], "RCP45.csv")
-    elif rcp == "RCP60":
-        rcp_data_path = pth.join(RCP.__path__[0], "RCP60.csv")
-    elif rcp == "RCP85":
-        rcp_data_path = pth.join(RCP.__path__[0], "RCP85.csv")
+    if scenario == "SSP119":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP119.csv")
+    elif scenario == "SSP126":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP126.csv")
+    elif scenario == "SSP245":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP245.csv")
+    elif scenario == "SSP370":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP370.csv")
+    elif scenario == "SSP434":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP434.csv")
+    elif scenario == "SSP460":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP460.csv")
+    elif scenario == "SSP534-over":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP534-over.csv")
+    elif scenario == "SSP585":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "SSP585.csv")
+    elif scenario == "RCP26":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "RCP26.csv")
+    elif scenario == "RCP45":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "RCP45.csv")
+    elif scenario == "RCP60":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "RCP60.csv")
+    elif scenario == "RCP85":
+        background_scenario_data_path = pth.join(background_scenarios.__path__[0], "RCP85.csv")
     else:
-        warnings.warn("RCP scenario not recognized (available: RCP26, RCP45, RCP60, RCP85). "
-                      "Background species will be set to zero.")
+        warnings.warn("Scenario not recognised (available: SSP119, SSP126, SSP245, SSP370, SSP434, SSP460, SSP534-over, SSP585, RCP26, RCP45, RCP60, RCP85)")
 
-    if rcp_data_path:
-        rcp_data_df = pd.read_csv(rcp_data_path)
+    background_scenario_data_df = pd.read_csv(background_scenario_data_path)
 
+    # World CO2
+    background_species_quantities["background_CO2"] = (
+            (background_scenario_data_df["CO2"][start_year - BACKGROUND_SCENARIO_START_YEAR : end_year - BACKGROUND_SCENARIO_START_YEAR + 1].values)/1000
+        ) # Unit: GtCO2
+
+    # World CH4
+    background_species_quantities["background_CH4"] = background_scenario_data_df["CH4"][
+                                       start_year - BACKGROUND_SCENARIO_START_YEAR: end_year - BACKGROUND_SCENARIO_START_YEAR + 1].values  # Unit: MtCH4
+
+    # Background NOx
+    background_species_quantities["background_NOx"] = background_scenario_data_df["NOx"][
+                                       start_year - BACKGROUND_SCENARIO_START_YEAR: end_year - BACKGROUND_SCENARIO_START_YEAR + 1].values # Unit: MtNOx
+
+    if end_year > BACKGROUND_SCENARIO_END_YEAR:
         # World CO2
-        background_species_quantities["background_CO2"] = (
-                rcp_data_df["FossilCO2"][start_year - RCP_START_YEAR : end_year - RCP_START_YEAR + 1].values
-                + rcp_data_df["OtherCO2"][start_year - RCP_START_YEAR : end_year - RCP_START_YEAR + 1].values
-            ) * 44 / 12  # Conversion from GtC to GtCO2
+        constant_co2 = (background_scenario_data_df["CO2"].values[-1] ) * np.ones(
+            end_year - BACKGROUND_SCENARIO_END_YEAR)
+        background_species_quantities["background_CO2"] = np.concatenate((background_species_quantities["background_CO2"],
+                                                                    constant_co2))
 
         # World CH4
-        background_species_quantities["background_CH4"] = rcp_data_df["CH4"][
-                                           start_year - RCP_START_YEAR: end_year - RCP_START_YEAR + 1].values  # Unit: MtCH4
+        constant_ch4 = (background_scenario_data_df["CH4"].values[-1]) * np.ones(end_year - BACKGROUND_SCENARIO_END_YEAR)
+        background_species_quantities["background_CH4"] = np.concatenate((background_species_quantities["background_CH4"],
+                                                                    constant_ch4))
 
-        if end_year > RCP_END_YEAR:
-            # World CO2
-            constant_co2 = (rcp_data_df["FossilCO2"].values[-1] + rcp_data_df["OtherCO2"].values[-1]) * np.ones(
-                end_year - RCP_END_YEAR)
-            background_species_quantities["background_CO2"] = np.concatenate((background_species_quantities["background_CO2"],
-                                                                        constant_co2))
+        # Background NOx
+        constant_nox = (background_scenario_data_df["NOx"].values[-1]) * np.ones(end_year - BACKGROUND_SCENARIO_END_YEAR)
+        background_species_quantities["background_NOx"] = np.concatenate((background_species_quantities["background_NOx"],
+                                                                    constant_nox))
 
-            # World CH4
-            constant_ch4 = (rcp_data_df["CH4"].values[-1]) * np.ones(end_year - RCP_END_YEAR)
-            background_species_quantities["background_CH4"] = np.concatenate((background_species_quantities["background_CH4"],
-                                                                        constant_ch4))
-
-            # Warning
-            warnings.warn("RCP scenario has no emission data after 2500. "
-                          "Constant emissions were considered for after 2500.")
+        # Warning
+        warnings.warn(f"Background scenario'{scenario}' has no emission data after 2500. "
+                      f"Constant emissions were considered for after 2500.")
 
     return background_species_quantities
