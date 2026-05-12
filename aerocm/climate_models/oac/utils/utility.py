@@ -635,6 +635,7 @@ def generate_toml(start_year, end_year, step, output_file, specie_settings,
     DEFAULT.G_250 = 1.70   # Schmidt-Appleman mixing line slope at 250 hPa
     DEFAULT.eff_fac = 1.0  # efficiency factor compared to 0.333
     DEFAULT.PMrel = 1.0    # relative PM emissions compared to 1e15
+    DEFAULT.b = 35.0       # aircraft wingspan [b]
     '''
 
 

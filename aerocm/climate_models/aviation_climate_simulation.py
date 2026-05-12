@@ -10,7 +10,7 @@ from aerocm.climate_models.ipcc_climate_model import IPCCClimateModel
 from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
 from aerocm.climate_models.lwe_climate_model import LWEClimateModel
 from aerocm.climate_models.fair_climate_model import FairClimateModel, FairRunner
-from aerocm.climate_models.oac_climate_model import OpenAirClim
+from aerocm.climate_models.oac_climate_model import OACClimateModel
 from aerocm.climate_models.oac.utils.utility import time_norm_ncdf
 from aerocm.utils.classes import ClimateModel
 
@@ -145,7 +145,7 @@ class AviationClimateSimulation:
             climate_model = FairClimateModel
             known_model = True
         elif climate_model == "OAC":
-            climate_model = OpenAirClim
+            climate_model = OACClimateModel
             known_model = True  
 
         if known_model:
@@ -167,12 +167,12 @@ class AviationClimateSimulation:
             model_settings["background_effective_radiative_forcing"] = results_background["effective_radiative_forcing"]
 
         # --- In case of time norm evolution for OAC --- 
-        if climate_model == OpenAirClim and model_settings["scaling"] == "norm":
+        if climate_model == OACClimateModel and model_settings["scaling"] == "norm":
            time_norm_ncdf(years , species_list, species_inventory, nc_name="time_norm_evo.nc")
         else:
             pass
        
-        if climate_model == OpenAirClim:
+        if climate_model == OACClimateModel:
             step = model_settings.get("step", 1)   
             years = list(range(int(start_year), int(end_year) + 1, int(step)))
         else:

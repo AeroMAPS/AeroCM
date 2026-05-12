@@ -14,7 +14,7 @@ from aerocm.climate_models.oac.utils.utility import read_nc, scaled_emissions_sp
 #       - oac_results folder generated to store simulation output, automatically deleted to prevent any override when simulatinf species by species
 #       - tomls folder generated for config files
 #       - time_evo folder generated for time evolution netcdf files.   
-class OpenAirClim(ClimateModel):
+class OACClimateModel(ClimateModel):
     """ 
     Implementation of OpenAirClim climate model
 
