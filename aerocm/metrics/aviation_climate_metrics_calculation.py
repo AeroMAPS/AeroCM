@@ -133,7 +133,7 @@ class AviationClimateMetricsCalculation:
                                   "NOx - CH4 decrease and induced": 1*10**10,
                                   "H2O": 1*10**12,
                                   "Soot - ARI": 1*10**14,
-                                  "Soot - ARI": 1*10**14,
+                                  "Soot - ACI": 1*10**14,
                                   "Sulfur - ARI": 1*10**10,
                                   "Sulfur - ACI": 1*10**10
             }
