@@ -33,23 +33,25 @@ class FairClimateModel(ClimateModel):
     available_species = [
         "CO2",
         "Contrails",
-        "NOx - ST O3 increase",
-        "NOx - CH4 decrease and induced",
+        "NOx - ST O3",
+        "NOx - CH4 and induced",
         "H2O",
         "Soot - ARI",
         "Soot - ACI",
         "Sulfur - ARI",
         "Sulfur - ACI",
+        "H2 leakage - ST O3",
+        "H2 leakage - CH4 and induced",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
         "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
                       "ratio_erf_rf": {"type": float, "default": 0.42},
                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
+        "NOx - ST O3": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
                                  "ratio_erf_rf": {"type": float, "default": 1.37},
                                  "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": {"type": float, "default": -3.9},
+        "NOx - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": -3.9},
                                            "ratio_erf_rf": {"type": float, "default": 1.18},
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
@@ -63,7 +65,13 @@ class FairClimateModel(ClimateModel):
         "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
                    "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
         "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - ST O3": {"sensitivity_rf": {"type": float, "default": 0.4e-12},
+                                 "ratio_erf_rf": {"type": float, "default": 1.37},
+                                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": 0.34},
+                                           "ratio_erf_rf": {"type": float, "default": 1.18},
+                                           "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {
         "contrails_saturation_factor": {"type": float, "default": 1.0},
@@ -95,7 +103,7 @@ class FairClimateModel(ClimateModel):
         sensitivity_rf = specie_settings.get("sensitivity_rf", 0.0)  # replace 2nd argument with default if needed
         ratio_erf_rf = specie_settings.get("ratio_erf_rf", 1.0)
         efficacy_erf = specie_settings.get("efficacy_erf", 1.0)
-        ch4_loss_per_nox = specie_settings.get("ch4_loss_per_nox", 0.0)  # only for NOx - CH4 decrease and induced
+        ch4_production_per_nox = specie_settings.get("ch4_production_per_nox", 0.0)  # only for NOx/H2 leakage - CH4 and induced
 
         # --- Extract simulation settings ---
         start_year = self.start_year
@@ -146,10 +154,48 @@ class FairClimateModel(ClimateModel):
             erf = rf * ratio_erf_rf
             processed_inventory = erf  # W/m2
 
-        elif specie_name == "H2O" or specie_name == "Soot - ACI" or specie_name == "Sulfur - ACI":
+        elif specie_name == "H2O" or specie_name == "Soot - ACI" or specie_name == "Sulfur - ACI" or specie_name == "H2 leakage - ST O3":
             rf = sensitivity_rf * specie_inventory
             erf = rf * ratio_erf_rf
             processed_inventory = erf  # W/m2
+
+        elif specie_name == "H2 leakage - CH4 and induced":
+            min_year = min(start_year, 1939)
+            max_year = max(end_year, 2051)
+            tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
+            tau_reference_values = [11, 11, 10.1, 10, 9.85, 10.25, 10.25]
+            tau_function = interp1d(tau_reference_year, tau_reference_values, kind="linear")
+            tau = tau_function(years)
+            ch4_molar_mass = 16.04e-3  # [kg/mol]
+            air_molar_mass = 28.97e-3  # [kg/mol]
+            atmosphere_total_mass = 5.1352e18  # [kg]
+            radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
+            A_CH4_unit = (
+                    radiative_efficiency
+                    * 1e9
+                    * air_molar_mass
+                    / (ch4_molar_mass * atmosphere_total_mass)
+            )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
+            A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
+            f1 = 0.5  # Indirect effect on ozone
+            f2 = 0.15  # Indirect effect on stratospheric water
+            radiative_forcing_from_year = np.zeros(
+                (len(specie_inventory), len(specie_inventory))
+            )
+            # Radiative forcing induced in year j by the species emitted in year i
+            for i in range(0, len(specie_inventory)):
+                for j in range(0, len(specie_inventory)):
+                    if i <= j:
+                        radiative_forcing_from_year[i, j] = (
+                                (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
+                        )
+            radiative_forcing = np.zeros(len(specie_inventory))
+            for k in range(0, len(specie_inventory)):
+                radiative_forcing[k] = np.sum(
+                    radiative_forcing_from_year[:, k]
+                )
+            effective_radiative_forcing = radiative_forcing * ratio_erf_rf
+            processed_inventory = effective_radiative_forcing  # W/m2
 
         else:
             nox_background_reference_year = 2018
@@ -157,12 +203,12 @@ class FairClimateModel(ClimateModel):
             dt_land = self.get_dt_land(nox_background, years, nox_background_reference_year)
             nox_correction = (dt_land * background_nox_correction_factor + 1)
 
-            if specie_name == "NOx - ST O3 increase":
+            if specie_name == "NOx - ST O3":
                 rf = sensitivity_rf * specie_inventory
                 erf = rf * ratio_erf_rf
                 processed_inventory =  erf * nox_correction # W/m2
 
-            elif specie_name == "NOx - CH4 decrease and induced":
+            elif specie_name == "NOx - CH4 and induced":
                 min_year = min(start_year, 1939)
                 max_year = max(end_year, 2051)
                 tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
@@ -179,7 +225,7 @@ class FairClimateModel(ClimateModel):
                         * air_molar_mass
                         / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-                A_CH4 = A_CH4_unit * ch4_loss_per_nox * specie_inventory
+                A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
                 f2 = 0.15  # Indirect effect on stratospheric water
                 radiative_forcing_from_year = np.zeros(
@@ -223,11 +269,13 @@ class FairClimateModel(ClimateModel):
         # For some species, the ERF is directly obtained from the inputs
         if specie_name in [
             "Contrails",
-            "NOx - ST O3 increase",
-            "NOx - CH4 decrease and induced",
+            "NOx - ST O3",
+            "NOx - CH4 and induced",
             "H2O",
             "Soot - ACI",
             "Sulfur - ACI"
+            "H2 leakage - ST O3",
+            "H2 leakage - CH4 and induced",
         ]:
             effective_radiative_forcing = processed_inventory.reshape(-1, 1)
         # For other species, the ERF is the difference between the FaIR runs with and without the species
@@ -373,13 +421,15 @@ class FairRunner:
             "CO2",  # Includes world and aviation emissions
             "World CH4",  # Includes background emissions only
             "Contrails",
-            "NOx - ST O3 increase",
-            "NOx - CH4 decrease and induced",
+            "NOx - ST O3",
+            "NOx - CH4 and induced",
             "H2O",
             "Soot - ARI",
             "Soot - ACI",
             "Sulfur - ARI",
             "Sulfur - ACI",
+            "H2 leakage - ST O3",
+            "H2 leakage - CH4 and induced",
             "Aerosols",
         ]
         properties = self.properties = {
@@ -404,14 +454,14 @@ class FairRunner:
                 "aerosol_chemistry_from_emissions": False,
                 "aerosol_chemistry_from_concentration": False,
             },
-            "NOx - ST O3 increase": {
+            "NOx - ST O3": {
                 "type": "ozone",
                 "input_mode": "forcing",
                 "greenhouse_gas": False,
                 "aerosol_chemistry_from_emissions": False,
                 "aerosol_chemistry_from_concentration": False,
             },
-            "NOx - CH4 decrease and induced": {
+            "NOx - CH4 and induced": {
                 "type": "unspecified",
                 "input_mode": "forcing",
                 "greenhouse_gas": False,
@@ -447,6 +497,20 @@ class FairRunner:
                 "aerosol_chemistry_from_concentration": False,
             },
             "Sulfur - ACI": {
+                "type": "unspecified",
+                "input_mode": "forcing",
+                "greenhouse_gas": False,
+                "aerosol_chemistry_from_emissions": False,
+                "aerosol_chemistry_from_concentration": False,
+            },
+            "H2 leakage - ST O3": {
+                "type": "unspecified",
+                "input_mode": "forcing",
+                "greenhouse_gas": False,
+                "aerosol_chemistry_from_emissions": False,
+                "aerosol_chemistry_from_concentration": False,
+            },
+            "H2 leakage - CH4 and induced": {
                 "type": "unspecified",
                 "input_mode": "forcing",
                 "greenhouse_gas": False,

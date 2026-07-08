@@ -21,23 +21,25 @@ class GWPStarClimateModel(ClimateModel):
     available_species = [
         "CO2",
         "Contrails",
-        "NOx - ST O3 increase",
-        "NOx - CH4 decrease and induced",
+        "NOx - ST O3",
+        "NOx - CH4 and induced",
         "H2O",
         "Soot - ARI",
         "Soot - ACI",
         "Sulfur - ARI",
         "Sulfur - ACI",
+        "H2 leakage - ST O3",
+        "H2 leakage - CH4 and induced",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
         "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
                       "ratio_erf_rf": {"type": float, "default": 0.42},
                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
+        "NOx - ST O3": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
                                  "ratio_erf_rf": {"type": float, "default": 1.37},
                                  "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 decrease and induced": {"sensitivity_rf": {"type": float, "default": -6.1e-12},
+        "NOx - CH4 and induced": {"sensitivity_rf": {"type": float, "default": -6.1e-12},
                                            "ratio_erf_rf": {"type": float, "default": 1.18},
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
@@ -51,7 +53,13 @@ class GWPStarClimateModel(ClimateModel):
         "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
                    "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
         "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - ST O3": {"sensitivity_rf": {"type": float, "default": 0.4e-12},
+                                 "ratio_erf_rf": {"type": float, "default": 1.37},
+                                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - CH4 and induced": {"sensitivity_rf": {"type": float, "default": 5.3e-13},
+                                           "ratio_erf_rf": {"type": float, "default": 1.18},
+                                           "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
 
@@ -131,17 +139,18 @@ class GWPStarClimateModel(ClimateModel):
 
             if (
                     specie_name == "Contrails"
-                    or specie_name == "NOx - ST O3 increase"
+                    or specie_name == "NOx - ST O3"
                     or specie_name == "H2O"
                     or specie_name == "Soot - ARI"
                     or specie_name == "Soot - ACI"
                     or specie_name == "Sulfur - ARI"
                     or specie_name == "Sulfur - ACI"
+                    or specie_name == "H2 leakage - ST O3"
             ):
                 gwpstar_variation_duration = 6
                 gwpstar_s_coefficient = 0.0
 
-            elif specie_name == "NOx - CH4 decrease and induced":
+            elif specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
                 gwpstar_variation_duration = 20
                 gwpstar_s_coefficient = 0.25
 

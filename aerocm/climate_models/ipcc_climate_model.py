@@ -22,23 +22,25 @@ class IPCCClimateModel(ClimateModel):
     available_species = [
         "CO2",
         "Contrails",
-        "NOx - ST O3 increase",
-        "NOx - CH4 decrease and induced",
+        "NOx - ST O3",
+        "NOx - CH4 and induced",
         "H2O",
         "Soot - ARI",
         "Soot - ACI",
         "Sulfur - ARI",
         "Sulfur - ACI",
+        "H2 leakage - ST O3",
+        "H2 leakage - CH4 and induced",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
         "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
                       "ratio_erf_rf": {"type": float, "default": 0.42},
                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
+        "NOx - ST O3": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
                                  "ratio_erf_rf": {"type": float, "default": 1.37},
                                  "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 decrease and induced": {"ch4_loss_per_nox": {"type": float, "default": -3.9},
+        "NOx - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": -3.9},
                                            "ratio_erf_rf": {"type": float, "default": 1.18},
                                            "efficacy_erf": {"type": float, "default": 1.0}},
         "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
@@ -52,7 +54,13 @@ class IPCCClimateModel(ClimateModel):
         "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
                    "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
         "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - ST O3": {"sensitivity_rf": {"type": float, "default": 0.4e-12},
+                                 "ratio_erf_rf": {"type": float, "default": 1.37},
+                                 "efficacy_erf": {"type": float, "default": 1.0}},
+        "H2 leakage - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": 0.34},
+                                           "ratio_erf_rf": {"type": float, "default": 1.18},
+                                           "efficacy_erf": {"type": float, "default": 1.0}}
     }
     available_model_settings = {}
 
@@ -74,7 +82,7 @@ class IPCCClimateModel(ClimateModel):
         sensitivity_rf = self.specie_settings.get("sensitivity_rf", None)
         ratio_erf_rf = self.specie_settings["ratio_erf_rf"]
         efficacy_erf = self.specie_settings.get("efficacy_erf", 1.0)
-        ch4_loss_per_nox = self.specie_settings.get("ch4_loss_per_nox", 0.0)  # only for NOx - CH4 decrease and induced
+        ch4_production_per_nox = self.specie_settings.get("ch4_production_per_nox", 0.0)  # only for NOx/H2 leakage - CH4 and induced
 
         # --- Extract simulation settings ---
         start_year = self.start_year
@@ -122,7 +130,7 @@ class IPCCClimateModel(ClimateModel):
             effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         else:
-            if specie_name == "NOx - CH4 decrease and induced":
+            if specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
                 min_year = min(start_year, 1939)
                 max_year = max(end_year, 2051)
                 tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
@@ -142,7 +150,7 @@ class IPCCClimateModel(ClimateModel):
                         * air_molar_mass
                         / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-                A_CH4 = A_CH4_unit * ch4_loss_per_nox * specie_inventory
+                A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
                 f2 = 0.15  # Indirect effect on stratospheric water
                 radiative_forcing_from_year = np.zeros(
@@ -178,7 +186,7 @@ class IPCCClimateModel(ClimateModel):
                         for i in [1,2,3]:
                             term += a[i] * tau[i] * c[j] / (tau[i] - d[j]) * (np.exp((ki - k) / tau[i]) - np.exp((ki - k) / d[j]))
                     temperature[k] += A_co2[ki] * term
-        elif specie_name == "NOx - CH4 decrease and induced":
+        elif specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
             for k in range(0, len(temperature)):
                 for ki in range(0, k + 1):
                     term = 0
