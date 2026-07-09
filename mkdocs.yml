@@ -79,7 +79,6 @@ plugins:
             show_source: true
             separate_signature: true
             merge_init_into_class: true
-            show_private_members: true
             inherited_members: false
             members_order: source
   - mkdocs-jupyter
