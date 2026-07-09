@@ -133,25 +133,29 @@ class AviationClimateMetricsCalculation:
             co2_unit_value = 1 * 10**10
             species_unit_value = {
                 "Contrails": 1 * 10**10,
-                "NOx - ST O3 increase": 1 * 10**10,
-                "NOx - CH4 decrease and induced": 1 * 10**10,
+                "NOx - ST O3": 1 * 10**10,
+                "NOx - CH4 and induced": 1 * 10**10,
                 "H2O": 1 * 10**12,
                 "Soot - ARI": 1 * 10**14,
                 "Soot - ACI": 1 * 10**14,
                 "Sulfur - ARI": 1 * 10**10,
                 "Sulfur - ACI": 1 * 10**10,
+                "H2 leakage - ST O3": 1 * 10 ** 10,
+                "H2 leakage - CH4 and induced": 1 * 10 ** 10,
             }
         else:
             co2_unit_value = 1
             species_unit_value = {
                 "Contrails": 1,
-                "NOx - ST O3 increase": 1,
-                "NOx - CH4 decrease and induced": 1,
+                "NOx - ST O3": 1,
+                "NOx - CH4 and induced": 1,
                 "H2O": 1,
                 "Soot - ARI": 1,
                 "Soot - ACI": 1,
                 "Sulfur - ARI": 1,
                 "Sulfur - ACI": 1,
+                "H2 leakage - ST O3": 1,
+                "H2 leakage - CH4 and induced": 1,
             }
 
         if type(time_horizon) == int or type(time_horizon) == float:
