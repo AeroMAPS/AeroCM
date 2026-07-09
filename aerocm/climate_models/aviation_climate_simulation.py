@@ -261,7 +261,9 @@ class AviationClimateSimulation:
             }
 
             for name, factor in factors.items():
-                results[name] = {k: v * factor for k, v in h2_leakage_ch4_results.items()}
+                results[name] = {
+                    k: v * factor for k, v in h2_leakage_ch4_results.items()
+                }
 
         # --- Aggregate results ---
         aggregations = {}

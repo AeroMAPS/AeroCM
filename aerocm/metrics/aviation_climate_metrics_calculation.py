@@ -140,8 +140,8 @@ class AviationClimateMetricsCalculation:
                 "Soot - ACI": 1 * 10**14,
                 "Sulfur - ARI": 1 * 10**10,
                 "Sulfur - ACI": 1 * 10**10,
-                "H2 leakage - ST O3": 1 * 10 ** 10,
-                "H2 leakage - CH4 and induced": 1 * 10 ** 10,
+                "H2 leakage - ST O3": 1 * 10**10,
+                "H2 leakage - CH4 and induced": 1 * 10**10,
             }
         else:
             co2_unit_value = 1
