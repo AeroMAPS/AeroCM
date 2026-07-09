@@ -12,11 +12,7 @@ from aerocm.climate_models.fair_climate_model import FairClimateModel
 
 
 def emission_profile_function(
-        start_year: int,
-        t0: int,
-        time_horizon: int,
-        profile: str,
-        unit_value: float
+    start_year: int, t0: int, time_horizon: int, profile: str, unit_value: float
 ):
     """
     Generate an emission profile based on the specified type (e.g. pulse) and time horizon.
@@ -45,7 +41,9 @@ def emission_profile_function(
         If an invalid profile type is provided.
     """
     if profile not in ["pulse", "step", "1% growth"]:
-        raise ValueError(f"Invalid profile '{profile}'. Choose from 'pulse', 'step', or '1% growth'.")
+        raise ValueError(
+            f"Invalid profile '{profile}'. Choose from 'pulse', 'step', or '1% growth'."
+        )
     emissions = np.zeros(t0 - start_year + time_horizon + 1)
     if profile == "pulse":
         emissions[t0 - start_year] = unit_value
@@ -102,7 +100,9 @@ def plot_simulation_results(
     if not isinstance(ds, xr.Dataset):
         raise TypeError("Input 'ds' must be an xarray.Dataset.")
     if data_var not in ds.data_vars:
-        raise ValueError(f"'{data_var}' not found in dataset. Available: {list(ds.data_vars)}")
+        raise ValueError(
+            f"'{data_var}' not found in dataset. Available: {list(ds.data_vars)}"
+        )
 
     if species is not None:
         missing = [s for s in species if s not in ds.species.values]
@@ -125,7 +125,9 @@ def plot_simulation_results(
 
     # --- Plot ---
     if stacked:
-        ax.stackplot(years, data.T, labels=[f"{label_prefix or ''}{sp}" for sp in species_list])
+        ax.stackplot(
+            years, data.T, labels=[f"{label_prefix or ''}{sp}" for sp in species_list]
+        )
     else:
         for i, sp in enumerate(species_list):
             label = f"{label_prefix or ''}{sp}"
@@ -164,13 +166,15 @@ def show_model_info(obj: type | str):
 
     # --- Collect attributes (class + instance) ---
     attributes = {
-        k: v for k, v in vars(cls).items()
+        k: v
+        for k, v in vars(cls).items()
         if not k.startswith("_") and not inspect.isroutine(v)
     }
 
     # --- Collect public methods ---
     methods = [
-        name for name, func in inspect.getmembers(cls, predicate=inspect.isroutine)
+        name
+        for name, func in inspect.getmembers(cls, predicate=inspect.isroutine)
         if not name.startswith("_")
     ]
 

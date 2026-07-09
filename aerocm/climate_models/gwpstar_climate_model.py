@@ -21,37 +21,68 @@ class GWPStarClimateModel(ClimateModel):
     available_species = [
         "CO2",
         "Contrails",
-        "NOx - ST O3 increase",
-        "NOx - CH4 decrease and induced",
+        "NOx - ST O3",
+        "NOx - CH4 and induced",
         "H2O",
         "Soot - ARI",
         "Soot - ACI",
         "Sulfur - ARI",
         "Sulfur - ACI",
+        "H2 leakage - ST O3",
+        "H2 leakage - CH4 and induced",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
-        "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
-                      "ratio_erf_rf": {"type": float, "default": 0.42},
-                      "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3 increase": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
-                                 "ratio_erf_rf": {"type": float, "default": 1.37},
-                                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 decrease and induced": {"sensitivity_rf": {"type": float, "default": -6.1e-12},
-                                           "ratio_erf_rf": {"type": float, "default": 1.18},
-                                           "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
-                "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ARI": {"sensitivity_rf": {"type": float, "default": 1.0e-10},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}}
+        "Contrails": {
+            "sensitivity_rf": {"type": float, "default": 2.23e-12},
+            "ratio_erf_rf": {"type": float, "default": 0.42},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 7.64e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - CH4 and induced": {
+            "sensitivity_rf": {"type": float, "default": -6.1e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2O": {
+            "sensitivity_rf": {"type": float, "default": 5.2e-15},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ARI": {
+            "sensitivity_rf": {"type": float, "default": 1.0e-10},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ARI": {
+            "sensitivity_rf": {"type": float, "default": -2.0e-11},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 0.4e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - CH4 and induced": {
+            "sensitivity_rf": {"type": float, "default": 5.3e-13},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
     }
     available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
 
@@ -87,18 +118,20 @@ class GWPStarClimateModel(ClimateModel):
         # --- Run the model ---
         if specie_name == "CO2":
             equivalent_emissions = (
-                    specie_inventory / 10 ** 12
+                specie_inventory / 10**12
             )  # Conversion from kgCO2 to GtCO2
 
             co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
             air_molar_mass = 28.97e-3  # [kg/mol]
             atmosphere_total_mass = 5.1352e18  # [kg]
-            radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            radiative_efficiency = (
+                1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            )
             A_co2_unit = (
-                    radiative_efficiency
-                    * 1e9
-                    * air_molar_mass
-                    / (co2_molar_mass * atmosphere_total_mass)
+                radiative_efficiency
+                * 1e9
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
             )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
 
             A_co2 = A_co2_unit * specie_inventory
@@ -115,7 +148,7 @@ class GWPStarClimateModel(ClimateModel):
                         radiative_forcing_from_year[i, j] = A_co2[i] * a[0]
                         for k in [1, 2, 3]:
                             radiative_forcing_from_year[i, j] += (
-                                    A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
+                                A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
                             )
             radiative_forcing = np.zeros(len(specie_inventory))
             for k in range(0, len(specie_inventory)):
@@ -130,37 +163,41 @@ class GWPStarClimateModel(ClimateModel):
             gwpstar_s_coefficient = np.nan
 
             if (
-                    specie_name == "Contrails"
-                    or specie_name == "NOx - ST O3 increase"
-                    or specie_name == "H2O"
-                    or specie_name == "Soot - ARI"
-                    or specie_name == "Soot - ACI"
-                    or specie_name == "Sulfur - ARI"
-                    or specie_name == "Sulfur - ACI"
+                specie_name == "Contrails"
+                or specie_name == "NOx - ST O3"
+                or specie_name == "H2O"
+                or specie_name == "Soot - ARI"
+                or specie_name == "Soot - ACI"
+                or specie_name == "Sulfur - ARI"
+                or specie_name == "Sulfur - ACI"
+                or specie_name == "H2 leakage - ST O3"
             ):
                 gwpstar_variation_duration = 6
                 gwpstar_s_coefficient = 0.0
 
-            elif specie_name == "NOx - CH4 decrease and induced":
+            elif (
+                specie_name == "NOx - CH4 and induced"
+                or specie_name == "H2 leakage - CH4 and induced"
+            ):
                 gwpstar_variation_duration = 20
                 gwpstar_s_coefficient = 0.25
 
             equivalent_emissions = (
-                    gwpstar_equivalent_emissions_function(
-                        start_year,
-                        end_year,
-                        emissions_erf=effective_radiative_forcing,
-                        gwpstar_variation_duration=gwpstar_variation_duration,
-                        gwpstar_s_coefficient=gwpstar_s_coefficient,
-                    )
-                    / 10 ** 12
+                gwpstar_equivalent_emissions_function(
+                    start_year,
+                    end_year,
+                    emissions_erf=effective_radiative_forcing,
+                    gwpstar_variation_duration=gwpstar_variation_duration,
+                    gwpstar_s_coefficient=gwpstar_s_coefficient,
+                )
+                / 10**12
             )  # Conversion from kgCO2-we to GtCO2-we
 
         cumulative_equivalent_emissions = np.zeros(len(specie_inventory))
         cumulative_equivalent_emissions[0] = equivalent_emissions[0]
         for k in range(1, len(cumulative_equivalent_emissions)):
             cumulative_equivalent_emissions[k] = (
-                    cumulative_equivalent_emissions[k - 1] + equivalent_emissions[k]
+                cumulative_equivalent_emissions[k - 1] + equivalent_emissions[k]
             )
         temperature = tcre * cumulative_equivalent_emissions * efficacy_erf
 
@@ -168,12 +205,12 @@ class GWPStarClimateModel(ClimateModel):
         output_data = {
             "radiative_forcing": radiative_forcing,
             "effective_radiative_forcing": effective_radiative_forcing,
-            "temperature": temperature
+            "temperature": temperature,
         }
 
         if return_df:
             output_data = pd.DataFrame(output_data, index=years)
-            output_data.index.name = 'Year'
+            output_data.index.name = "Year"
 
         return output_data
 

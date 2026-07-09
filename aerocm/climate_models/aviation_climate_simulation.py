@@ -49,8 +49,8 @@ class AviationClimateSimulation:
     >>> species_inventory = {
     ...     "CO2": np.random.rand(end_year - start_year + 1) * 1e9,  # in kg
     ...     "Contrails": np.random.rand(end_year - start_year + 1) * 1e9,  # in km
-    ...     "NOx - ST O3 increase": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
-    ...     "NOx - CH4 decrease and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "NOx - ST O3": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
+    ...     "NOx - CH4 and induced": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "H2O": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "Soot - ARI": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
     ...     "Sulfur - ARI": np.random.rand(end_year - start_year + 1) * 1e6,  # in kg
@@ -58,8 +58,8 @@ class AviationClimateSimulation:
     >>> species_settings = {
     ...     "CO2": {"ratio_erf_rf": 1.0},
     ...     "Contrails": {"sensitivity_rf": 2.23e-12, "ratio_erf_rf": 0.42, "efficacy_erf": 1.0},
-    ...     "NOx - ST O3 increase": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
-    ...     "NOx - CH4 decrease and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
+    ...     "NOx - ST O3": {"sensitivity_rf": 7.6e-12, "ratio_erf_rf": 1.37, "efficacy_erf": 1.0},
+    ...     "NOx - CH4 and induced": {"sensitivity_rf": -6.1e-12, "ratio_erf_rf": 1.18, "efficacy_erf": 1.0},
     ...     "H2O": {"sensitivity_rf": 5.2e-15, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
     ...     "Soot - ARI": {"sensitivity_rf": 1.0e-10, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
     ...     "Sulfur - ARI": {"sensitivity_rf": -2.0e-11, "ratio_erf_rf": 1.0, "efficacy_erf": 1.0},
@@ -78,16 +78,16 @@ class AviationClimateSimulation:
     """
 
     # --- Variables for validation ---
-    available_climate_models = ['IPCC', 'GWP*', 'LWE', 'FaIR']
+    available_climate_models = ["IPCC", "GWP*", "LWE", "FaIR"]
 
     def __init__(
-            self,
-            climate_model: str | ClimateModel | Callable,
-            start_year: int,
-            end_year: int,
-            species_inventory: dict,
-            species_settings: dict | None = None,
-            model_settings: dict | None = None
+        self,
+        climate_model: str | ClimateModel | Callable,
+        start_year: int,
+        end_year: int,
+        species_inventory: dict,
+        species_settings: dict | None = None,
+        model_settings: dict | None = None,
     ):
         self.climate_model = climate_model
         self.start_year = start_year
@@ -130,7 +130,7 @@ class AviationClimateSimulation:
         model_settings = self.model_settings.copy()
 
         known_model = False
-        if climate_model == 'IPCC':
+        if climate_model == "IPCC":
             climate_model = IPCCClimateModel
             known_model = True
         elif climate_model == "GWP*":
@@ -144,35 +144,49 @@ class AviationClimateSimulation:
             known_model = True
 
         if known_model:
-            species_settings = add_default_species_settings(climate_model, species_settings)
-            self.species_settings = species_settings # For accessing to the final species settings
+            species_settings = add_default_species_settings(
+                climate_model, species_settings
+            )
+            self.species_settings = (
+                species_settings  # For accessing to the final species settings
+            )
             model_settings = add_default_model_settings(climate_model, model_settings)
-            self.model_settings = model_settings  # For accessing to the final model settings
+            self.model_settings = (
+                model_settings  # For accessing to the final model settings
+            )
 
         if climate_model == FairClimateModel and known_model:
             # -- Calculate background temperature and ERF only once here to improve calculation time ---
-            background_species_quantities = climate_model.get_background_species_quantities(
-                model_settings,
-                start_year,
-                end_year
+            background_species_quantities = (
+                climate_model.get_background_species_quantities(
+                    model_settings, start_year, end_year
+                )
             )
-            fair_runner = FairRunner(start_year, end_year, background_species_quantities)  # Initialize FairRunner
-            results_background = fair_runner.run()  # Run with no additional species to get background state
+            fair_runner = FairRunner(
+                start_year, end_year, background_species_quantities
+            )  # Initialize FairRunner
+            results_background = (
+                fair_runner.run()
+            )  # Run with no additional species to get background state
             model_settings["background_temperature"] = results_background["temperature"]
-            model_settings["background_effective_radiative_forcing"] = results_background["effective_radiative_forcing"]
+            model_settings["background_effective_radiative_forcing"] = (
+                results_background["effective_radiative_forcing"]
+            )
 
         # -- Run model for all species ---
         results = {}
         if isinstance(climate_model, type) and issubclass(climate_model, ClimateModel):
             if "Contrails correction factors" in species_list:
-                species_inventory["Contrails"] = species_inventory["Contrails"] * species_inventory[
-                    "Contrails correction factors"]
+                species_inventory["Contrails"] = (
+                    species_inventory["Contrails"]
+                    * species_inventory["Contrails correction factors"]
+                )
                 species_list.remove("Contrails correction factors")
             if "NOx" in species_list:
-                species_list.append("NOx - ST O3 increase")
-                species_list.append("NOx - CH4 decrease and induced")
-                species_inventory["NOx - ST O3 increase"] = species_inventory["NOx"]
-                species_inventory["NOx - CH4 decrease and induced"] = species_inventory["NOx"]
+                species_list.append("NOx - ST O3")
+                species_list.append("NOx - CH4 and induced")
+                species_inventory["NOx - ST O3"] = species_inventory["NOx"]
+                species_inventory["NOx - CH4 and induced"] = species_inventory["NOx"]
                 species_list.remove("NOx")
             if "Soot" in species_list:
                 species_list.append("Soot - ARI")
@@ -186,6 +200,16 @@ class AviationClimateSimulation:
                 species_inventory["Sulfur - ARI"] = species_inventory["Sulfur"]
                 species_inventory["Sulfur - ACI"] = species_inventory["Sulfur"]
                 species_list.remove("Sulfur")
+            if "H2 leakage" in species_list:
+                species_list.append("H2 leakage - ST O3")
+                species_list.append("H2 leakage - CH4 and induced")
+                species_inventory["H2 leakage - ST O3"] = species_inventory[
+                    "H2 leakage"
+                ]
+                species_inventory["H2 leakage - CH4 and induced"] = species_inventory[
+                    "H2 leakage"
+                ]
+                species_list.remove("H2 leakage")
             for specie in species_list:
                 model_instance = climate_model(
                     start_year,
@@ -208,35 +232,86 @@ class AviationClimateSimulation:
                 )
 
         # --- NOX-CH4: discriminate between direct CH4 decrease and O3/H2O variations induced by CH4 decrease ---
-        nox_ch4_results = results.get("NOx - CH4 decrease and induced")
+        nox_ch4_results = results.get("NOx - CH4 and induced")
         if nox_ch4_results:
-            f1 = 0.5  # Indirect effect of CH4 decrease on ozone
-            f2 = 0.15  # Indirect effect of CH4 decrease on stratospheric water
+            f1 = 0.5  # Indirect effect of CH4 change on ozone
+            f2 = 0.15  # Indirect effect of CH4 change on stratospheric water
             total_effect = 1 + f1 + f2
 
             factors = {
-                "NOX - CH4 decrease": 1 / total_effect,
-                "NOX - CH4 induced O3": f1 / total_effect,
-                "NOX - CH4 induced H2O": f2 / total_effect,
+                "NOx - CH4": 1 / total_effect,
+                "NOx - CH4 induced O3": f1 / total_effect,
+                "NOx - CH4 induced H2O": f2 / total_effect,
             }
 
             for name, factor in factors.items():
                 results[name] = {k: v * factor for k, v in nox_ch4_results.items()}
 
+        # --- H2-CH4: discriminate between direct CH4 increase and O3/H2O variations induced by CH4 increase ---
+        h2_leakage_ch4_results = results.get("H2 leakage - CH4 and induced")
+        if h2_leakage_ch4_results:
+            f1 = 0.5  # Indirect effect of CH4 change on ozone
+            f2 = 0.15  # Indirect effect of CH4 change on stratospheric water
+            total_effect = 1 + f1 + f2
+
+            factors = {
+                "H2 leakage - CH4": 1 / total_effect,
+                "H2 leakage - CH4 induced O3": f1 / total_effect,
+                "H2 leakage - CH4 induced H2O": f2 / total_effect,
+            }
+
+            for name, factor in factors.items():
+                results[name] = {k: v * factor for k, v in h2_leakage_ch4_results.items()}
+
         # --- Aggregate results ---
         aggregations = {}
-        if "NOx - CH4 decrease and induced" in results:
-            aggregations["NOx"] = ["NOx - ST O3 increase", "NOx - CH4 decrease and induced"]
+        if "NOx - CH4 and induced" in results:
+            aggregations["NOx"] = ["NOx - ST O3", "NOx - CH4 and induced"]
         if "Soot - ARI" in results or "Soot - ACI" in results:
-            aggregations["Soot"] = [s for s in ["Soot - ARI", "Soot - ACI"] if s in results]
+            aggregations["Soot"] = [
+                s for s in ["Soot - ARI", "Soot - ACI"] if s in results
+            ]
         if "Sulfur - ARI" in results or "Sulfur - ACI" in results:
-            aggregations["Sulfur"] = [s for s in ["Sulfur - ARI", "Sulfur - ACI"] if s in results]
-        if "Soot - ARI" in results or "Soot - ACI" in results or "Sulfur - ARI" in results or "Sulfur - ACI" in results:
-            aggregations["Aerosols"] = [s for s in ["Soot - ARI", "Soot - ACI", "Sulfur - ARI", "Sulfur - ACI"] if s in results]
-        if "Contrails" in results or "NOx" in results or "H2O" in results or "Aerosols" in aggregations:
-            aggregations["Non-CO2"] = [s for s in ["Contrails", "NOx", "H2O", "Aerosols"] if s in results or s in aggregations]
-        if "CO2" in results or "Non-CO2" in aggregations:
-            aggregations["Total"] = [s for s in ["CO2", "Non-CO2"] if s in results or s in aggregations]
+            aggregations["Sulfur"] = [
+                s for s in ["Sulfur - ARI", "Sulfur - ACI"] if s in results
+            ]
+        if (
+            "Soot - ARI" in results
+            or "Soot - ACI" in results
+            or "Sulfur - ARI" in results
+            or "Sulfur - ACI" in results
+        ):
+            aggregations["Aerosols"] = [
+                s
+                for s in ["Soot - ARI", "Soot - ACI", "Sulfur - ARI", "Sulfur - ACI"]
+                if s in results
+            ]
+        if "H2 leakage - CH4 and induced" in results:
+            aggregations["H2 leakage"] = [
+                "H2 leakage - ST O3",
+                "H2 leakage - CH4 and induced",
+            ]
+        if (
+            "Contrails" in results
+            or "NOx" in results
+            or "H2O" in results
+            or "Aerosols" in aggregations
+        ):
+            aggregations["Non-CO2"] = [
+                s
+                for s in ["Contrails", "NOx", "H2O", "Aerosols"]
+                if s in results or s in aggregations
+            ]
+        if (
+            "CO2" in results
+            or "Non-CO2" in aggregations
+            or "H2 leakage" in aggregations
+        ):
+            aggregations["Total"] = [
+                s
+                for s in ["CO2", "Non-CO2", "H2 leakage"]
+                if s in results or s in aggregations
+            ]
 
         for agg_name, names in aggregations.items():
             results[agg_name] = {
@@ -259,7 +334,9 @@ class AviationClimateSimulation:
 
         is_registered_name = model in self.available_climate_models
         is_callable = callable(model)
-        is_climate_subclass = isinstance(model, type) and issubclass(model, ClimateModel)
+        is_climate_subclass = isinstance(model, type) and issubclass(
+            model, ClimateModel
+        )
 
         if not (is_registered_name or is_callable or is_climate_subclass):
             raise ValueError(
@@ -282,26 +359,28 @@ def to_xarray(data: dict, timesteps: list):
     """
     # Extract species and variable names
     species = list(data.keys())  # e.g. 'Aviation CO2', 'Aviation NOx', 'Aviation total'
-    variables = sorted({k for d in data.values() for k in d.keys()})  # e.g. 'rf', 'erf', 'temperature increase'
+    variables = sorted(
+        {k for d in data.values() for k in d.keys()}
+    )  # e.g. 'rf', 'erf', 'temperature increase'
 
     # Build xarray dataset
     ds = xr.Dataset(
         {
-            var: (("species", "year"),
-                  np.array([data[s].get(var, np.full(len(timesteps), np.nan)) for s in species]))
+            var: (
+                ("species", "year"),
+                np.array(
+                    [data[s].get(var, np.full(len(timesteps), np.nan)) for s in species]
+                ),
+            )
             for var in variables
         },
-        coords={
-            "species": species,
-            "year": timesteps
-        }
+        coords={"species": species, "year": timesteps},
     )
     return ds
 
 
 def add_default_species_settings(
-        climate_model: ClimateModel,
-        species_settings: dict | None = None
+    climate_model: ClimateModel, species_settings: dict | None = None
 ):
     """
     Complete the species settings with default values from the climate model for the ones that are not provided.
@@ -372,7 +451,3 @@ def add_default_model_settings(climate_model, model_settings):
         updated_model_settings[key] = value
 
     return updated_model_settings
-
-
-
-

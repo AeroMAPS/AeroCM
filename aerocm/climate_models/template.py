@@ -9,7 +9,7 @@ from aerocm.utils.classes import ClimateModel
 
 
 class MyClimateModel(ClimateModel):
-    """ Template class for climate model implementations.
+    """Template class for climate model implementations.
 
     Example
     -------
@@ -35,14 +35,12 @@ class MyClimateModel(ClimateModel):
     """
 
     # --- Variables for validation ---
-    available_species = [
-        "species_1",
-        "species_2",
-        "species_3"
-    ]
+    available_species = ["species_1", "species_2", "species_3"]
     available_species_settings = {
-        "species_1": {"param1": {"type": float, "default": 1.0},
-                      "param2": {"type": float, "default": 1.0}},
+        "species_1": {
+            "param1": {"type": float, "default": 1.0},
+            "param2": {"type": float, "default": 1.0},
+        },
         "species_2": {"param3": {"type": int, "default": 1}},
         "species_3": {},
     }
@@ -62,7 +60,9 @@ class MyClimateModel(ClimateModel):
 
         # --- Extract species settings ---
         specie_settings = self.specie_settings
-        param1 = specie_settings.get("param1", 1.0)  # replace 2nd argument with default if needed
+        param1 = specie_settings.get(
+            "param1", 1.0
+        )  # replace 2nd argument with default if needed
         param2 = specie_settings.get("param2", 1.0)
         param3 = specie_settings.get("param3", 1)
 
@@ -77,7 +77,7 @@ class MyClimateModel(ClimateModel):
         output_data = {
             "radiative_forcing": radiative_forcing,
             "effective_radiative_forcing": effective_radiative_forcing,
-            "temperature": temperature
+            "temperature": temperature,
         }
 
         if return_df:
