@@ -34,33 +34,56 @@ class IPCCClimateModel(ClimateModel):
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
-        "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
-                      "ratio_erf_rf": {"type": float, "default": 0.42},
-                      "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
-                                 "ratio_erf_rf": {"type": float, "default": 1.37},
-                                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": -3.9},
-                                           "ratio_erf_rf": {"type": float, "default": 1.18},
-                                           "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
-                "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ARI": {"sensitivity_rf": {"type": float, "default": 1.0e-10},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2 leakage - ST O3": {"sensitivity_rf": {"type": float, "default": 0.4e-12},
-                                 "ratio_erf_rf": {"type": float, "default": 1.37},
-                                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2 leakage - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": 0.34},
-                                           "ratio_erf_rf": {"type": float, "default": 1.18},
-                                           "efficacy_erf": {"type": float, "default": 1.0}}
+        "Contrails": {
+            "sensitivity_rf": {"type": float, "default": 2.23e-12},
+            "ratio_erf_rf": {"type": float, "default": 0.42},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 7.64e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - CH4 and induced": {
+            "ch4_production_per_nox": {"type": float, "default": -3.9},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2O": {
+            "sensitivity_rf": {"type": float, "default": 5.2e-15},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ARI": {
+            "sensitivity_rf": {"type": float, "default": 1.0e-10},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ARI": {
+            "sensitivity_rf": {"type": float, "default": -2.0e-11},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 0.4e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - CH4 and induced": {
+            "ch4_production_per_nox": {"type": float, "default": 0.34},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
     }
     available_model_settings = {}
 
@@ -82,7 +105,9 @@ class IPCCClimateModel(ClimateModel):
         sensitivity_rf = self.specie_settings.get("sensitivity_rf", None)
         ratio_erf_rf = self.specie_settings["ratio_erf_rf"]
         efficacy_erf = self.specie_settings.get("efficacy_erf", 1.0)
-        ch4_production_per_nox = self.specie_settings.get("ch4_production_per_nox", 0.0)  # only for NOx/H2 leakage - CH4 and induced
+        ch4_production_per_nox = self.specie_settings.get(
+            "ch4_production_per_nox", 0.0
+        )  # only for NOx/H2 leakage - CH4 and induced
 
         # --- Extract simulation settings ---
         start_year = self.start_year
@@ -94,18 +119,20 @@ class IPCCClimateModel(ClimateModel):
         # --- Run the IPCC climate model ---
         if specie_name == "CO2":
             equivalent_emissions = (
-                    specie_inventory / 10 ** 12
+                specie_inventory / 10**12
             )  # Conversion from kgCO2 to GtCO2
 
             co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
             air_molar_mass = 28.97e-3  # [kg/mol]
             atmosphere_total_mass = 5.1352e18  # [kg]
-            radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            radiative_efficiency = (
+                1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            )
             A_co2_unit = (
-                    radiative_efficiency
-                    * 1e9
-                    * air_molar_mass
-                    / (co2_molar_mass * atmosphere_total_mass)
+                radiative_efficiency
+                * 1e9
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
             )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
 
             A_co2 = A_co2_unit * specie_inventory
@@ -122,7 +149,7 @@ class IPCCClimateModel(ClimateModel):
                         radiative_forcing_from_year[i, j] = A_co2[i] * a[0]
                         for k in [1, 2, 3]:
                             radiative_forcing_from_year[i, j] += (
-                                    A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
+                                A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
                             )
             radiative_forcing = np.zeros(len(specie_inventory))
             for k in range(0, len(specie_inventory)):
@@ -130,7 +157,10 @@ class IPCCClimateModel(ClimateModel):
             effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         else:
-            if specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
+            if (
+                specie_name == "NOx - CH4 and induced"
+                or specie_name == "H2 leakage - CH4 and induced"
+            ):
                 min_year = min(start_year, 1939)
                 max_year = max(end_year, 2051)
                 tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
@@ -145,10 +175,10 @@ class IPCCClimateModel(ClimateModel):
                 atmosphere_total_mass = 5.1352e18  # [kg]
                 radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
                 A_CH4_unit = (
-                        radiative_efficiency
-                        * 1e9
-                        * air_molar_mass
-                        / (ch4_molar_mass * atmosphere_total_mass)
+                    radiative_efficiency
+                    * 1e9
+                    * air_molar_mass
+                    / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
                 A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
@@ -161,7 +191,7 @@ class IPCCClimateModel(ClimateModel):
                     for j in range(0, len(specie_inventory)):
                         if i <= j:
                             radiative_forcing_from_year[i, j] = (
-                                    (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
+                                (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                             )
                 radiative_forcing = np.zeros(len(specie_inventory))
                 for k in range(0, len(specie_inventory)):
@@ -182,36 +212,56 @@ class IPCCClimateModel(ClimateModel):
                 for ki in range(0, k + 1):
                     term = 0
                     for j in [0, 1]:
-                        term += a[0] * c[j] * (1-np.exp((ki-k)/d[j]))
-                        for i in [1,2,3]:
-                            term += a[i] * tau[i] * c[j] / (tau[i] - d[j]) * (np.exp((ki - k) / tau[i]) - np.exp((ki - k) / d[j]))
+                        term += a[0] * c[j] * (1 - np.exp((ki - k) / d[j]))
+                        for i in [1, 2, 3]:
+                            term += (
+                                a[i]
+                                * tau[i]
+                                * c[j]
+                                / (tau[i] - d[j])
+                                * (np.exp((ki - k) / tau[i]) - np.exp((ki - k) / d[j]))
+                            )
                     temperature[k] += A_co2[ki] * term
-        elif specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
+        elif (
+            specie_name == "NOx - CH4 and induced"
+            or specie_name == "H2 leakage - CH4 and induced"
+        ):
             for k in range(0, len(temperature)):
                 for ki in range(0, k + 1):
                     term = 0
                     for j in [0, 1]:
-                        term += tau[k] * c[j] / (tau[k] - d[j]) * (np.exp((ki - k) / tau[k]) - np.exp((ki - k) / d[j]))
+                        term += (
+                            tau[k]
+                            * c[j]
+                            / (tau[k] - d[j])
+                            * (np.exp((ki - k) / tau[k]) - np.exp((ki - k) / d[j]))
+                        )
                     temperature[k] += efficacy_erf * (1 + f1 + f2) * A_CH4[ki] * term
         else:
             tau = 1
             for k in range(0, len(temperature)):
                 for ki in range(0, k + 1):
                     term = 0
-                    for j in [0,1]:
-                        term += tau * c[j] / (tau-d[j]) * (np.exp((ki-k)/tau) - np.exp((ki-k)/d[j]))
-                    temperature[k] += efficacy_erf * effective_radiative_forcing[ki] * term
-
+                    for j in [0, 1]:
+                        term += (
+                            tau
+                            * c[j]
+                            / (tau - d[j])
+                            * (np.exp((ki - k) / tau) - np.exp((ki - k) / d[j]))
+                        )
+                    temperature[k] += (
+                        efficacy_erf * effective_radiative_forcing[ki] * term
+                    )
 
         # --- Prepare output ---
         output_data = {
             "radiative_forcing": radiative_forcing,
             "effective_radiative_forcing": effective_radiative_forcing,
-            "temperature": temperature
+            "temperature": temperature,
         }
 
         if return_df:
             output_data = pd.DataFrame(output_data, index=years)
-            output_data.index.name = 'Year'
+            output_data.index.name = "Year"
 
         return output_data

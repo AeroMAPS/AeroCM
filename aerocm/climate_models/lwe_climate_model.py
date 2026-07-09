@@ -35,33 +35,56 @@ class LWEClimateModel(ClimateModel):
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
-        "Contrails": {"sensitivity_rf": {"type": float, "default": 2.23e-12},
-                      "ratio_erf_rf": {"type": float, "default": 0.42},
-                      "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - ST O3": {"sensitivity_rf": {"type": float, "default": 7.64e-12},
-                                 "ratio_erf_rf": {"type": float, "default": 1.37},
-                                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "NOx - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": -3.9},
-                                           "ratio_erf_rf": {"type": float, "default": 1.18},
-                                           "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2O": {"sensitivity_rf": {"type": float, "default": 5.2e-15}, "ratio_erf_rf": {"type": float, "default": 1.0},
-                "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ARI": {"sensitivity_rf": {"type": float, "default": 1.0e-10},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Soot - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                       "ratio_erf_rf": {"type": float, "default": 1.0},
-                       "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ARI": {"sensitivity_rf": {"type": float, "default": -2.0e-11},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "Sulfur - ACI": {"sensitivity_rf": {"type": float, "default": 0.0},
-                   "ratio_erf_rf": {"type": float, "default": 1.0}, "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2 leakage - ST O3": {"sensitivity_rf": {"type": float, "default": 0.4e-12},
-                                 "ratio_erf_rf": {"type": float, "default": 1.37},
-                                 "efficacy_erf": {"type": float, "default": 1.0}},
-        "H2 leakage - CH4 and induced": {"ch4_production_per_nox": {"type": float, "default": 0.34},
-                                           "ratio_erf_rf": {"type": float, "default": 1.18},
-                                           "efficacy_erf": {"type": float, "default": 1.0}}
+        "Contrails": {
+            "sensitivity_rf": {"type": float, "default": 2.23e-12},
+            "ratio_erf_rf": {"type": float, "default": 0.42},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 7.64e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "NOx - CH4 and induced": {
+            "ch4_production_per_nox": {"type": float, "default": -3.9},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2O": {
+            "sensitivity_rf": {"type": float, "default": 5.2e-15},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ARI": {
+            "sensitivity_rf": {"type": float, "default": 1.0e-10},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Soot - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ARI": {
+            "sensitivity_rf": {"type": float, "default": -2.0e-11},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "Sulfur - ACI": {
+            "sensitivity_rf": {"type": float, "default": 0.0},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - ST O3": {
+            "sensitivity_rf": {"type": float, "default": 0.4e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - CH4 and induced": {
+            "ch4_production_per_nox": {"type": float, "default": 0.34},
+            "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
     }
     available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
 
@@ -86,7 +109,9 @@ class LWEClimateModel(ClimateModel):
         sensitivity_rf = self.specie_settings.get("sensitivity_rf", None)
         ratio_erf_rf = self.specie_settings["ratio_erf_rf"]
         efficacy_erf = self.specie_settings.get("efficacy_erf", 1.0)
-        ch4_production_per_nox = self.specie_settings.get("ch4_production_per_nox", 0.0)  # only for NOx and H2 (CH4)
+        ch4_production_per_nox = self.specie_settings.get(
+            "ch4_production_per_nox", 0.0
+        )  # only for NOx and H2 (CH4)
 
         # --- Extract simulation settings ---
         start_year = self.start_year
@@ -98,18 +123,20 @@ class LWEClimateModel(ClimateModel):
         # --- Run the LWE climate model ---
         if specie_name == "CO2":
             equivalent_emissions = (
-                    specie_inventory / 10 ** 12
+                specie_inventory / 10**12
             )  # Conversion from kgCO2 to GtCO2
 
             co2_molar_mass = 44.01 * 1e-3  # [kg/mol]
             air_molar_mass = 28.97e-3  # [kg/mol]
             atmosphere_total_mass = 5.1352e18  # [kg]
-            radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            radiative_efficiency = (
+                1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
+            )
             A_co2_unit = (
-                    radiative_efficiency
-                    * 1e9
-                    * air_molar_mass
-                    / (co2_molar_mass * atmosphere_total_mass)
+                radiative_efficiency
+                * 1e9
+                * air_molar_mass
+                / (co2_molar_mass * atmosphere_total_mass)
             )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
 
             A_co2 = A_co2_unit * specie_inventory
@@ -126,7 +153,7 @@ class LWEClimateModel(ClimateModel):
                         radiative_forcing_from_year[i, j] = A_co2[i] * a[0]
                         for k in [1, 2, 3]:
                             radiative_forcing_from_year[i, j] += (
-                                    A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
+                                A_co2[i] * a[k] * np.exp(-(j - i) / tau[k])
                             )
             radiative_forcing = np.zeros(len(specie_inventory))
             for k in range(0, len(specie_inventory)):
@@ -134,7 +161,10 @@ class LWEClimateModel(ClimateModel):
             effective_radiative_forcing = radiative_forcing * ratio_erf_rf
 
         else:
-            if specie_name == "NOx - CH4 and induced" or specie_name == "H2 leakage - CH4 and induced":
+            if (
+                specie_name == "NOx - CH4 and induced"
+                or specie_name == "H2 leakage - CH4 and induced"
+            ):
                 min_year = min(start_year, 1939)
                 max_year = max(end_year, 2051)
                 tau_reference_year = [min_year, 1940, 1980, 1994, 2004, 2050, max_year]
@@ -149,10 +179,10 @@ class LWEClimateModel(ClimateModel):
                 atmosphere_total_mass = 5.1352e18  # [kg]
                 radiative_efficiency = 3.454545e-4  # radiative efficiency [W/m^2/ppb] with AR6 value (5.7e-4) without indirect effects
                 A_CH4_unit = (
-                        radiative_efficiency
-                        * 1e9
-                        * air_molar_mass
-                        / (ch4_molar_mass * atmosphere_total_mass)
+                    radiative_efficiency
+                    * 1e9
+                    * air_molar_mass
+                    / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
                 A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
@@ -165,7 +195,7 @@ class LWEClimateModel(ClimateModel):
                     for j in range(0, len(specie_inventory)):
                         if i <= j:
                             radiative_forcing_from_year[i, j] = (
-                                    (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
+                                (1 + f1 + f2) * A_CH4[i] * np.exp(-(j - i) / tau[j])
                             )
                 radiative_forcing = np.zeros(len(specie_inventory))
                 for k in range(0, len(specie_inventory)):
@@ -209,14 +239,14 @@ class LWEClimateModel(ClimateModel):
             F_co2_inv = solve_triangular(F_co2, Identity, lower=True)
 
             equivalent_emissions = (
-                    np.dot(F_co2_inv, effective_radiative_forcing) / 10 ** 12
+                np.dot(F_co2_inv, effective_radiative_forcing) / 10**12
             )  # Conversion from kgCO2-we to GtCO2-we
 
         cumulative_equivalent_emissions = np.zeros(len(specie_inventory))
         cumulative_equivalent_emissions[0] = equivalent_emissions[0]
         for k in range(1, len(cumulative_equivalent_emissions)):
             cumulative_equivalent_emissions[k] = (
-                    cumulative_equivalent_emissions[k - 1] + equivalent_emissions[k]
+                cumulative_equivalent_emissions[k - 1] + equivalent_emissions[k]
             )
         temperature = tcre * cumulative_equivalent_emissions * efficacy_erf
 
@@ -224,11 +254,11 @@ class LWEClimateModel(ClimateModel):
         output_data = {
             "radiative_forcing": radiative_forcing,
             "effective_radiative_forcing": effective_radiative_forcing,
-            "temperature": temperature
+            "temperature": temperature,
         }
 
         if return_df:
             output_data = pd.DataFrame(output_data, index=years)
-            output_data.index.name = 'Year'
+            output_data.index.name = "Year"
 
         return output_data

@@ -53,13 +53,13 @@ class ClimateModel(ABC):
     available_model_settings = dict()
 
     def __init__(
-            self,
-            start_year: int,
-            end_year: int,
-            specie_name: str,
-            specie_inventory: list | np.ndarray,
-            specie_settings: dict,
-            model_settings: dict,
+        self,
+        start_year: int,
+        end_year: int,
+        specie_name: str,
+        specie_inventory: list | np.ndarray,
+        specie_settings: dict,
+        model_settings: dict,
     ):
         """Initialize the climate model with the provided settings.
 
@@ -122,8 +122,12 @@ class ClimateModel(ABC):
         """
         for key in model_settings:
             if key in self.available_model_settings:
-                if not isinstance(model_settings[key], self.available_model_settings[key]["type"]):
-                    raise TypeError(f"Model setting {key} must be of type {self.available_model_settings[key]['type']}")
+                if not isinstance(
+                    model_settings[key], self.available_model_settings[key]["type"]
+                ):
+                    raise TypeError(
+                        f"Model setting {key} must be of type {self.available_model_settings[key]['type']}"
+                    )
             else:
                 logging.info(f"Unknown model setting: {key}. Will be ignored.")
 
@@ -145,18 +149,28 @@ class ClimateModel(ABC):
             If any setting has an incorrect type.
         """
         if specie_name not in self.available_species:
-            raise ValueError(f"Species {specie_name} is not supported. Available species: {self.available_species}")
+            raise ValueError(
+                f"Species {specie_name} is not supported. Available species: {self.available_species}"
+            )
         available_specie_settings = self.available_species_settings[specie_name]
         for key in available_specie_settings:
             if key not in specie_settings:
                 raise ValueError(f"Missing setting for {specie_name}: {key}")
-            if not isinstance(specie_settings[key], available_specie_settings[key]["type"]):
-                raise TypeError(f"Setting {key} for {specie_name} must be of type {available_specie_settings[key]['type']}")
+            if not isinstance(
+                specie_settings[key], available_specie_settings[key]["type"]
+            ):
+                raise TypeError(
+                    f"Setting {key} for {specie_name} must be of type {available_specie_settings[key]['type']}"
+                )
         for key in specie_settings:
             if key not in available_specie_settings:
-                logging.info(f"Unknown setting for {specie_name}: {key}. Will be ignored.")
+                logging.info(
+                    f"Unknown setting for {specie_name}: {key}. Will be ignored."
+                )
 
-    def validate_inventory(self, start_year: int, end_year: int, specie_inventory: list | np.ndarray):
+    def validate_inventory(
+        self, start_year: int, end_year: int, specie_inventory: list | np.ndarray
+    ):
         """Validate the provided emission inventory.
 
         Parameters
@@ -176,5 +190,6 @@ class ClimateModel(ABC):
         # Check length of inventory
         expected_length = end_year - start_year + 1
         if len(specie_inventory) != expected_length:
-            raise ValueError(f"Inventory length must be {expected_length} for the period {start_year}-{end_year}")
-
+            raise ValueError(
+                f"Inventory length must be {expected_length} for the period {start_year}-{end_year}"
+            )

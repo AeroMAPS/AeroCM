@@ -31,10 +31,10 @@ def co2_ipcc_pulse_absolute_metrics(time_horizon: int) -> tuple:
     atmosphere_total_mass = 5.1352e18  # [kg]
     radiative_efficiency = 1.33e-5  # radiative efficiency [W/m^2/ppb] with AR6 value
     A_co2_unit = (
-            radiative_efficiency
-            * 1e9
-            * air_molar_mass
-            / (co2_molar_mass * atmosphere_total_mass)
+        radiative_efficiency
+        * 1e9
+        * air_molar_mass
+        / (co2_molar_mass * atmosphere_total_mass)
     )  # RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]
     a = [0.2173, 0.2240, 0.2824, 0.2763]
     tau = [0, 394.4, 36.54, 4.304]
@@ -81,11 +81,11 @@ def co2_ipcc_pulse_absolute_metrics(time_horizon: int) -> tuple:
 
 
 def absolute_metrics(
-        radiative_forcing: np.ndarray | list,
-        effective_radiative_forcing: np.ndarray | list,
-        efficacy_erf: float,
-        temperature: np.ndarray | list,
-        time_horizon: int,
+    radiative_forcing: np.ndarray | list,
+    effective_radiative_forcing: np.ndarray | list,
+    efficacy_erf: float,
+    temperature: np.ndarray | list,
+    time_horizon: int,
 ) -> tuple:
     """
     Calculate absolute climate metrics for a given greenhouse gas.
