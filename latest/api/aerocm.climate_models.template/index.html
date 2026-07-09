@@ -1369,7 +1369,7 @@
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -1469,13 +1469,13 @@
 <span class="normal">91</span>
 <span class="normal">92</span>
 <span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">specie_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">specie_inventory</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">specie_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">specie_inventory</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the climate model with the provided settings.</span>
 
@@ -1512,7 +1512,7 @@
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -1564,7 +1564,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/climate_models/template.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
@@ -1614,7 +1616,9 @@
 
     <span class="c1"># --- Extract species settings ---</span>
     <span class="n">specie_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span>
-    <span class="n">param1</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;param1&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># replace 2nd argument with default if needed</span>
+    <span class="n">param1</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">&quot;param1&quot;</span><span class="p">,</span> <span class="mf">1.0</span>
+    <span class="p">)</span>  <span class="c1"># replace 2nd argument with default if needed</span>
     <span class="n">param2</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;param2&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">param3</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;param3&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -1629,7 +1633,7 @@
     <span class="n">output_data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;radiative_forcing&quot;</span><span class="p">:</span> <span class="n">radiative_forcing</span><span class="p">,</span>
         <span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">:</span> <span class="n">effective_radiative_forcing</span><span class="p">,</span>
-        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span>
+        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">return_df</span><span class="p">:</span>

@@ -1374,7 +1374,7 @@
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -1562,10 +1562,10 @@
     <span class="n">atmosphere_total_mass</span> <span class="o">=</span> <span class="mf">5.1352e18</span>  <span class="c1"># [kg]</span>
     <span class="n">radiative_efficiency</span> <span class="o">=</span> <span class="mf">1.33e-5</span>  <span class="c1"># radiative efficiency [W/m^2/ppb] with AR6 value</span>
     <span class="n">A_co2_unit</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">radiative_efficiency</span>
-            <span class="o">*</span> <span class="mf">1e9</span>
-            <span class="o">*</span> <span class="n">air_molar_mass</span>
-            <span class="o">/</span> <span class="p">(</span><span class="n">co2_molar_mass</span> <span class="o">*</span> <span class="n">atmosphere_total_mass</span><span class="p">)</span>
+        <span class="n">radiative_efficiency</span>
+        <span class="o">*</span> <span class="mf">1e9</span>
+        <span class="o">*</span> <span class="n">air_molar_mass</span>
+        <span class="o">/</span> <span class="p">(</span><span class="n">co2_molar_mass</span> <span class="o">*</span> <span class="n">atmosphere_total_mass</span><span class="p">)</span>
     <span class="p">)</span>  <span class="c1"># RF per unit mass increase in atmospheric abundance of CO2 [W/m^2/kg]</span>
     <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2173</span><span class="p">,</span> <span class="mf">0.2240</span><span class="p">,</span> <span class="mf">0.2824</span><span class="p">,</span> <span class="mf">0.2763</span><span class="p">]</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">394.4</span><span class="p">,</span> <span class="mf">36.54</span><span class="p">,</span> <span class="mf">4.304</span><span class="p">]</span>
@@ -1804,11 +1804,11 @@
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">absolute_metrics</span><span class="p">(</span>
-        <span class="n">radiative_forcing</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">effective_radiative_forcing</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">efficacy_erf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">temperature</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">radiative_forcing</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">effective_radiative_forcing</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">efficacy_erf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate absolute climate metrics for a given greenhouse gas.</span>

@@ -2,74 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.aviation_climate_simulation/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.fair_climate_model/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.gwpstar_climate_model/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.ipcc_climate_model/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.lwe_climate_model/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.climate_models.template/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.metrics.aviation_climate_metrics_calculation/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.metrics.metrics_utils/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.utils.classes/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/api/aerocm.utils.functions/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/books/CHANGELOG/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/books/developers/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/books/installation/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/books/overview/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/notebooks/example_climate_metrics/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
     <url>
          <loc>https://aeromaps.github.io/AeroCM/latest/notebooks/example_climate_simulation/</loc>
-         <lastmod>2025-11-27</lastmod>
+         <lastmod>2026-07-09</lastmod>
     </url>
 </urlset>

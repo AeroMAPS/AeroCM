@@ -1374,7 +1374,7 @@
 
 
 
-  <div class="doc doc-children">
+<div class="doc doc-children">
 
 
 
@@ -1586,14 +1586,8 @@
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emission_profile_function</span><span class="p">(</span>
-        <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">t0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">unit_value</span><span class="p">:</span> <span class="nb">float</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emission_profile_function</span><span class="p">(</span>
+    <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit_value</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate an emission profile based on the specified type (e.g. pulse) and time horizon.</span>
@@ -1622,7 +1616,9 @@
 <span class="sd">        If an invalid profile type is provided.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">profile</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;1</span><span class="si">% g</span><span class="s2">rowth&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid profile &#39;</span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&#39;. Choose from &#39;pulse&#39;, &#39;step&#39;, or &#39;1% growth&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid profile &#39;</span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&#39;. Choose from &#39;pulse&#39;, &#39;step&#39;, or &#39;1% growth&#39;.&quot;</span>
+        <span class="p">)</span>
     <span class="n">emissions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="n">time_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;pulse&quot;</span><span class="p">:</span>
         <span class="n">emissions</span><span class="p">[</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_value</span>
@@ -1833,7 +1829,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/utils/functions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 61</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
 <span class="normal"> 62</span>
 <span class="normal"> 63</span>
 <span class="normal"> 64</span>
@@ -1918,7 +1916,9 @@
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_simulation_results</span><span class="p">(</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_simulation_results</span><span class="p">(</span>
     <span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">data_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1962,7 +1962,9 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input &#39;ds&#39; must be an xarray.Dataset.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">data_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">data_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">data_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">species</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
@@ -1985,7 +1987,9 @@
 
     <span class="c1"># --- Plot ---</span>
     <span class="k">if</span> <span class="n">stacked</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">stackplot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">stackplot</span><span class="p">(</span>
+            <span class="n">years</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">]</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">species_list</span><span class="p">):</span>
             <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -2029,9 +2033,7 @@ and methods of a class or instance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/utils/functions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
@@ -2071,7 +2073,11 @@ and methods of a class or instance.</p>
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
-<span class="normal">191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_model_info</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_model_info</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pretty-print all public attributes (with current/default values)</span>
 <span class="sd">    and methods of a class or instance.</span>
@@ -2089,13 +2095,15 @@ and methods of a class or instance.</p>
 
     <span class="c1"># --- Collect attributes (class + instance) ---</span>
     <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="c1"># --- Collect public methods ---</span>
     <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">)</span>
+        <span class="n">name</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
     <span class="p">]</span>
 
