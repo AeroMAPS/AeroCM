@@ -43,6 +43,7 @@ class FairClimateModel(ClimateModel):
         "Sulfur - ACI",
         "H2 leakage - ST O3",
         "H2 leakage - CH4 and induced",
+        "H2 leakage - SWV",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
@@ -88,12 +89,17 @@ class FairClimateModel(ClimateModel):
         },
         "H2 leakage - ST O3": {
             "sensitivity_rf": {"type": float, "default": 0.4e-12},
-            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "H2 leakage - CH4 and induced": {
             "ch4_production_per_nox": {"type": float, "default": 0.32},
             "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - SWV": {
+            "sensitivity_rf": {"type": float, "default": 0.19e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
     }
@@ -195,6 +201,7 @@ class FairClimateModel(ClimateModel):
             or specie_name == "Soot - ACI"
             or specie_name == "Sulfur - ACI"
             or specie_name == "H2 leakage - ST O3"
+            or specie_name == "H2 leakage - SWV"
         ):
             rf = sensitivity_rf * specie_inventory
             erf = rf * ratio_erf_rf
@@ -329,8 +336,10 @@ class FairClimateModel(ClimateModel):
             "NOx - CH4 and induced",
             "H2O",
             "Soot - ACI",
-            "Sulfur - ACI" "H2 leakage - ST O3",
+            "Sulfur - ACI",
+            "H2 leakage - ST O3",
             "H2 leakage - CH4 and induced",
+            "H2 leakage - SWV",
         ]:
             effective_radiative_forcing = processed_inventory.reshape(-1, 1)
         # For other species, the ERF is the difference between the FaIR runs with and without the species
@@ -495,6 +504,7 @@ class FairRunner:
             "Sulfur - ACI",
             "H2 leakage - ST O3",
             "H2 leakage - CH4 and induced",
+            "H2 leakage - SWV",
             "Aerosols",
         ]
         properties = self.properties = {
@@ -576,6 +586,13 @@ class FairRunner:
                 "aerosol_chemistry_from_concentration": False,
             },
             "H2 leakage - CH4 and induced": {
+                "type": "unspecified",
+                "input_mode": "forcing",
+                "greenhouse_gas": False,
+                "aerosol_chemistry_from_emissions": False,
+                "aerosol_chemistry_from_concentration": False,
+            },
+            "H2 leakage - SWV": {
                 "type": "unspecified",
                 "input_mode": "forcing",
                 "greenhouse_gas": False,

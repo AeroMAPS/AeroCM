@@ -30,6 +30,7 @@ class GWPStarClimateModel(ClimateModel):
         "Sulfur - ACI",
         "H2 leakage - ST O3",
         "H2 leakage - CH4 and induced",
+        "H2 leakage - SWV",
     ]
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
@@ -75,12 +76,17 @@ class GWPStarClimateModel(ClimateModel):
         },
         "H2 leakage - ST O3": {
             "sensitivity_rf": {"type": float, "default": 0.4e-12},
-            "ratio_erf_rf": {"type": float, "default": 1.37},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "H2 leakage - CH4 and induced": {
             "sensitivity_rf": {"type": float, "default": 5.0e-13},
             "ratio_erf_rf": {"type": float, "default": 1.18},
+            "efficacy_erf": {"type": float, "default": 1.0},
+        },
+        "H2 leakage - SWV": {
+            "sensitivity_rf": {"type": float, "default": 0.19e-12},
+            "ratio_erf_rf": {"type": float, "default": 1.0},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
     }
@@ -171,6 +177,7 @@ class GWPStarClimateModel(ClimateModel):
                 or specie_name == "Sulfur - ARI"
                 or specie_name == "Sulfur - ACI"
                 or specie_name == "H2 leakage - ST O3"
+                or specie_name == "H2 leakage - SWV"
             ):
                 gwpstar_variation_duration = 6
                 gwpstar_s_coefficient = 0.0
