@@ -79,7 +79,7 @@ class GWPStarClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "H2 leakage - CH4 and induced": {
-            "sensitivity_rf": {"type": float, "default": 5.3e-13},
+            "sensitivity_rf": {"type": float, "default": 5.0e-13},
             "ratio_erf_rf": {"type": float, "default": 1.18},
             "efficacy_erf": {"type": float, "default": 1.0},
         },

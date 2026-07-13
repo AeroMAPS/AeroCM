@@ -80,7 +80,7 @@ class IPCCClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "H2 leakage - CH4 and induced": {
-            "ch4_production_per_nox": {"type": float, "default": 0.34},
+            "ch4_production_per_nox": {"type": float, "default": 0.32},
             "ratio_erf_rf": {"type": float, "default": 1.18},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
