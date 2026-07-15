@@ -58,7 +58,7 @@ class FairClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "NOx - CH4 and induced": {
-            "ch4_production_per_nox": {"type": float, "default": -3.9},
+            "ch4_change_per_species": {"type": float, "default": -3.9},
             "ratio_erf_rf": {"type": float, "default": 1.18},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
@@ -93,7 +93,7 @@ class FairClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0},
         },
         "H2 leakage - CH4 and induced": {
-            "ch4_production_per_nox": {"type": float, "default": 0.32},
+            "ch4_change_per_species": {"type": float, "default": 0.32},
             "ratio_erf_rf": {"type": float, "default": 1.18},
             "efficacy_erf": {"type": float, "default": 1.0},
         },
@@ -135,8 +135,8 @@ class FairClimateModel(ClimateModel):
         )  # replace 2nd argument with default if needed
         ratio_erf_rf = specie_settings.get("ratio_erf_rf", 1.0)
         efficacy_erf = specie_settings.get("efficacy_erf", 1.0)
-        ch4_production_per_nox = specie_settings.get(
-            "ch4_production_per_nox", 0.0
+        ch4_change_per_species = specie_settings.get(
+            "ch4_change_per_species", 0.0
         )  # only for NOx/H2 leakage - CH4 and induced
 
         # --- Extract simulation settings ---
@@ -226,7 +226,7 @@ class FairClimateModel(ClimateModel):
                 * air_molar_mass
                 / (ch4_molar_mass * atmosphere_total_mass)
             )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-            A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
+            A_CH4 = A_CH4_unit * ch4_change_per_species * specie_inventory
             f1 = 0.5  # Indirect effect on ozone
             f2 = 0.15  # Indirect effect on stratospheric water
             radiative_forcing_from_year = np.zeros(
@@ -277,7 +277,7 @@ class FairClimateModel(ClimateModel):
                     * air_molar_mass
                     / (ch4_molar_mass * atmosphere_total_mass)
                 )  # RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]
-                A_CH4 = A_CH4_unit * ch4_production_per_nox * specie_inventory
+                A_CH4 = A_CH4_unit * ch4_change_per_species * specie_inventory
                 f1 = 0.5  # Indirect effect on ozone
                 f2 = 0.15  # Indirect effect on stratospheric water
                 radiative_forcing_from_year = np.zeros(
