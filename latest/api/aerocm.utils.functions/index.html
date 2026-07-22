@@ -1544,8 +1544,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/utils/functions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
-<span class="normal">15</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
@@ -1586,7 +1585,8 @@
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emission_profile_function</span><span class="p">(</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emission_profile_function</span><span class="p">(</span>
     <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit_value</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1829,8 +1829,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/utils/functions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 59</span>
-<span class="normal"> 60</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 60</span>
 <span class="normal"> 61</span>
 <span class="normal"> 62</span>
 <span class="normal"> 63</span>
@@ -1918,7 +1917,8 @@
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_simulation_results</span><span class="p">(</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_simulation_results</span><span class="p">(</span>
     <span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">data_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">species</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2033,8 +2033,7 @@ and methods of a class or instance.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/utils/functions.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
@@ -2077,13 +2076,18 @@ and methods of a class or instance.</p>
 <span class="normal">192</span>
 <span class="normal">193</span>
 <span class="normal">194</span>
-<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_model_info</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_model_info</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pretty-print all public attributes (with current/default values)</span>
 <span class="sd">    and methods of a class or instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;LWE&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;IPCC&quot;</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">IPCCClimateModel</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;LWE&quot;</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">LWEClimateModel</span>
         <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;GWP*&quot;</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">GWPStarClimateModel</span>

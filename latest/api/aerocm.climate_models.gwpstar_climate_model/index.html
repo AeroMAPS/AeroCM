@@ -1589,13 +1589,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/climate_models/gwpstar_climate_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
 <span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
@@ -1715,7 +1709,14 @@
 <span class="normal">212</span>
 <span class="normal">213</span>
 <span class="normal">214</span>
-<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the GWP* climate model with the assigned input data.</span>
 
 <span class="sd">    Parameters</span>
@@ -1800,6 +1801,7 @@
             <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ARI&quot;</span>
             <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ACI&quot;</span>
             <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - ST O3&quot;</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - SWV&quot;</span>
         <span class="p">):</span>
             <span class="n">gwpstar_variation_duration</span> <span class="o">=</span> <span class="mi">6</span>
             <span class="n">gwpstar_s_coefficient</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -1998,14 +2000,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/climate_models/gwpstar_climate_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">225</span>
 <span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
@@ -2075,7 +2070,14 @@
 <span class="normal">292</span>
 <span class="normal">293</span>
 <span class="normal">294</span>
-<span class="normal">295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gwpstar_equivalent_emissions_function</span><span class="p">(</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gwpstar_equivalent_emissions_function</span><span class="p">(</span>
     <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">emissions_erf</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>

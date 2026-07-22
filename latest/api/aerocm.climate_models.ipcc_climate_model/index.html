@@ -1580,13 +1580,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/climate_models/ipcc_climate_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
@@ -1757,7 +1751,13 @@
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the IPCC climate model with the assigned input data.</span>
 
 <span class="sd">    Parameters</span>
@@ -1775,8 +1775,8 @@
     <span class="n">sensitivity_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sensitivity_rf&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">ratio_erf_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="p">[</span><span class="s2">&quot;ratio_erf_rf&quot;</span><span class="p">]</span>
     <span class="n">efficacy_erf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;efficacy_erf&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-    <span class="n">ch4_production_per_nox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s2">&quot;ch4_production_per_nox&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">ch4_change_per_species</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">&quot;ch4_change_per_species&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
     <span class="p">)</span>  <span class="c1"># only for NOx/H2 leakage - CH4 and induced</span>
 
     <span class="c1"># --- Extract simulation settings ---</span>
@@ -1850,7 +1850,7 @@
                 <span class="o">*</span> <span class="n">air_molar_mass</span>
                 <span class="o">/</span> <span class="p">(</span><span class="n">ch4_molar_mass</span> <span class="o">*</span> <span class="n">atmosphere_total_mass</span><span class="p">)</span>
             <span class="p">)</span>  <span class="c1"># RF per unit mass increase in atmospheric abundance of CH4 [W/m^2/kg]</span>
-            <span class="n">A_CH4</span> <span class="o">=</span> <span class="n">A_CH4_unit</span> <span class="o">*</span> <span class="n">ch4_production_per_nox</span> <span class="o">*</span> <span class="n">specie_inventory</span>
+            <span class="n">A_CH4</span> <span class="o">=</span> <span class="n">A_CH4_unit</span> <span class="o">*</span> <span class="n">ch4_change_per_species</span> <span class="o">*</span> <span class="n">specie_inventory</span>
             <span class="n">f1</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Indirect effect on ozone</span>
             <span class="n">f2</span> <span class="o">=</span> <span class="mf">0.15</span>  <span class="c1"># Indirect effect on stratospheric water</span>
             <span class="n">radiative_forcing_from_year</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>

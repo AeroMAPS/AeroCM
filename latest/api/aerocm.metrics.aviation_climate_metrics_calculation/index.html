@@ -2051,7 +2051,9 @@ or a custom callable function.</p>
 <span class="normal">384</span>
 <span class="normal">385</span>
 <span class="normal">386</span>
-<span class="normal">387</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">include_absolute_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2095,6 +2097,7 @@ or a custom callable function.</p>
             <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
             <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
             <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">co2_unit_value</span> <span class="o">=</span> <span class="mi">1</span>
@@ -2109,6 +2112,7 @@ or a custom callable function.</p>
             <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">time_horizon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">time_horizon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
@@ -2385,9 +2389,7 @@ or a custom callable function.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>aerocm/metrics/aviation_climate_metrics_calculation.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">389</span>
-<span class="normal">390</span>
-<span class="normal">391</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
 <span class="normal">392</span>
 <span class="normal">393</span>
 <span class="normal">394</span>
@@ -2407,7 +2409,9 @@ or a custom callable function.</p>
 <span class="normal">408</span>
 <span class="normal">409</span>
 <span class="normal">410</span>
-<span class="normal">411</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_model_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_model_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate the selected climate model and species profile.</span>
 
