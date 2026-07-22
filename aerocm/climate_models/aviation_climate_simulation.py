@@ -203,12 +203,14 @@ class AviationClimateSimulation:
             if "H2 leakage" in species_list:
                 species_list.append("H2 leakage - ST O3")
                 species_list.append("H2 leakage - CH4 and induced")
+                species_list.append("H2 leakage - SWV")
                 species_inventory["H2 leakage - ST O3"] = species_inventory[
                     "H2 leakage"
                 ]
                 species_inventory["H2 leakage - CH4 and induced"] = species_inventory[
                     "H2 leakage"
                 ]
+                species_inventory["H2 leakage - SWV"] = species_inventory["H2 leakage"]
                 species_list.remove("H2 leakage")
             for specie in species_list:
                 model_instance = climate_model(
@@ -288,10 +290,15 @@ class AviationClimateSimulation:
                 for s in ["Soot - ARI", "Soot - ACI", "Sulfur - ARI", "Sulfur - ACI"]
                 if s in results
             ]
-        if "H2 leakage - CH4 and induced" in results:
+        if (
+            "H2 leakage - ST O3" in results
+            or "H2 leakage - CH4 and induced" in results
+            or "H2 leakage - SWV" in results
+        ):
             aggregations["H2 leakage"] = [
                 "H2 leakage - ST O3",
                 "H2 leakage - CH4 and induced",
+                "H2 leakage - SWV",
             ]
         if (
             "Contrails" in results

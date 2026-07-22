@@ -30,61 +30,67 @@ class GWPStarClimateModel(ClimateModel):
         "Sulfur - ACI",
         "H2 leakage - ST O3",
         "H2 leakage - CH4 and induced",
+        "H2 leakage - SWV",
     ]
     available_species_settings = {
-        "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0}},
+        "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"}},
         "Contrails": {
-            "sensitivity_rf": {"type": float, "default": 2.23e-12},
-            "ratio_erf_rf": {"type": float, "default": 0.42},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 2.23e-12, "unit": "W/m^2/(aircraft.km)"},
+            "ratio_erf_rf": {"type": float, "default": 0.42, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - ST O3": {
-            "sensitivity_rf": {"type": float, "default": 7.64e-12},
-            "ratio_erf_rf": {"type": float, "default": 1.37},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 7.64e-12, "unit": "W/m^2/kgNOx"},
+            "ratio_erf_rf": {"type": float, "default": 1.37, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - CH4 and induced": {
-            "sensitivity_rf": {"type": float, "default": -6.1e-12},
-            "ratio_erf_rf": {"type": float, "default": 1.18},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": -6.1e-12, "unit": "W/m^2/kgNOx"},
+            "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2O": {
-            "sensitivity_rf": {"type": float, "default": 5.2e-15},
-            "ratio_erf_rf": {"type": float, "default": 1.0},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 5.2e-15, "unit": "W/m^2/kgH2O"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Soot - ARI": {
-            "sensitivity_rf": {"type": float, "default": 1.0e-10},
-            "ratio_erf_rf": {"type": float, "default": 1.0},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 1.0e-10, "unit": "W/m^2/kgBC"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Soot - ACI": {
-            "sensitivity_rf": {"type": float, "default": 0.0},
-            "ratio_erf_rf": {"type": float, "default": 1.0},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 0.0, "unit": "W/m^2/kgBC"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Sulfur - ARI": {
-            "sensitivity_rf": {"type": float, "default": -2.0e-11},
-            "ratio_erf_rf": {"type": float, "default": 1.0},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": -2.0e-11, "unit": "W/m^2/kgSO2"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Sulfur - ACI": {
-            "sensitivity_rf": {"type": float, "default": 0.0},
-            "ratio_erf_rf": {"type": float, "default": 1.0},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 0.0, "unit": "W/m^2/kgSO2"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - ST O3": {
-            "sensitivity_rf": {"type": float, "default": 0.4e-12},
-            "ratio_erf_rf": {"type": float, "default": 1.37},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 0.4e-12, "unit": "W/m^2/kgH2"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - CH4 and induced": {
-            "sensitivity_rf": {"type": float, "default": 5.0e-13},
-            "ratio_erf_rf": {"type": float, "default": 1.18},
-            "efficacy_erf": {"type": float, "default": 1.0},
+            "sensitivity_rf": {"type": float, "default": 5.0e-13, "unit": "W/m^2/kgH2"},
+            "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
+        },
+        "H2 leakage - SWV": {
+            "sensitivity_rf": {"type": float, "default": 0.19e-12, "unit": "W/m^2/kgH2"},
+            "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
+            "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
     }
-    available_model_settings = {"tcre": {"type": float, "default": 0.00045}}
+    available_model_settings = {"tcre": {"type": float, "default": 0.00045, "unit": "°C/GtCO2"}}
 
     def run(self, return_df: bool = False) -> dict | pd.DataFrame:
         """Run the GWP* climate model with the assigned input data.
@@ -171,6 +177,7 @@ class GWPStarClimateModel(ClimateModel):
                 or specie_name == "Sulfur - ARI"
                 or specie_name == "Sulfur - ACI"
                 or specie_name == "H2 leakage - ST O3"
+                or specie_name == "H2 leakage - SWV"
             ):
                 gwpstar_variation_duration = 6
                 gwpstar_s_coefficient = 0.0

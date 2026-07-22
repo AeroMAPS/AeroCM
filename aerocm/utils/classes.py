@@ -32,7 +32,7 @@ class ClimateModel(ABC):
     available_species : list
         Supported species names for the climate model.
     available_species_settings : dict
-        Dictionary containing available settings for each species, their type and default value.
+        Dictionary containing available settings for each species, their type, default value, and units.
     available_model_settings : dict
         Dictionary containing available model settings, their type and default value.
 

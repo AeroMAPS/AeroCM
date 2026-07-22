@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
 import inspect
+from aerocm.climate_models.ipcc_climate_model import IPCCClimateModel
 from aerocm.climate_models.lwe_climate_model import LWEClimateModel
 from aerocm.climate_models.gwpstar_climate_model import GWPStarClimateModel
 from aerocm.climate_models.fair_climate_model import FairClimateModel
@@ -154,7 +155,9 @@ def show_model_info(obj: type | str):
     and methods of a class or instance.
     """
     if isinstance(obj, str):
-        if obj == "LWE":
+        if obj == "IPCC":
+            obj = IPCCClimateModel
+        elif obj == "LWE":
             obj = LWEClimateModel
         elif obj == "GWP*":
             obj = GWPStarClimateModel

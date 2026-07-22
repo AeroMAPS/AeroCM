@@ -142,6 +142,7 @@ class AviationClimateMetricsCalculation:
                 "Sulfur - ACI": 1 * 10**10,
                 "H2 leakage - ST O3": 1 * 10**10,
                 "H2 leakage - CH4 and induced": 1 * 10**10,
+                "H2 leakage - SWV": 1 * 10**10,
             }
         else:
             co2_unit_value = 1
@@ -156,6 +157,7 @@ class AviationClimateMetricsCalculation:
                 "Sulfur - ACI": 1,
                 "H2 leakage - ST O3": 1,
                 "H2 leakage - CH4 and induced": 1,
+                "H2 leakage - SWV": 1,
             }
 
         if type(time_horizon) == int or type(time_horizon) == float:
