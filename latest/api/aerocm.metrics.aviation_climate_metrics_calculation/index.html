@@ -2056,7 +2056,7 @@ or a custom callable function.</p>
 <span class="normal">389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">include_absolute_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run the climate metric calculation.</span>
 
 <span class="sd">    Parameters</span>
@@ -2071,7 +2071,7 @@ or a custom callable function.</p>
 <span class="sd">    -------</span>
 <span class="sd">    dict | pd.DataFrame</span>
 <span class="sd">        Results of the climate metrics calculation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Extract simulation parameters ---</span>
     <span class="n">climate_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">climate_model</span>
@@ -2084,35 +2084,35 @@ or a custom callable function.</p>
     <span class="n">species_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_settings</span>
     <span class="n">model_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_settings</span>
 
-    <span class="k">if</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">&quot;FaIR&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">"FaIR"</span><span class="p">:</span>
         <span class="n">co2_unit_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span>
         <span class="n">species_unit_value</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Contrails&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;H2O&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span>
-            <span class="s2">&quot;Soot - ARI&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">,</span>
-            <span class="s2">&quot;Soot - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">,</span>
-            <span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"Contrails"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"NOx - ST O3"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"NOx - CH4 and induced"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"H2O"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span>
+            <span class="s2">"Soot - ARI"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">,</span>
+            <span class="s2">"Soot - ACI"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">,</span>
+            <span class="s2">"Sulfur - ARI"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"Sulfur - ACI"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - ST O3"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - SWV"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">co2_unit_value</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">species_unit_value</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Contrails&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;H2O&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Soot - ARI&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Soot - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"Contrails"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"NOx - ST O3"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"NOx - CH4 and induced"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"H2O"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"Soot - ARI"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"Soot - ACI"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"Sulfur - ARI"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"Sulfur - ACI"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - ST O3"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - SWV"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">time_horizon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">time_horizon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
@@ -2120,10 +2120,10 @@ or a custom callable function.</p>
 
     <span class="n">time_horizon_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_horizon</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">&quot;pulse&quot;</span> <span class="ow">or</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">&quot;step&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">"pulse"</span> <span class="ow">or</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">"step"</span><span class="p">:</span>
         <span class="n">profile</span> <span class="o">=</span> <span class="n">species_profile</span>
         <span class="n">co2_inventory</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;CO2&quot;</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
+            <span class="s2">"CO2"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
                 <span class="n">start_year</span><span class="p">,</span>
                 <span class="n">profile_start_year</span><span class="p">,</span>
                 <span class="n">time_horizon_max</span><span class="p">,</span>
@@ -2141,13 +2141,13 @@ or a custom callable function.</p>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span>
         <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">&quot;combined&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">"combined"</span><span class="p">:</span>
         <span class="n">co2_inventory</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;CO2&quot;</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
+            <span class="s2">"CO2"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
                 <span class="n">start_year</span><span class="p">,</span>
                 <span class="n">profile_start_year</span><span class="p">,</span>
                 <span class="n">time_horizon_max</span><span class="p">,</span>
-                <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span>
+                <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
                 <span class="n">unit_value</span><span class="o">=</span><span class="n">co2_unit_value</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">}</span>
@@ -2156,21 +2156,21 @@ or a custom callable function.</p>
                 <span class="n">start_year</span><span class="p">,</span>
                 <span class="n">profile_start_year</span><span class="p">,</span>
                 <span class="n">time_horizon_max</span><span class="p">,</span>
-                <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+                <span class="n">profile</span><span class="o">=</span><span class="s2">"step"</span><span class="p">,</span>
                 <span class="n">unit_value</span><span class="o">=</span><span class="n">species_unit_value</span><span class="p">[</span><span class="n">specie</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span>
         <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">&quot;scenario&quot;</span><span class="p">:</span>
-        <span class="n">co2_inventory</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CO2&quot;</span><span class="p">:</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]}</span>
+    <span class="k">elif</span> <span class="n">species_profile</span> <span class="o">==</span> <span class="s2">"scenario"</span><span class="p">:</span>
+        <span class="n">co2_inventory</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"CO2"</span><span class="p">:</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">]}</span>
         <span class="n">non_co2_inventory</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">specie</span><span class="p">:</span> <span class="n">params</span>
             <span class="k">for</span> <span class="n">specie</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">species_inventory</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">specie</span> <span class="o">!=</span> <span class="s2">&quot;CO2&quot;</span>
+            <span class="k">if</span> <span class="n">specie</span> <span class="o">!=</span> <span class="s2">"CO2"</span>
         <span class="p">}</span>
-        <span class="n">species_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">species_inventory</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;CO2&quot;</span><span class="p">]</span>
+        <span class="n">species_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">species_inventory</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">"CO2"</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">species_profile</span> <span class="o">!=</span> <span class="s2">&quot;scenario&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">species_profile</span> <span class="o">!=</span> <span class="s2">"scenario"</span><span class="p">:</span>
         <span class="n">end_year</span> <span class="o">=</span> <span class="n">profile_start_year</span> <span class="o">+</span> <span class="n">time_horizon_max</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">first_key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">species_inventory</span><span class="p">))</span>
@@ -2202,9 +2202,9 @@ or a custom callable function.</p>
 
     <span class="c1"># -- Remove useless data and divide by unit values --</span>
     <span class="n">co2_climate_simulation_results</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;CO2&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"CO2"</span><span class="p">:</span> <span class="p">{</span>
             <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="o">/</span> <span class="n">co2_unit_value</span>
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">full_co2_climate_simulation_results</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">full_co2_climate_simulation_results</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="n">non_co2_climate_simulation_results</span> <span class="o">=</span> <span class="p">{</span>
@@ -2235,41 +2235,41 @@ or a custom callable function.</p>
             <span class="n">iagtp_co2</span><span class="p">,</span>
             <span class="n">atr_co2</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">=</span> <span class="n">absolute_metrics</span><span class="p">(</span>
-            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;radiative_forcing&quot;</span><span class="p">][</span>
+            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"radiative_forcing"</span><span class="p">][</span>
                 <span class="p">:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
             <span class="p">],</span>
-            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">][</span>
+            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"effective_radiative_forcing"</span><span class="p">][</span>
                 <span class="p">:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
             <span class="p">],</span>
             <span class="mf">1.0</span><span class="p">,</span>
-            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;temperature&quot;</span><span class="p">][</span>
+            <span class="n">co2_climate_simulation_results</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"temperature"</span><span class="p">][</span>
                 <span class="p">:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
             <span class="p">],</span>
             <span class="n">H</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;agwp_rf&quot;</span><span class="p">:</span> <span class="n">agwp_rf_co2</span><span class="p">,</span>
-            <span class="s2">&quot;agwp_erf&quot;</span><span class="p">:</span> <span class="n">agwp_erf_co2</span><span class="p">,</span>
-            <span class="s2">&quot;aegwp_rf&quot;</span><span class="p">:</span> <span class="n">aegwp_rf_co2</span><span class="p">,</span>
-            <span class="s2">&quot;aegwp_erf&quot;</span><span class="p">:</span> <span class="n">aegwp_erf_co2</span><span class="p">,</span>
-            <span class="s2">&quot;agtp&quot;</span><span class="p">:</span> <span class="n">agtp_co2</span><span class="p">,</span>
-            <span class="s2">&quot;iagtp&quot;</span><span class="p">:</span> <span class="n">iagtp_co2</span><span class="p">,</span>
-            <span class="s2">&quot;atr&quot;</span><span class="p">:</span> <span class="n">atr_co2</span><span class="p">,</span>
+        <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"agwp_rf"</span><span class="p">:</span> <span class="n">agwp_rf_co2</span><span class="p">,</span>
+            <span class="s2">"agwp_erf"</span><span class="p">:</span> <span class="n">agwp_erf_co2</span><span class="p">,</span>
+            <span class="s2">"aegwp_rf"</span><span class="p">:</span> <span class="n">aegwp_rf_co2</span><span class="p">,</span>
+            <span class="s2">"aegwp_erf"</span><span class="p">:</span> <span class="n">aegwp_erf_co2</span><span class="p">,</span>
+            <span class="s2">"agtp"</span><span class="p">:</span> <span class="n">agtp_co2</span><span class="p">,</span>
+            <span class="s2">"iagtp"</span><span class="p">:</span> <span class="n">iagtp_co2</span><span class="p">,</span>
+            <span class="s2">"atr"</span><span class="p">:</span> <span class="n">atr_co2</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Non-CO2 species</span>
         <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
             <span class="n">agwp_rf</span><span class="p">,</span> <span class="n">agwp_erf</span><span class="p">,</span> <span class="n">aegwp_rf</span><span class="p">,</span> <span class="n">aegwp_erf</span><span class="p">,</span> <span class="n">agtp</span><span class="p">,</span> <span class="n">iagtp</span><span class="p">,</span> <span class="n">atr</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">absolute_metrics</span><span class="p">(</span>
-                    <span class="n">non_co2_climate_simulation_results</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;radiative_forcing&quot;</span><span class="p">][</span>
+                    <span class="n">non_co2_climate_simulation_results</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"radiative_forcing"</span><span class="p">][</span>
                         <span class="p">:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
                     <span class="p">],</span>
                     <span class="n">non_co2_climate_simulation_results</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span>
-                        <span class="s2">&quot;effective_radiative_forcing&quot;</span>
+                        <span class="s2">"effective_radiative_forcing"</span>
                     <span class="p">][:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)],</span>
-                    <span class="n">non_co2_species_settings</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;efficacy_erf&quot;</span><span class="p">],</span>
-                    <span class="n">non_co2_climate_simulation_results</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;temperature&quot;</span><span class="p">][</span>
+                    <span class="n">non_co2_species_settings</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"efficacy_erf"</span><span class="p">],</span>
+                    <span class="n">non_co2_climate_simulation_results</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"temperature"</span><span class="p">][</span>
                         <span class="p">:</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">time_horizon_max</span> <span class="o">-</span> <span class="n">H</span><span class="p">)</span>
                     <span class="p">],</span>
                     <span class="n">H</span><span class="p">,</span>
@@ -2277,50 +2277,50 @@ or a custom callable function.</p>
             <span class="p">)</span>
 
             <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;agwp_rf&quot;</span><span class="p">:</span> <span class="n">agwp_rf</span><span class="p">,</span>
-                <span class="s2">&quot;agwp_erf&quot;</span><span class="p">:</span> <span class="n">agwp_erf</span><span class="p">,</span>
-                <span class="s2">&quot;aegwp_rf&quot;</span><span class="p">:</span> <span class="n">aegwp_rf</span><span class="p">,</span>
-                <span class="s2">&quot;aegwp_erf&quot;</span><span class="p">:</span> <span class="n">aegwp_erf</span><span class="p">,</span>
-                <span class="s2">&quot;agtp&quot;</span><span class="p">:</span> <span class="n">agtp</span><span class="p">,</span>
-                <span class="s2">&quot;iagtp&quot;</span><span class="p">:</span> <span class="n">iagtp</span><span class="p">,</span>
-                <span class="s2">&quot;atr&quot;</span><span class="p">:</span> <span class="n">atr</span><span class="p">,</span>
+                <span class="s2">"agwp_rf"</span><span class="p">:</span> <span class="n">agwp_rf</span><span class="p">,</span>
+                <span class="s2">"agwp_erf"</span><span class="p">:</span> <span class="n">agwp_erf</span><span class="p">,</span>
+                <span class="s2">"aegwp_rf"</span><span class="p">:</span> <span class="n">aegwp_rf</span><span class="p">,</span>
+                <span class="s2">"aegwp_erf"</span><span class="p">:</span> <span class="n">aegwp_erf</span><span class="p">,</span>
+                <span class="s2">"agtp"</span><span class="p">:</span> <span class="n">agtp</span><span class="p">,</span>
+                <span class="s2">"iagtp"</span><span class="p">:</span> <span class="n">iagtp</span><span class="p">,</span>
+                <span class="s2">"atr"</span><span class="p">:</span> <span class="n">atr</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="c1"># --- Relative metrics ---</span>
         <span class="n">results_H_relative</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"CO2"</span><span class="p">]:</span>
             <span class="n">gwp_rf</span><span class="p">,</span> <span class="n">gwp_erf</span><span class="p">,</span> <span class="n">egwp_rf</span><span class="p">,</span> <span class="n">egwp_erf</span><span class="p">,</span> <span class="n">gtp</span><span class="p">,</span> <span class="n">igtp</span><span class="p">,</span> <span class="n">ratr</span> <span class="o">=</span> <span class="n">relative_metrics</span><span class="p">(</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;agwp_rf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;agwp_erf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;aegwp_rf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;aegwp_erf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;agtp&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;iagtp&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span><span class="s2">&quot;atr&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;agwp_rf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;agwp_erf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;aegwp_rf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;aegwp_erf&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;agtp&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;iagtp&quot;</span><span class="p">],</span>
-                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;atr&quot;</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"agwp_rf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"agwp_erf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"aegwp_rf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"aegwp_erf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"agtp"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"iagtp"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span><span class="s2">"atr"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"agwp_rf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"agwp_erf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"aegwp_rf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"aegwp_erf"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"agtp"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"iagtp"</span><span class="p">],</span>
+                <span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"atr"</span><span class="p">],</span>
             <span class="p">)</span>
 
             <span class="n">results_H_relative</span><span class="p">[</span><span class="n">specie</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;gwp_rf&quot;</span><span class="p">:</span> <span class="n">gwp_rf</span><span class="p">,</span>
-                <span class="s2">&quot;gwp_erf&quot;</span><span class="p">:</span> <span class="n">gwp_erf</span><span class="p">,</span>
-                <span class="s2">&quot;egwp_rf&quot;</span><span class="p">:</span> <span class="n">egwp_rf</span><span class="p">,</span>
-                <span class="s2">&quot;egwp_erf&quot;</span><span class="p">:</span> <span class="n">egwp_erf</span><span class="p">,</span>
-                <span class="s2">&quot;gtp&quot;</span><span class="p">:</span> <span class="n">gtp</span><span class="p">,</span>
-                <span class="s2">&quot;igtp&quot;</span><span class="p">:</span> <span class="n">igtp</span><span class="p">,</span>
-                <span class="s2">&quot;ratr&quot;</span><span class="p">:</span> <span class="n">ratr</span><span class="p">,</span>
+                <span class="s2">"gwp_rf"</span><span class="p">:</span> <span class="n">gwp_rf</span><span class="p">,</span>
+                <span class="s2">"gwp_erf"</span><span class="p">:</span> <span class="n">gwp_erf</span><span class="p">,</span>
+                <span class="s2">"egwp_rf"</span><span class="p">:</span> <span class="n">egwp_rf</span><span class="p">,</span>
+                <span class="s2">"egwp_erf"</span><span class="p">:</span> <span class="n">egwp_erf</span><span class="p">,</span>
+                <span class="s2">"gtp"</span><span class="p">:</span> <span class="n">gtp</span><span class="p">,</span>
+                <span class="s2">"igtp"</span><span class="p">:</span> <span class="n">igtp</span><span class="p">,</span>
+                <span class="s2">"ratr"</span><span class="p">:</span> <span class="n">ratr</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">include_absolute_metrics</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">H</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">specie</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">results_H_absolute</span><span class="p">[</span><span class="n">specie</span><span class="p">],</span> <span class="o">**</span><span class="n">results_H_relative</span><span class="p">[</span><span class="n">specie</span><span class="p">]}</span>
-                <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"CO2"</span><span class="p">]</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">results</span><span class="p">[</span><span class="n">H</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -2333,8 +2333,8 @@ or a custom callable function.</p>
         <span class="k">for</span> <span class="n">H</span><span class="p">,</span> <span class="n">species_dict</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">specie</span><span class="p">,</span> <span class="n">metrics</span> <span class="ow">in</span> <span class="n">species_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">flatten_dict</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;time_horizon&quot;</span><span class="p">:</span> <span class="n">H</span><span class="p">,</span>
-                    <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="n">specie</span><span class="p">,</span>
+                    <span class="s2">"time_horizon"</span><span class="p">:</span> <span class="n">H</span><span class="p">,</span>
+                    <span class="s2">"species"</span><span class="p">:</span> <span class="n">specie</span><span class="p">,</span>
                     <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
                 <span class="p">}</span>
                 <span class="n">flatten_dicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flatten_dict</span><span class="p">)</span>
@@ -2412,27 +2412,27 @@ or a custom callable function.</p>
 <span class="normal">411</span>
 <span class="normal">412</span>
 <span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_model_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Validate the selected climate model and species profile.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the climate model or species profile is not recognized.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">climate_model</span>
     <span class="n">species_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_profile</span>
 
-    <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">&quot;GWP*&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">"GWP*"</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;The &#39;</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&#39; climate model is not recommended for calculating aviation climate metrics.&quot;</span>
+            <span class="sa">f</span><span class="s2">"The '</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">' climate model is not recommended for calculating aviation climate metrics."</span>
         <span class="p">)</span>
 
     <span class="n">is_registered_name</span> <span class="o">=</span> <span class="n">species_profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_species_profile</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_registered_name</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Species profile must be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_species_profile</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Species profile must be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_species_profile</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>

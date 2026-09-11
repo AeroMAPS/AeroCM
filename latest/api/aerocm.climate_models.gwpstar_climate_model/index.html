@@ -1471,7 +1471,7 @@
     <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the climate model with the provided settings.</span>
+<span class="w">    </span><span class="sd">"""Initialize the climate model with the provided settings.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1487,7 +1487,7 @@
 <span class="sd">        Dictionary containing species settings.</span>
 <span class="sd">    model_settings : dict</span>
 <span class="sd">        Dictionary containing model settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Validate parameters ---</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">validate_model_settings</span><span class="p">(</span><span class="n">model_settings</span><span class="p">)</span>
@@ -1717,7 +1717,7 @@
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the GWP* climate model with the assigned input data.</span>
+<span class="w">    </span><span class="sd">"""Run the GWP* climate model with the assigned input data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1728,15 +1728,15 @@
 <span class="sd">    -------</span>
 <span class="sd">    output_data : dict</span>
 <span class="sd">        Dictionary containing the results of the climate model.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Extract model settings ---</span>
-    <span class="n">tcre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_settings</span><span class="p">[</span><span class="s2">&quot;tcre&quot;</span><span class="p">]</span>
+    <span class="n">tcre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_settings</span><span class="p">[</span><span class="s2">"tcre"</span><span class="p">]</span>
 
     <span class="c1"># --- Extract species settings ---</span>
-    <span class="n">sensitivity_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sensitivity_rf&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">ratio_erf_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="p">[</span><span class="s2">&quot;ratio_erf_rf&quot;</span><span class="p">]</span>
-    <span class="n">efficacy_erf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;efficacy_erf&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">sensitivity_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sensitivity_rf"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ratio_erf_rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="p">[</span><span class="s2">"ratio_erf_rf"</span><span class="p">]</span>
+    <span class="n">efficacy_erf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"efficacy_erf"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
     <span class="c1"># --- Extract simulation settings ---</span>
     <span class="n">start_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_year</span>
@@ -1746,7 +1746,7 @@
     <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="c1"># --- Run the model ---</span>
-    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;CO2&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"CO2"</span><span class="p">:</span>
         <span class="n">equivalent_emissions</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">specie_inventory</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">12</span>
         <span class="p">)</span>  <span class="c1"># Conversion from kgCO2 to GtCO2</span>
@@ -1793,22 +1793,22 @@
         <span class="n">gwpstar_s_coefficient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
         <span class="k">if</span> <span class="p">(</span>
-            <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Contrails&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;NOx - ST O3&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2O&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Soot - ARI&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Soot - ACI&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ARI&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ACI&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - ST O3&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - SWV&quot;</span>
+            <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Contrails"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"NOx - ST O3"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2O"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Soot - ARI"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Soot - ACI"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Sulfur - ARI"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Sulfur - ACI"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - ST O3"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - SWV"</span>
         <span class="p">):</span>
             <span class="n">gwpstar_variation_duration</span> <span class="o">=</span> <span class="mi">6</span>
             <span class="n">gwpstar_s_coefficient</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">elif</span> <span class="p">(</span>
-            <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;NOx - CH4 and induced&quot;</span>
-            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span>
+            <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"NOx - CH4 and induced"</span>
+            <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - CH4 and induced"</span>
         <span class="p">):</span>
             <span class="n">gwpstar_variation_duration</span> <span class="o">=</span> <span class="mi">20</span>
             <span class="n">gwpstar_s_coefficient</span> <span class="o">=</span> <span class="mf">0.25</span>
@@ -1834,14 +1834,14 @@
 
     <span class="c1"># --- Prepare output ---</span>
     <span class="n">output_data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;radiative_forcing&quot;</span><span class="p">:</span> <span class="n">radiative_forcing</span><span class="p">,</span>
-        <span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">:</span> <span class="n">effective_radiative_forcing</span><span class="p">,</span>
-        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+        <span class="s2">"radiative_forcing"</span><span class="p">:</span> <span class="n">radiative_forcing</span><span class="p">,</span>
+        <span class="s2">"effective_radiative_forcing"</span><span class="p">:</span> <span class="n">effective_radiative_forcing</span><span class="p">,</span>
+        <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">return_df</span><span class="p">:</span>
         <span class="n">output_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">years</span><span class="p">)</span>
-        <span class="n">output_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Year&quot;</span>
+        <span class="n">output_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Year"</span>
 
     <span class="k">return</span> <span class="n">output_data</span>
 </code></pre></div></td></tr></table></div>
@@ -2084,7 +2084,7 @@
     <span class="n">gwpstar_variation_duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">gwpstar_s_coefficient</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;GWP* equivalent emissions function.</span>
+<span class="w">    </span><span class="sd">"""GWP* equivalent emissions function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2107,7 +2107,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Reference: Smith et al. (2021), https://doi.org/10.1038/s41612-021-00169-8</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Global</span>
     <span class="n">climate_time_horizon</span> <span class="o">=</span> <span class="mi">100</span>

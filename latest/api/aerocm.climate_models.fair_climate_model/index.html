@@ -1535,7 +1535,7 @@ profile, accounting for the background scenario.</p>
     <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the climate model with the provided settings.</span>
+<span class="w">    </span><span class="sd">"""Initialize the climate model with the provided settings.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1551,7 +1551,7 @@ profile, accounting for the background scenario.</p>
 <span class="sd">        Dictionary containing species settings.</span>
 <span class="sd">    model_settings : dict</span>
 <span class="sd">        Dictionary containing model settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Validate parameters ---</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">validate_model_settings</span><span class="p">(</span><span class="n">model_settings</span><span class="p">)</span>
@@ -1902,7 +1902,7 @@ profile, accounting for the background scenario.</p>
 <span class="normal">362</span>
 <span class="normal">363</span>
 <span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the RF, ERF and temperature increase for a given species and its quantities using the FaIR climate model.</span>
 
 <span class="sd">    Parameters</span>
@@ -1914,17 +1914,17 @@ profile, accounting for the background scenario.</p>
 <span class="sd">    -------</span>
 <span class="sd">    output_data : dict</span>
 <span class="sd">        Dictionary containing the results of the FaIR climate model.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Extract species settings ---</span>
     <span class="n">specie_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specie_settings</span>
     <span class="n">sensitivity_rf</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s2">&quot;sensitivity_rf&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="s2">"sensitivity_rf"</span><span class="p">,</span> <span class="mf">0.0</span>
     <span class="p">)</span>  <span class="c1"># replace 2nd argument with default if needed</span>
-    <span class="n">ratio_erf_rf</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ratio_erf_rf&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-    <span class="n">efficacy_erf</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;efficacy_erf&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">ratio_erf_rf</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ratio_erf_rf"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">efficacy_erf</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"efficacy_erf"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">ch4_change_per_species</span> <span class="o">=</span> <span class="n">specie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s2">&quot;ch4_change_per_species&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="s2">"ch4_change_per_species"</span><span class="p">,</span> <span class="mf">0.0</span>
     <span class="p">)</span>  <span class="c1"># only for NOx/H2 leakage - CH4 and induced</span>
 
     <span class="c1"># --- Extract simulation settings ---</span>
@@ -1937,10 +1937,10 @@ profile, accounting for the background scenario.</p>
     <span class="c1"># --- Extract model settings ---</span>
     <span class="n">model_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_settings</span>
     <span class="n">contrails_saturation_factor</span> <span class="o">=</span> <span class="n">model_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s2">&quot;contrails_saturation_factor&quot;</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="s2">"contrails_saturation_factor"</span><span class="p">,</span> <span class="mf">1.0</span>
     <span class="p">)</span>
     <span class="n">background_nox_correction_factor</span> <span class="o">=</span> <span class="n">model_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s2">&quot;background_nox_correction_factor&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="s2">"background_nox_correction_factor"</span><span class="p">,</span> <span class="mf">0.0</span>
     <span class="p">)</span>
     <span class="n">background_species_quantities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_background_species_quantities</span><span class="p">(</span>
         <span class="n">model_settings</span><span class="p">,</span> <span class="n">start_year</span><span class="p">,</span> <span class="n">end_year</span>
@@ -1949,22 +1949,22 @@ profile, accounting for the background scenario.</p>
     <span class="c1"># --- Prepare inputs depending on species ---</span>
     <span class="n">processed_inventory</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;CO2&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"CO2"</span><span class="p">:</span>
         <span class="n">processed_inventory</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">specie_inventory</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">12</span>
         <span class="p">)</span>  <span class="c1"># Conversion from kgCO2 to GtCO2</span>
 
-    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Soot - ARI&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Soot - ARI"</span><span class="p">:</span>
         <span class="n">processed_inventory</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">specie_inventory</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
         <span class="p">)</span>  <span class="c1"># Conversion from kgSO2 to MtSO2</span>
 
-    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Sulfur - ARI"</span><span class="p">:</span>
         <span class="n">processed_inventory</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">specie_inventory</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
         <span class="p">)</span>  <span class="c1"># Conversion from kgBC to MtBC</span>
 
-    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Contrails&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Contrails"</span><span class="p">:</span>
         <span class="n">contrails_saturation_reference_year</span> <span class="o">=</span> <span class="mi">2018</span>
         <span class="n">years_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
         <span class="n">idx_ref_contrails</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
@@ -1985,23 +1985,23 @@ profile, accounting for the background scenario.</p>
         <span class="n">processed_inventory</span> <span class="o">=</span> <span class="n">erf</span>  <span class="c1"># W/m2</span>
 
     <span class="k">elif</span> <span class="p">(</span>
-        <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2O&quot;</span>
-        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Soot - ACI&quot;</span>
-        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ACI&quot;</span>
-        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - ST O3&quot;</span>
-        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - SWV&quot;</span>
+        <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2O"</span>
+        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Soot - ACI"</span>
+        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Sulfur - ACI"</span>
+        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - ST O3"</span>
+        <span class="ow">or</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - SWV"</span>
     <span class="p">):</span>
         <span class="n">rf</span> <span class="o">=</span> <span class="n">sensitivity_rf</span> <span class="o">*</span> <span class="n">specie_inventory</span>
         <span class="n">erf</span> <span class="o">=</span> <span class="n">rf</span> <span class="o">*</span> <span class="n">ratio_erf_rf</span>
         <span class="n">processed_inventory</span> <span class="o">=</span> <span class="n">erf</span>  <span class="c1"># W/m2</span>
 
-    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">:</span>
         <span class="n">min_year</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span> <span class="mi">1939</span><span class="p">)</span>
         <span class="n">max_year</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">end_year</span><span class="p">,</span> <span class="mi">2051</span><span class="p">)</span>
         <span class="n">tau_reference_year</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_year</span><span class="p">,</span> <span class="mi">1940</span><span class="p">,</span> <span class="mi">1980</span><span class="p">,</span> <span class="mi">1994</span><span class="p">,</span> <span class="mi">2004</span><span class="p">,</span> <span class="mi">2050</span><span class="p">,</span> <span class="n">max_year</span><span class="p">]</span>
         <span class="n">tau_reference_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mf">10.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">9.85</span><span class="p">,</span> <span class="mf">10.25</span><span class="p">,</span> <span class="mf">10.25</span><span class="p">]</span>
         <span class="n">tau_function</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span>
-            <span class="n">tau_reference_year</span><span class="p">,</span> <span class="n">tau_reference_values</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span>
+            <span class="n">tau_reference_year</span><span class="p">,</span> <span class="n">tau_reference_values</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"linear"</span>
         <span class="p">)</span>
         <span class="n">tau</span> <span class="o">=</span> <span class="n">tau_function</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
         <span class="n">ch4_molar_mass</span> <span class="o">=</span> <span class="mf">16.04e-3</span>  <span class="c1"># [kg/mol]</span>
@@ -2035,24 +2035,24 @@ profile, accounting for the background scenario.</p>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">nox_background_reference_year</span> <span class="o">=</span> <span class="mi">2018</span>
-        <span class="n">nox_background</span> <span class="o">=</span> <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_NOx&quot;</span><span class="p">]</span>
+        <span class="n">nox_background</span> <span class="o">=</span> <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_NOx"</span><span class="p">]</span>
         <span class="n">dt_land</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dt_land</span><span class="p">(</span>
             <span class="n">nox_background</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">nox_background_reference_year</span>
         <span class="p">)</span>
         <span class="n">nox_correction</span> <span class="o">=</span> <span class="n">dt_land</span> <span class="o">*</span> <span class="n">background_nox_correction_factor</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"NOx - ST O3"</span><span class="p">:</span>
             <span class="n">rf</span> <span class="o">=</span> <span class="n">sensitivity_rf</span> <span class="o">*</span> <span class="n">specie_inventory</span>
             <span class="n">erf</span> <span class="o">=</span> <span class="n">rf</span> <span class="o">*</span> <span class="n">ratio_erf_rf</span>
             <span class="n">processed_inventory</span> <span class="o">=</span> <span class="n">erf</span> <span class="o">*</span> <span class="n">nox_correction</span>  <span class="c1"># W/m2</span>
 
-        <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"NOx - CH4 and induced"</span><span class="p">:</span>
             <span class="n">min_year</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span> <span class="mi">1939</span><span class="p">)</span>
             <span class="n">max_year</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">end_year</span><span class="p">,</span> <span class="mi">2051</span><span class="p">)</span>
             <span class="n">tau_reference_year</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_year</span><span class="p">,</span> <span class="mi">1940</span><span class="p">,</span> <span class="mi">1980</span><span class="p">,</span> <span class="mi">1994</span><span class="p">,</span> <span class="mi">2004</span><span class="p">,</span> <span class="mi">2050</span><span class="p">,</span> <span class="n">max_year</span><span class="p">]</span>
             <span class="n">tau_reference_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mf">10.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">9.85</span><span class="p">,</span> <span class="mf">10.25</span><span class="p">,</span> <span class="mf">10.25</span><span class="p">]</span>
             <span class="n">tau_function</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span>
-                <span class="n">tau_reference_year</span><span class="p">,</span> <span class="n">tau_reference_values</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span>
+                <span class="n">tau_reference_year</span><span class="p">,</span> <span class="n">tau_reference_values</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">"linear"</span>
             <span class="p">)</span>
             <span class="n">tau</span> <span class="o">=</span> <span class="n">tau_function</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
             <span class="n">ch4_molar_mass</span> <span class="o">=</span> <span class="mf">16.04e-3</span>  <span class="c1"># [kg/mol]</span>
@@ -2091,27 +2091,27 @@ profile, accounting for the background scenario.</p>
     <span class="n">results</span> <span class="o">=</span> <span class="n">fair_runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
         <span class="n">specie_name</span><span class="p">,</span> <span class="n">sensitivity_rf</span><span class="p">,</span> <span class="n">ratio_erf_rf</span><span class="p">,</span> <span class="n">efficacy_erf</span><span class="p">,</span> <span class="n">processed_inventory</span>
     <span class="p">)</span>
-    <span class="n">temperature_with_species</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span>
+    <span class="n">temperature_with_species</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
     <span class="n">effective_radiative_forcing_with_species</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span>
-        <span class="s2">&quot;effective_radiative_forcing&quot;</span>
+        <span class="s2">"effective_radiative_forcing"</span>
     <span class="p">]</span>
 
     <span class="c1"># --- Counterfactual scenario (without the species) ---</span>
     <span class="c1"># If background ERF and temperature are provided in model_settings, use them</span>
     <span class="k">if</span> <span class="p">{</span>
-        <span class="s2">&quot;background_effective_radiative_forcing&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;background_temperature&quot;</span><span class="p">,</span>
+        <span class="s2">"background_effective_radiative_forcing"</span><span class="p">,</span>
+        <span class="s2">"background_temperature"</span><span class="p">,</span>
     <span class="p">}</span> <span class="o">&lt;=</span> <span class="n">model_settings</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">temperature_without_species</span> <span class="o">=</span> <span class="n">model_settings</span><span class="p">[</span><span class="s2">&quot;background_temperature&quot;</span><span class="p">]</span>
+        <span class="n">temperature_without_species</span> <span class="o">=</span> <span class="n">model_settings</span><span class="p">[</span><span class="s2">"background_temperature"</span><span class="p">]</span>
         <span class="n">effective_radiative_forcing_without_species</span> <span class="o">=</span> <span class="n">model_settings</span><span class="p">[</span>
-            <span class="s2">&quot;background_effective_radiative_forcing&quot;</span>
+            <span class="s2">"background_effective_radiative_forcing"</span>
         <span class="p">]</span>
     <span class="c1"># Else, run FaIR with no additional species</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">results_background</span> <span class="o">=</span> <span class="n">fair_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Run with no additional species</span>
-        <span class="n">temperature_without_species</span> <span class="o">=</span> <span class="n">results_background</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span>
+        <span class="n">temperature_without_species</span> <span class="o">=</span> <span class="n">results_background</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
         <span class="n">effective_radiative_forcing_without_species</span> <span class="o">=</span> <span class="n">results_background</span><span class="p">[</span>
-            <span class="s2">&quot;effective_radiative_forcing&quot;</span>
+            <span class="s2">"effective_radiative_forcing"</span>
         <span class="p">]</span>
 
     <span class="c1"># --- Compute RF, ERF and temperature increase due to the species ---</span>
@@ -2119,15 +2119,15 @@ profile, accounting for the background scenario.</p>
 
     <span class="c1"># For some species, the ERF is directly obtained from the inputs</span>
     <span class="k">if</span> <span class="n">specie_name</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="s2">&quot;Contrails&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;H2O&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Soot - ACI&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">,</span>
+        <span class="s2">"Contrails"</span><span class="p">,</span>
+        <span class="s2">"NOx - ST O3"</span><span class="p">,</span>
+        <span class="s2">"NOx - CH4 and induced"</span><span class="p">,</span>
+        <span class="s2">"H2O"</span><span class="p">,</span>
+        <span class="s2">"Soot - ACI"</span><span class="p">,</span>
+        <span class="s2">"Sulfur - ACI"</span><span class="p">,</span>
+        <span class="s2">"H2 leakage - ST O3"</span><span class="p">,</span>
+        <span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">,</span>
+        <span class="s2">"H2 leakage - SWV"</span><span class="p">,</span>
     <span class="p">]:</span>
         <span class="n">effective_radiative_forcing</span> <span class="o">=</span> <span class="n">processed_inventory</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="c1"># For other species, the ERF is the difference between the FaIR runs with and without the species</span>
@@ -2141,13 +2141,13 @@ profile, accounting for the background scenario.</p>
 
     <span class="c1"># --- Return results ---</span>
     <span class="n">output_data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;radiative_forcing&quot;</span><span class="p">:</span> <span class="n">radiative_forcing</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-        <span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">:</span> <span class="n">effective_radiative_forcing</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
-        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">temperature</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+        <span class="s2">"radiative_forcing"</span><span class="p">:</span> <span class="n">radiative_forcing</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+        <span class="s2">"effective_radiative_forcing"</span><span class="p">:</span> <span class="n">effective_radiative_forcing</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+        <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">temperature</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">return_df</span><span class="p">:</span>
         <span class="n">output_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">years</span><span class="p">)</span>
-        <span class="n">output_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Year&quot;</span>
+        <span class="n">output_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Year"</span>
 
     <span class="k">return</span> <span class="n">output_data</span>
 </code></pre></div></td></tr></table></div>
@@ -2194,10 +2194,10 @@ profile, accounting for the background scenario.</p>
 <span class="normal">379</span>
 <span class="normal">380</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_dt_land</span><span class="p">(</span><span class="n">inventory</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">reference_year</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Computes a ratio of emissions growth versus a reference year, used to parametrise</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">years_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
     <span class="n">idx_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">years_array</span> <span class="o">==</span> <span class="n">reference_year</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">emission_ref</span> <span class="o">=</span> <span class="n">inventory</span><span class="p">[</span><span class="n">idx_ref</span><span class="p">]</span>
@@ -2370,7 +2370,7 @@ profile, accounting for the background scenario.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_background_species_quantities</span><span class="p">(</span>
     <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the background species quantities from the model settings or from the background scenario.</span>
 
 <span class="sd">    Parameters</span>
@@ -2387,18 +2387,18 @@ profile, accounting for the background scenario.</p>
 <span class="sd">    background_species_quantities : dict</span>
 <span class="sd">        Dictionary containing the background species quantities (CO2 and CH4) for each year of the simulation.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">scenario</span> <span class="o">=</span> <span class="n">model_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;background_scenario&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">model_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"background_scenario"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;background_species_quantities&quot;</span> <span class="ow">in</span> <span class="n">model_settings</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"background_species_quantities"</span> <span class="ow">in</span> <span class="n">model_settings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">scenario</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Both scenario and background species provided in model_settings. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;The background species provided will override scenario &#39;</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Both scenario and background species provided in model_settings. "</span>
+                <span class="sa">f</span><span class="s2">"The background species provided will override scenario '</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">'."</span>
             <span class="p">)</span>
 
         <span class="n">background_species_quantities</span> <span class="o">=</span> <span class="n">model_settings</span><span class="p">[</span>
-            <span class="s2">&quot;background_species_quantities&quot;</span>
+            <span class="s2">"background_species_quantities"</span>
         <span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">scenario</span><span class="p">:</span>
@@ -2408,7 +2408,7 @@ profile, accounting for the background scenario.</p>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Either &#39;background_scenario&#39; or &#39;background_species_quantities&#39; must be provided in model_settings.&quot;</span>
+            <span class="s2">"Either 'background_scenario' or 'background_species_quantities' must be provided in model_settings."</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">background_species_quantities</span>
@@ -2871,7 +2871,7 @@ and temperature.</p>
     <span class="n">efficacy_erf</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">specie_inventory</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run FaIR climate model previously configured, for a (single) given species and its emission profile.</span>
 
 <span class="sd">    Parameters</span>
@@ -2888,7 +2888,7 @@ and temperature.</p>
 <span class="sd">    results : dict</span>
 <span class="sd">        Dictionary containing the results of the FaIR climate model run for the effective radiative forcing</span>
 <span class="sd">        and temperature.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># --- Setup model for fresh start ---</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">()</span>
 
@@ -2900,48 +2900,48 @@ and temperature.</p>
         <span class="kc">None</span>
     <span class="p">]:</span>  <span class="c1"># None is allowed for run with only background species</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Species &#39;</span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">&#39; not recognized and won&#39;t have any effect. Available species: </span><span class="si">{</span><span class="n">species_list</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Species '</span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">' not recognized and won't have any effect. Available species: </span><span class="si">{</span><span class="n">species_list</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Soot - ARI&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Soot - ARI"</span><span class="p">:</span>
         <span class="n">erf_ari_soot</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">sensitivity_rf</span> <span class="o">*</span> <span class="n">ratio_erf_rf</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
         <span class="p">)</span>  <span class="c1"># W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr</span>
         <span class="n">fill</span><span class="p">(</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">&quot;erfari_radiative_efficiency&quot;</span><span class="p">],</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">"erfari_radiative_efficiency"</span><span class="p">],</span>
             <span class="n">erf_ari_soot</span><span class="p">,</span>
-            <span class="n">specie</span><span class="o">=</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">,</span>
+            <span class="n">specie</span><span class="o">=</span><span class="s2">"Soot - ARI"</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">fill</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">&quot;aci_shape&quot;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">)</span>
+        <span class="n">fill</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">"aci_shape"</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="s2">"Soot - ARI"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"Sulfur - ARI"</span><span class="p">:</span>
         <span class="n">erf_ari_sulfur</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">sensitivity_rf</span> <span class="o">*</span> <span class="n">ratio_erf_rf</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
         <span class="p">)</span>  <span class="c1"># W/m² per MtSO2/yr, conversion from W/m² per kgSO2/yr</span>
         <span class="n">fill</span><span class="p">(</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">&quot;erfari_radiative_efficiency&quot;</span><span class="p">],</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">"erfari_radiative_efficiency"</span><span class="p">],</span>
             <span class="n">erf_ari_sulfur</span><span class="p">,</span>
-            <span class="n">specie</span><span class="o">=</span><span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">,</span>
+            <span class="n">specie</span><span class="o">=</span><span class="s2">"Sulfur - ARI"</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">fill</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">&quot;aci_shape&quot;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">)</span>
+        <span class="n">fill</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">"aci_shape"</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="s2">"Sulfur - ARI"</span><span class="p">)</span>
 
     <span class="c1"># --- Set efficacy erf for current species ---</span>
     <span class="k">if</span> <span class="n">specie_name</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
         <span class="n">fill</span><span class="p">(</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">&quot;forcing_efficacy&quot;</span><span class="p">],</span> <span class="n">efficacy_erf</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="n">specie_name</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">species_configs</span><span class="p">[</span><span class="s2">"forcing_efficacy"</span><span class="p">],</span> <span class="n">efficacy_erf</span><span class="p">,</span> <span class="n">specie</span><span class="o">=</span><span class="n">specie_name</span>
         <span class="p">)</span>
 
     <span class="c1"># --- Set emissions/forcing inputs for current species ---</span>
     <span class="c1"># - special case for CO2: adds to background CO2 -</span>
-    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">&quot;CO2&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">specie_name</span> <span class="o">==</span> <span class="s2">"CO2"</span><span class="p">:</span>
         <span class="n">total_CO2</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">emissions</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-            <span class="nb">dict</span><span class="p">(</span><span class="n">specie</span><span class="o">=</span><span class="s2">&quot;CO2&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scenario</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">scenarios</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">specie</span><span class="o">=</span><span class="s2">"CO2"</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scenario</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">scenarios</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="p">]</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># background CO2 emissions</span>
         <span class="n">total_CO2</span> <span class="o">+=</span> <span class="n">specie_inventory</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># add aviation CO2 emissions</span>
         <span class="n">fill</span><span class="p">(</span>
             <span class="n">f</span><span class="o">.</span><span class="n">emissions</span><span class="p">,</span>
             <span class="n">total_CO2</span><span class="p">,</span>
-            <span class="n">specie</span><span class="o">=</span><span class="s2">&quot;CO2&quot;</span><span class="p">,</span>
+            <span class="n">specie</span><span class="o">=</span><span class="s2">"CO2"</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">scenarios</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="p">)</span>
@@ -2951,7 +2951,7 @@ and temperature.</p>
         <span class="k">pass</span>  <span class="c1"># species not recognized, do nothing</span>
 
     <span class="c1"># - Species using forcing as input instead of emissions -</span>
-    <span class="k">elif</span> <span class="n">properties</span><span class="p">[</span><span class="n">specie_name</span><span class="p">][</span><span class="s2">&quot;input_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;forcing&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">properties</span><span class="p">[</span><span class="n">specie_name</span><span class="p">][</span><span class="s2">"input_mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"forcing"</span><span class="p">:</span>
         <span class="n">fill</span><span class="p">(</span>
             <span class="n">f</span><span class="o">.</span><span class="n">forcing</span><span class="p">,</span>
             <span class="n">specie_inventory</span><span class="p">,</span>
@@ -2981,10 +2981,10 @@ and temperature.</p>
 
     <span class="c1"># --- Results ---</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">forcing_sum</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="s2">"effective_radiative_forcing"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">forcing_sum</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
             <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">results</span>
@@ -3034,12 +3034,12 @@ and temperature.</p>
 <span class="normal">889</span>
 <span class="normal">890</span>
 <span class="normal">891</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialise_emissions_and_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Initialise all emissions and forcing to zero for all species.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span>
     <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_list</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">&quot;input_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;forcing&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">specie</span><span class="p">][</span><span class="s2">"input_mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"forcing"</span><span class="p">:</span>
             <span class="n">fill</span><span class="p">(</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">forcing</span><span class="p">,</span>
                 <span class="mi">0</span><span class="p">,</span>
@@ -3326,7 +3326,7 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
 <span class="normal">1051</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">background_species_quantities_function</span><span class="p">(</span>
     <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scenario</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get background species quantities (CO2 and CH4) from RCP or SSP scenarios.</span>
 
 <span class="sd">    Parameters</span>
@@ -3335,7 +3335,7 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
 <span class="sd">        Start year of the simulation.</span>
 <span class="sd">    end_year : int</span>
 <span class="sd">        End year of the simulation.</span>
-<span class="sd">        Background scenario to be used (&#39;RCP26&#39;, &#39;RCP45&#39;, &#39;RCP60&#39;, &#39;RCP85&#39;, &#39;SSP119&#39;, &#39;SSP126&#39;, &#39;SSP245&#39;, &#39;SSP370&#39;, &#39;SSP434&#39;, &#39;SSP460&#39;, &#39;SSP534-over&#39;, &#39;SSP585&#39;). Select None to set background species to zero.</span>
+<span class="sd">        Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'SSP126', 'SSP245', 'SSP370', 'SSP434', 'SSP460', 'SSP534-over', 'SSP585'). Select None to set background species to zero.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -3346,82 +3346,82 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
 <span class="sd">    -------</span>
 <span class="sd">    ```python</span>
 <span class="sd">    &gt;&gt;&gt; from aerocm.climate_models.fair_climate_model import background_species_quantities_function</span>
-<span class="sd">    &gt;&gt;&gt; background_species_quantities = background_species_quantities_function(2020, 2050, &#39;RCP45&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; background_species_quantities = background_species_quantities_function(2020, 2050, 'RCP45')</span>
 <span class="sd">    ```</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Validate inputs ---</span>
     <span class="k">if</span> <span class="n">start_year</span> <span class="o">&lt;</span> <span class="n">BACKGROUND_SCENARIO_START_YEAR</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;start_year must be &gt;= </span><span class="si">{</span><span class="n">BACKGROUND_SCENARIO_START_YEAR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"start_year must be &gt;= </span><span class="si">{</span><span class="n">BACKGROUND_SCENARIO_START_YEAR</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># --- Initialise variables ---</span>
     <span class="n">background_species_quantities</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;background_CO2&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;background_CH4&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;background_NOx&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">"background_CO2"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">"background_CH4"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">"background_NOx"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
     <span class="p">}</span>
 
     <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># --- Read data ---</span>
-    <span class="k">if</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP119&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP119"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP119.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP119.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP126&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP126"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP126.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP126.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP245&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP245"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP245.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP245.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP370&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP370"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP370.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP370.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP434&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP434"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP434.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP434.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP460&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP460"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP460.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP460.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP534-over&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP534-over"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP534-over.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP534-over.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;SSP585&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"SSP585"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;SSP585.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"SSP585.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;RCP26&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"RCP26"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;RCP26.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"RCP26.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;RCP45&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"RCP45"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;RCP45.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"RCP45.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;RCP60&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"RCP60"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;RCP60.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"RCP60.csv"</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">&quot;RCP85&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">scenario</span> <span class="o">==</span> <span class="s2">"RCP85"</span><span class="p">:</span>
         <span class="n">background_scenario_data_path</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;RCP85.csv&quot;</span>
+            <span class="n">background_scenarios</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"RCP85.csv"</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;Scenario not recognised (available: SSP119, SSP126, SSP245, SSP370, SSP434, SSP460, SSP534-over, SSP585, RCP26, RCP45, RCP60, RCP85)&quot;</span>
+            <span class="s2">"Scenario not recognised (available: SSP119, SSP126, SSP245, SSP370, SSP434, SSP460, SSP534-over, SSP585, RCP26, RCP45, RCP60, RCP85)"</span>
         <span class="p">)</span>
 
     <span class="n">background_scenario_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">background_scenario_data_path</span><span class="p">)</span>
 
     <span class="c1"># World CO2</span>
-    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">][</span>
+    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CO2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">][</span>
             <span class="n">start_year</span>
             <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_START_YEAR</span> <span class="p">:</span> <span class="n">end_year</span>
             <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_START_YEAR</span>
@@ -3430,8 +3430,8 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
     <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># Unit: GtCO2</span>
 
     <span class="c1"># World CH4</span>
-    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CH4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">background_scenario_data_df</span><span class="p">[</span>
-        <span class="s2">&quot;CH4&quot;</span>
+    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CH4"</span><span class="p">]</span> <span class="o">=</span> <span class="n">background_scenario_data_df</span><span class="p">[</span>
+        <span class="s2">"CH4"</span>
     <span class="p">][</span>
         <span class="n">start_year</span>
         <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_START_YEAR</span> <span class="p">:</span> <span class="n">end_year</span>
@@ -3440,8 +3440,8 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
     <span class="p">]</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># Unit: MtCH4</span>
 
     <span class="c1"># Background NOx</span>
-    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_NOx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">background_scenario_data_df</span><span class="p">[</span>
-        <span class="s2">&quot;NOx&quot;</span>
+    <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_NOx"</span><span class="p">]</span> <span class="o">=</span> <span class="n">background_scenario_data_df</span><span class="p">[</span>
+        <span class="s2">"NOx"</span>
     <span class="p">][</span>
         <span class="n">start_year</span>
         <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_START_YEAR</span> <span class="p">:</span> <span class="n">end_year</span>
@@ -3451,33 +3451,33 @@ Background scenario to be used ('RCP26', 'RCP45', 'RCP60', 'RCP85', 'SSP119', 'S
 
     <span class="k">if</span> <span class="n">end_year</span> <span class="o">&gt;</span> <span class="n">BACKGROUND_SCENARIO_END_YEAR</span><span class="p">:</span>
         <span class="c1"># World CO2</span>
-        <span class="n">constant_co2</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+        <span class="n">constant_co2</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">"CO2"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
             <span class="n">end_year</span> <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_END_YEAR</span>
         <span class="p">)</span>
-        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CO2&quot;</span><span class="p">],</span> <span class="n">constant_co2</span><span class="p">)</span>
+        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CO2"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CO2"</span><span class="p">],</span> <span class="n">constant_co2</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># World CH4</span>
-        <span class="n">constant_ch4</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">&quot;CH4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+        <span class="n">constant_ch4</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">"CH4"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
             <span class="n">end_year</span> <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_END_YEAR</span>
         <span class="p">)</span>
-        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CH4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_CH4&quot;</span><span class="p">],</span> <span class="n">constant_ch4</span><span class="p">)</span>
+        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CH4"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_CH4"</span><span class="p">],</span> <span class="n">constant_ch4</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># Background NOx</span>
-        <span class="n">constant_nox</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">&quot;NOx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+        <span class="n">constant_nox</span> <span class="o">=</span> <span class="p">(</span><span class="n">background_scenario_data_df</span><span class="p">[</span><span class="s2">"NOx"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
             <span class="n">end_year</span> <span class="o">-</span> <span class="n">BACKGROUND_SCENARIO_END_YEAR</span>
         <span class="p">)</span>
-        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_NOx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">&quot;background_NOx&quot;</span><span class="p">],</span> <span class="n">constant_nox</span><span class="p">)</span>
+        <span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_NOx"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">background_species_quantities</span><span class="p">[</span><span class="s2">"background_NOx"</span><span class="p">],</span> <span class="n">constant_nox</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="c1"># Warning</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Background scenario&#39;</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">&#39; has no emission data after 2500. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Constant emissions were considered for after 2500.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Background scenario'</span><span class="si">{</span><span class="n">scenario</span><span class="si">}</span><span class="s2">' has no emission data after 2500. "</span>
+            <span class="sa">f</span><span class="s2">"Constant emissions were considered for after 2500."</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">background_species_quantities</span>

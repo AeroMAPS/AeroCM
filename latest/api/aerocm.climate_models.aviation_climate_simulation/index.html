@@ -1961,7 +1961,7 @@
 <span class="normal">333</span>
 <span class="normal">334</span>
 <span class="normal">335</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_xr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run the climate simulation.</span>
 
 <span class="sd">    Parameters</span>
@@ -1973,7 +1973,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    dict or xr.Dataset</span>
 <span class="sd">        Results of the climate simulation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Extract species and their settings ---</span>
     <span class="n">species_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_inventory</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -1990,16 +1990,16 @@
     <span class="n">model_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_settings</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="n">known_model</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">&quot;IPCC&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">"IPCC"</span><span class="p">:</span>
         <span class="n">climate_model</span> <span class="o">=</span> <span class="n">IPCCClimateModel</span>
         <span class="n">known_model</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">&quot;GWP*&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">"GWP*"</span><span class="p">:</span>
         <span class="n">climate_model</span> <span class="o">=</span> <span class="n">GWPStarClimateModel</span>
         <span class="n">known_model</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">&quot;LWE&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">"LWE"</span><span class="p">:</span>
         <span class="n">climate_model</span> <span class="o">=</span> <span class="n">LWEClimateModel</span>
         <span class="n">known_model</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">&quot;FaIR&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">climate_model</span> <span class="o">==</span> <span class="s2">"FaIR"</span><span class="p">:</span>
         <span class="n">climate_model</span> <span class="o">=</span> <span class="n">FairClimateModel</span>
         <span class="n">known_model</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -2028,50 +2028,50 @@
         <span class="n">results_background</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">fair_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="p">)</span>  <span class="c1"># Run with no additional species to get background state</span>
-        <span class="n">model_settings</span><span class="p">[</span><span class="s2">&quot;background_temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_background</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span>
-        <span class="n">model_settings</span><span class="p">[</span><span class="s2">&quot;background_effective_radiative_forcing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">results_background</span><span class="p">[</span><span class="s2">&quot;effective_radiative_forcing&quot;</span><span class="p">]</span>
+        <span class="n">model_settings</span><span class="p">[</span><span class="s2">"background_temperature"</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_background</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+        <span class="n">model_settings</span><span class="p">[</span><span class="s2">"background_effective_radiative_forcing"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">results_background</span><span class="p">[</span><span class="s2">"effective_radiative_forcing"</span><span class="p">]</span>
         <span class="p">)</span>
 
     <span class="c1"># -- Run model for all species ---</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">climate_model</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">climate_model</span><span class="p">,</span> <span class="n">ClimateModel</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;Contrails correction factors&quot;</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Contrails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Contrails&quot;</span><span class="p">]</span>
-                <span class="o">*</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Contrails correction factors&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">"Contrails correction factors"</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Contrails"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Contrails"</span><span class="p">]</span>
+                <span class="o">*</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Contrails correction factors"</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;Contrails correction factors&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;NOx&quot;</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">)</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;NOx&quot;</span><span class="p">]</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;NOx&quot;</span><span class="p">]</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;NOx&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;Soot&quot;</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Soot - ACI&quot;</span><span class="p">)</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Soot&quot;</span><span class="p">]</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Soot - ACI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Soot&quot;</span><span class="p">]</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;Soot&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;Sulfur&quot;</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">)</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Sulfur&quot;</span><span class="p">]</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;Sulfur&quot;</span><span class="p">]</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;Sulfur&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;H2 leakage&quot;</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">)</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">)</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span>
-                <span class="s2">&quot;H2 leakage&quot;</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"Contrails correction factors"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"NOx"</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"NOx - ST O3"</span><span class="p">)</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"NOx - CH4 and induced"</span><span class="p">)</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"NOx - ST O3"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"NOx"</span><span class="p">]</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"NOx - CH4 and induced"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"NOx"</span><span class="p">]</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"NOx"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"Soot"</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Soot - ARI"</span><span class="p">)</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Soot - ACI"</span><span class="p">)</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Soot - ARI"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Soot"</span><span class="p">]</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Soot - ACI"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Soot"</span><span class="p">]</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"Soot"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"Sulfur"</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Sulfur - ARI"</span><span class="p">)</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Sulfur - ACI"</span><span class="p">)</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Sulfur - ARI"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Sulfur"</span><span class="p">]</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Sulfur - ACI"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"Sulfur"</span><span class="p">]</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"Sulfur"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"H2 leakage"</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"H2 leakage - ST O3"</span><span class="p">)</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">)</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"H2 leakage - SWV"</span><span class="p">)</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"H2 leakage - ST O3"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span>
+                <span class="s2">"H2 leakage"</span>
             <span class="p">]</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span>
-                <span class="s2">&quot;H2 leakage&quot;</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span>
+                <span class="s2">"H2 leakage"</span>
             <span class="p">]</span>
-            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">&quot;H2 leakage&quot;</span><span class="p">]</span>
-            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;H2 leakage&quot;</span><span class="p">)</span>
+            <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"H2 leakage - SWV"</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_inventory</span><span class="p">[</span><span class="s2">"H2 leakage"</span><span class="p">]</span>
+            <span class="n">species_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"H2 leakage"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">specie</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">:</span>
             <span class="n">model_instance</span> <span class="o">=</span> <span class="n">climate_model</span><span class="p">(</span>
                 <span class="n">start_year</span><span class="p">,</span>
@@ -2094,32 +2094,32 @@
             <span class="p">)</span>
 
     <span class="c1"># --- NOX-CH4: discriminate between direct CH4 decrease and O3/H2O variations induced by CH4 decrease ---</span>
-    <span class="n">nox_ch4_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">)</span>
+    <span class="n">nox_ch4_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"NOx - CH4 and induced"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nox_ch4_results</span><span class="p">:</span>
         <span class="n">f1</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Indirect effect of CH4 change on ozone</span>
         <span class="n">f2</span> <span class="o">=</span> <span class="mf">0.15</span>  <span class="c1"># Indirect effect of CH4 change on stratospheric water</span>
         <span class="n">total_effect</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
 
         <span class="n">factors</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;NOx - CH4&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - CH4 induced O3&quot;</span><span class="p">:</span> <span class="n">f1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
-            <span class="s2">&quot;NOx - CH4 induced H2O&quot;</span><span class="p">:</span> <span class="n">f2</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"NOx - CH4"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"NOx - CH4 induced O3"</span><span class="p">:</span> <span class="n">f1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"NOx - CH4 induced H2O"</span><span class="p">:</span> <span class="n">f2</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nox_ch4_results</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="c1"># --- H2-CH4: discriminate between direct CH4 increase and O3/H2O variations induced by CH4 increase ---</span>
-    <span class="n">h2_leakage_ch4_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">)</span>
+    <span class="n">h2_leakage_ch4_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">h2_leakage_ch4_results</span><span class="p">:</span>
         <span class="n">f1</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Indirect effect of CH4 change on ozone</span>
         <span class="n">f2</span> <span class="o">=</span> <span class="mf">0.15</span>  <span class="c1"># Indirect effect of CH4 change on stratospheric water</span>
         <span class="n">total_effect</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
 
         <span class="n">factors</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;H2 leakage - CH4&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - CH4 induced O3&quot;</span><span class="p">:</span> <span class="n">f1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - CH4 induced H2O&quot;</span><span class="p">:</span> <span class="n">f2</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4 induced O3"</span><span class="p">:</span> <span class="n">f1</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4 induced H2O"</span><span class="p">:</span> <span class="n">f2</span> <span class="o">/</span> <span class="n">total_effect</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -2129,56 +2129,56 @@
 
     <span class="c1"># --- Aggregate results ---</span>
     <span class="n">aggregations</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="s2">&quot;NOx - CH4 and induced&quot;</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;NOx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NOx - ST O3&quot;</span><span class="p">,</span> <span class="s2">&quot;NOx - CH4 and induced&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;Soot - ARI&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="s2">&quot;Soot - ACI&quot;</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;Soot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">,</span> <span class="s2">&quot;Soot - ACI&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span>
+    <span class="k">if</span> <span class="s2">"NOx - CH4 and induced"</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"NOx"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"NOx - ST O3"</span><span class="p">,</span> <span class="s2">"NOx - CH4 and induced"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">"Soot - ARI"</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="s2">"Soot - ACI"</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"Soot"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Soot - ARI"</span><span class="p">,</span> <span class="s2">"Soot - ACI"</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span>
         <span class="p">]</span>
-    <span class="k">if</span> <span class="s2">&quot;Sulfur - ARI&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="s2">&quot;Sulfur - ACI&quot;</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;Sulfur&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">,</span> <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span>
+    <span class="k">if</span> <span class="s2">"Sulfur - ARI"</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="s2">"Sulfur - ACI"</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"Sulfur"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Sulfur - ARI"</span><span class="p">,</span> <span class="s2">"Sulfur - ACI"</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;Soot - ARI&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;Soot - ACI&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;Sulfur - ARI&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;Sulfur - ACI&quot;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="s2">"Soot - ARI"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"Soot - ACI"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"Sulfur - ARI"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"Sulfur - ACI"</span> <span class="ow">in</span> <span class="n">results</span>
     <span class="p">):</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;Aerosols&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"Aerosols"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">s</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Soot - ARI&quot;</span><span class="p">,</span> <span class="s2">&quot;Soot - ACI&quot;</span><span class="p">,</span> <span class="s2">&quot;Sulfur - ARI&quot;</span><span class="p">,</span> <span class="s2">&quot;Sulfur - ACI&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Soot - ARI"</span><span class="p">,</span> <span class="s2">"Soot - ACI"</span><span class="p">,</span> <span class="s2">"Sulfur - ARI"</span><span class="p">,</span> <span class="s2">"Sulfur - ACI"</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;H2 leakage - ST O3&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;H2 leakage - SWV&quot;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="s2">"H2 leakage - ST O3"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"H2 leakage - CH4 and induced"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"H2 leakage - SWV"</span> <span class="ow">in</span> <span class="n">results</span>
     <span class="p">):</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;H2 leakage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;H2 leakage - ST O3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - CH4 and induced&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;H2 leakage - SWV&quot;</span><span class="p">,</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"H2 leakage"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">"H2 leakage - ST O3"</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - CH4 and induced"</span><span class="p">,</span>
+            <span class="s2">"H2 leakage - SWV"</span><span class="p">,</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;Contrails&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;NOx&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;H2O&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;Aerosols&quot;</span> <span class="ow">in</span> <span class="n">aggregations</span>
+        <span class="s2">"Contrails"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"NOx"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"H2O"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"Aerosols"</span> <span class="ow">in</span> <span class="n">aggregations</span>
     <span class="p">):</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;Non-CO2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"Non-CO2"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">s</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Contrails&quot;</span><span class="p">,</span> <span class="s2">&quot;NOx&quot;</span><span class="p">,</span> <span class="s2">&quot;H2O&quot;</span><span class="p">,</span> <span class="s2">&quot;Aerosols&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Contrails"</span><span class="p">,</span> <span class="s2">"NOx"</span><span class="p">,</span> <span class="s2">"H2O"</span><span class="p">,</span> <span class="s2">"Aerosols"</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">aggregations</span>
         <span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;CO2&quot;</span> <span class="ow">in</span> <span class="n">results</span>
-        <span class="ow">or</span> <span class="s2">&quot;Non-CO2&quot;</span> <span class="ow">in</span> <span class="n">aggregations</span>
-        <span class="ow">or</span> <span class="s2">&quot;H2 leakage&quot;</span> <span class="ow">in</span> <span class="n">aggregations</span>
+        <span class="s2">"CO2"</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="ow">or</span> <span class="s2">"Non-CO2"</span> <span class="ow">in</span> <span class="n">aggregations</span>
+        <span class="ow">or</span> <span class="s2">"H2 leakage"</span> <span class="ow">in</span> <span class="n">aggregations</span>
     <span class="p">):</span>
-        <span class="n">aggregations</span><span class="p">[</span><span class="s2">&quot;Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">aggregations</span><span class="p">[</span><span class="s2">"Total"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">s</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CO2&quot;</span><span class="p">,</span> <span class="s2">&quot;Non-CO2&quot;</span><span class="p">,</span> <span class="s2">&quot;H2 leakage&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"CO2"</span><span class="p">,</span> <span class="s2">"Non-CO2"</span><span class="p">,</span> <span class="s2">"H2 leakage"</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">or</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">aggregations</span>
         <span class="p">]</span>
 
@@ -2236,10 +2236,10 @@ Specifically, check if it's a registered name, a subclass of ClimateModel, or a 
 <span class="normal">352</span>
 <span class="normal">353</span>
 <span class="normal">354</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Validate the climate model provided.</span>
-<span class="sd">    Specifically, check if it&#39;s a registered name, a subclass of ClimateModel, or a callable function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Specifically, check if it's a registered name, a subclass of ClimateModel, or a callable function.</span>
+<span class="sd">    """</span>
     <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">climate_model</span>
 
     <span class="n">is_registered_name</span> <span class="o">=</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_climate_models</span>
@@ -2250,8 +2250,8 @@ Specifically, check if it's a registered name, a subclass of ClimateModel, or a 
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">is_registered_name</span> <span class="ow">or</span> <span class="n">is_callable</span> <span class="ow">or</span> <span class="n">is_climate_subclass</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Climate model must be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_climate_models</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;a subclass of ClimateModel, or a callable function&quot;</span>
+            <span class="sa">f</span><span class="s2">"Climate model must be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_climate_models</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"a subclass of ClimateModel, or a callable function"</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2366,35 +2366,35 @@ where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arra
 <span class="normal">386</span>
 <span class="normal">387</span>
 <span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_xarray</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert results dictionary to xarray Dataset</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    data: dict</span>
 <span class="sd">        dictionary with species as keys and another dictionary as values,</span>
-<span class="sd">        where the inner dictionary has variable names (e.g. &#39;rf, &#39;erf&#39;) as keys and arrays as values</span>
+<span class="sd">        where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arrays as values</span>
 <span class="sd">    timesteps: list</span>
 <span class="sd">        Years corresponding to the data arrays</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Extract species and variable names</span>
-    <span class="n">species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># e.g. &#39;Aviation CO2&#39;, &#39;Aviation NOx&#39;, &#39;Aviation total&#39;</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># e.g. 'Aviation CO2', 'Aviation NOx', 'Aviation total'</span>
     <span class="n">variables</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
         <span class="p">{</span><span class="n">k</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-    <span class="p">)</span>  <span class="c1"># e.g. &#39;rf&#39;, &#39;erf&#39;, &#39;temperature increase&#39;</span>
+    <span class="p">)</span>  <span class="c1"># e.g. 'rf', 'erf', 'temperature increase'</span>
 
     <span class="c1"># Build xarray dataset</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
         <span class="p">{</span>
             <span class="n">var</span><span class="p">:</span> <span class="p">(</span>
-                <span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"species"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">),</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">timesteps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">species</span><span class="p">]</span>
                 <span class="p">),</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span>
         <span class="p">},</span>
-        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="n">species</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">timesteps</span><span class="p">},</span>
+        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s2">"species"</span><span class="p">:</span> <span class="n">species</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">:</span> <span class="n">timesteps</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">ds</span>
 </code></pre></div></td></tr></table></div>
@@ -2532,7 +2532,7 @@ where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arra
 <span class="normal">429</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_default_species_settings</span><span class="p">(</span>
     <span class="n">climate_model</span><span class="p">:</span> <span class="n">ClimateModel</span><span class="p">,</span> <span class="n">species_settings</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Complete the species settings with default values from the climate model for the ones that are not provided.</span>
 
 <span class="sd">    Parameters</span>
@@ -2546,14 +2546,14 @@ where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arra
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
 <span class="sd">        Updated species settings dictionary with default values filled in.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Extract the default values from the available species settings of the climate model</span>
     <span class="n">default_species_settings</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">specie</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">param</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+            <span class="n">param</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="s2">"default"</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">specie_param</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="s2">"default"</span> <span class="ow">in</span> <span class="n">value</span>
         <span class="p">}</span>
         <span class="k">for</span> <span class="n">specie</span><span class="p">,</span> <span class="n">specie_param</span> <span class="ow">in</span> <span class="n">climate_model</span><span class="o">.</span><span class="n">available_species_settings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>
@@ -2693,7 +2693,7 @@ where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arra
 <span class="normal">460</span>
 <span class="normal">461</span>
 <span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_default_model_settings</span><span class="p">(</span><span class="n">climate_model</span><span class="p">,</span> <span class="n">model_settings</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Complete the model settings with default values from the climate model for the ones that are not provided.</span>
 
 <span class="sd">    Parameters</span>
@@ -2707,13 +2707,13 @@ where the inner dictionary has variable names (e.g. 'rf, 'erf') as keys and arra
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
 <span class="sd">        Updated model settings dictionary with default values filled in.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Extract the default values from the available model settings of the climate model</span>
     <span class="n">default_model_settings</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">[</span><span class="s2">"default"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">climate_model</span><span class="o">.</span><span class="n">available_model_settings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="s2">"default"</span> <span class="ow">in</span> <span class="n">value</span>
     <span class="p">}</span>
 
     <span class="n">updated_model_settings</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">default_model_settings</span><span class="p">)</span>

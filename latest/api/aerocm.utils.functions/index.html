@@ -1589,7 +1589,7 @@
 <span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emission_profile_function</span><span class="p">(</span>
     <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t0</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_horizon</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit_value</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate an emission profile based on the specified type (e.g. pulse) and time horizon.</span>
 
 <span class="sd">    Parameters</span>
@@ -1601,7 +1601,7 @@
 <span class="sd">    time_horizon : int</span>
 <span class="sd">        Duration of the emission profile in years.</span>
 <span class="sd">    profile : str</span>
-<span class="sd">        Type of emission profile: &quot;pulse&quot;, &quot;step&quot;, or &quot;1% growth&quot;.</span>
+<span class="sd">        Type of emission profile: "pulse", "step", or "1% growth".</span>
 <span class="sd">    unit_value : float</span>
 <span class="sd">        Magnitude of the emission event.</span>
 
@@ -1614,18 +1614,18 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid profile type is provided.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">profile</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="s2">&quot;1</span><span class="si">% g</span><span class="s2">rowth&quot;</span><span class="p">]:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">profile</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"pulse"</span><span class="p">,</span> <span class="s2">"step"</span><span class="p">,</span> <span class="s2">"1</span><span class="si">% g</span><span class="s2">rowth"</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Invalid profile &#39;</span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&#39;. Choose from &#39;pulse&#39;, &#39;step&#39;, or &#39;1% growth&#39;.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Invalid profile '</span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">'. Choose from 'pulse', 'step', or '1% growth'."</span>
         <span class="p">)</span>
     <span class="n">emissions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="n">time_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;pulse&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">"pulse"</span><span class="p">:</span>
         <span class="n">emissions</span><span class="p">[</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_value</span>
-    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;step&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">"step"</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">time_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">emissions</span><span class="p">[</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_value</span>
-    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;1</span><span class="si">% g</span><span class="s2">rowth&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">"1</span><span class="si">% g</span><span class="s2">rowth"</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">time_horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">emissions</span><span class="p">[</span><span class="n">t0</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit_value</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">**</span> <span class="n">k</span>
     <span class="k">return</span> <span class="n">emissions</span>
@@ -1928,7 +1928,7 @@
     <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">label_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot selected species over time for a chosen data variable.</span>
 
 <span class="sd">    Parameters</span>
@@ -1936,7 +1936,7 @@
 <span class="sd">    ds : xr.Dataset</span>
 <span class="sd">        Dataset with dimensions (species, year).</span>
 <span class="sd">    data_var : str</span>
-<span class="sd">        Name of the data variable to plot (e.g. &#39;temperature_change&#39;).</span>
+<span class="sd">        Name of the data variable to plot (e.g. 'temperature_change').</span>
 <span class="sd">    species : list[str], optional</span>
 <span class="sd">        Species names to plot. If None, all species are plotted.</span>
 <span class="sd">    title : str, optional</span>
@@ -1953,29 +1953,29 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
-<span class="sd">        If &#39;ds&#39; is not an xarray.Dataset.</span>
+<span class="sd">        If 'ds' is not an xarray.Dataset.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If &#39;data_var&#39; is not found in the dataset or if specified species are missing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        If 'data_var' is not found in the dataset or if specified species are missing.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Validation ---</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Input &#39;ds&#39; must be an xarray.Dataset.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Input 'ds' must be an xarray.Dataset."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">data_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">data_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">data_var</span><span class="si">}</span><span class="s2">' not found in dataset. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">species</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Species not found in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Species not found in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">da</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">data_var</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">da</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">data_var</span><span class="p">]</span>
 
     <span class="n">years</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># shape (year, species)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s2">"year"</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># shape (year, species)</span>
     <span class="n">species_list</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">values</span>
 
     <span class="c1"># --- Prepare axes ---</span>
@@ -1988,24 +1988,24 @@
     <span class="c1"># --- Plot ---</span>
     <span class="k">if</span> <span class="n">stacked</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">stackplot</span><span class="p">(</span>
-            <span class="n">years</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">]</span>
+            <span class="n">years</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">''</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">species_list</span><span class="p">]</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">species_list</span><span class="p">):</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label_prefix</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">''</span><span class="si">}{</span><span class="n">sp</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 
     <span class="c1"># --- Format ---</span>
     <span class="k">if</span> <span class="n">new_fig</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Year&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">data_var</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_var</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Species&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Year"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">data_var</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data_var</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span><span class="w"> </span><span class="s1">' '</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Species"</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># If reusing an existing axis, only update legend</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax</span>
 </code></pre></div></td></tr></table></div>
@@ -2080,18 +2080,18 @@ and methods of a class or instance.</p>
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_model_info</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Pretty-print all public attributes (with current/default values)</span>
 <span class="sd">    and methods of a class or instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;IPCC&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">"IPCC"</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">IPCCClimateModel</span>
-        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;LWE&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">"LWE"</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">LWEClimateModel</span>
-        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;GWP*&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">"GWP*"</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">GWPStarClimateModel</span>
-        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">&quot;FaIR&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="o">==</span> <span class="s2">"FaIR"</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">FairClimateModel</span>
 
     <span class="c1"># Determine the class</span>
@@ -2101,31 +2101,31 @@ and methods of a class or instance.</p>
     <span class="n">attributes</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="c1"># --- Collect public methods ---</span>
     <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">name</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
     <span class="p">]</span>
 
     <span class="c1"># --- Pretty print ---</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Class: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Attributes:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Class: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Attributes:"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">attributes</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  (No public attributes)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  (No public attributes)"</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Methods:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Methods:"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">methods</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  • </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">()&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">()"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  (No public methods)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  (No public methods)"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

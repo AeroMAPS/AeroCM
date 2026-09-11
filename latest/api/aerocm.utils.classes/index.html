@@ -1802,7 +1802,7 @@
     <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the climate model with the provided settings.</span>
+<span class="w">    </span><span class="sd">"""Initialize the climate model with the provided settings.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1818,7 +1818,7 @@
 <span class="sd">        Dictionary containing species settings.</span>
 <span class="sd">    model_settings : dict</span>
 <span class="sd">        Dictionary containing model settings.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># --- Validate parameters ---</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">validate_model_settings</span><span class="p">(</span><span class="n">model_settings</span><span class="p">)</span>
@@ -1893,17 +1893,17 @@ Example:
 <span class="normal">107</span>
 <span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the climate model with the provided input data.</span>
+<span class="w">    </span><span class="sd">"""Run the climate model with the provided input data.</span>
 
-<span class="sd">    Subclasses must return a dict with keys: &#39;radiative_forcing&#39;, &#39;effective_radiative_forcing&#39;,</span>
-<span class="sd">    and &#39;temperature&#39;, which are the outputs of the climate model.</span>
+<span class="sd">    Subclasses must return a dict with keys: 'radiative_forcing', 'effective_radiative_forcing',</span>
+<span class="sd">    and 'temperature', which are the outputs of the climate model.</span>
 <span class="sd">    Example:</span>
 <span class="sd">        {</span>
-<span class="sd">            &#39;radiative_forcing&#39;: np.zeros(end_year - start_year + 1),</span>
-<span class="sd">            &#39;effective_radiative_forcing&#39;: np.zeros(end_year - start_year + 1),</span>
-<span class="sd">            &#39;temperature&#39;: np.zeros(end_year - start_year + 1)</span>
+<span class="sd">            'radiative_forcing': np.zeros(end_year - start_year + 1),</span>
+<span class="sd">            'effective_radiative_forcing': np.zeros(end_year - start_year + 1),</span>
+<span class="sd">            'temperature': np.zeros(end_year - start_year + 1)</span>
 <span class="sd">        }</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2006,7 +2006,7 @@ Example:
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_model_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the provided model settings.</span>
+<span class="w">    </span><span class="sd">"""Validate the provided model settings.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2017,17 +2017,17 @@ Example:
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If any setting has an incorrect type.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">model_settings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_model_settings</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
-                <span class="n">model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+                <span class="n">model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">"type"</span><span class="p">]</span>
             <span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Model setting </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> must be of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Model setting </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> must be of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_model_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model setting: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">. Will be ignored.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model setting: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">. Will be ignored."</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2168,7 +2168,7 @@ Example:
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_specie_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specie_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">specie_settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the provided species settings.</span>
+<span class="w">    </span><span class="sd">"""Validate the provided species settings.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2183,25 +2183,25 @@ Example:
 <span class="sd">        If the species is not supported or if any mandatory setting is missing.</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If any setting has an incorrect type.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">specie_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_species</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Species </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2"> is not supported. Available species: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_species</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Species </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2"> is not supported. Available species: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">available_species</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="n">available_specie_settings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_species_settings</span><span class="p">[</span><span class="n">specie_name</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">available_specie_settings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specie_settings</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing setting for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing setting for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">available_specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+            <span class="n">specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">available_specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">"type"</span><span class="p">]</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Setting </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2"> must be of type </span><span class="si">{</span><span class="n">available_specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Setting </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2"> must be of type </span><span class="si">{</span><span class="n">available_specie_settings</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">specie_settings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_specie_settings</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unknown setting for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">. Will be ignored.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unknown setting for </span><span class="si">{</span><span class="n">specie_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">. Will be ignored."</span>
             <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2340,7 +2340,7 @@ Example:
 <span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_inventory</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">specie_inventory</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the provided emission inventory.</span>
+<span class="w">    </span><span class="sd">"""Validate the provided emission inventory.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2355,12 +2355,12 @@ Example:
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the emission profile length does not match the simulation period.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Check length of inventory</span>
     <span class="n">expected_length</span> <span class="o">=</span> <span class="n">end_year</span> <span class="o">-</span> <span class="n">start_year</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">specie_inventory</span><span class="p">)</span> <span class="o">!=</span> <span class="n">expected_length</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Inventory length must be </span><span class="si">{</span><span class="n">expected_length</span><span class="si">}</span><span class="s2"> for the period </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Inventory length must be </span><span class="si">{</span><span class="n">expected_length</span><span class="si">}</span><span class="s2"> for the period </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_year</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
