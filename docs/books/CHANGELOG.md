@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.3.0-beta
+
+Changed:
+
+- Add hydrogen leakage (#18)
+- Formatting (#18)
+
 ## Version 0.2.0-beta
 
 Changed:
