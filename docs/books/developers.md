@@ -1,17 +1,17 @@
 Installation guide for developers
 --------------------------------
-If you want to contribute to the development of AeroCM, you can clone the repository and install the package in a virtual environment using [Poetry](https://python-poetry.org/):
+If you want to contribute to the development of AeroCM, you can clone the repository and install the package in a virtual environment using [uv](https://docs.astral.sh/uv/):
 
 ``` {.bash}
 git clone https://github.com/AeroMAPS/AeroCM.git
 cd aerocm
-poetry install
+uv sync
 ```
 
 If you also want to run the Jupyter notebooks developed for the reference paper, install the extra dependencies with this command:
 
 ``` {.bash}
-poetry install -E publications
+uv sync --extra publications
 ```
 
 Template to implement new climate models
