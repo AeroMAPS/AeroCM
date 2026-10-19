@@ -17,7 +17,7 @@ dependencies = [
     "jupyterlab>=4.0.0,<5.0.0",
     "xarray>=2024.2.0,<2025.0.0",
     "ipympl>=0.9.3,<0.10.0",
-
+    "ruff"
 ]
 
 [project.optional-dependencies]
