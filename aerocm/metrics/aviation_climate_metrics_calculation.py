@@ -266,7 +266,6 @@ class AviationClimateMetricsCalculation:
         results = {}
 
         for H in time_horizon:
-
             # --- Absolute metrics ---
             results_H_absolute = {}
 

@@ -48,22 +48,38 @@ class FairClimateModel(ClimateModel):
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"}},
         "Contrails": {
-            "sensitivity_rf": {"type": float, "default": 2.23e-12, "unit": "W/m^2/(aircraft.km)"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 2.23e-12,
+                "unit": "W/m^2/(aircraft.km)",
+            },
             "ratio_erf_rf": {"type": float, "default": 0.42, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - ST O3": {
-            "sensitivity_rf": {"type": float, "default": 7.64e-12, "unit": "W/m^2/kgNOx"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 7.64e-12,
+                "unit": "W/m^2/kgNOx",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.37, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - CH4 and induced": {
-            "ch4_change_per_species": {"type": float, "default": -3.9, "unit": "kgCH4/kgNOx"},
+            "ch4_change_per_species": {
+                "type": float,
+                "default": -3.9,
+                "unit": "kgCH4/kgNOx",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2O": {
-            "sensitivity_rf": {"type": float, "default": 5.2e-15, "unit": "W/m^2/kgH2O"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 5.2e-15,
+                "unit": "W/m^2/kgH2O",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
@@ -78,7 +94,11 @@ class FairClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Sulfur - ARI": {
-            "sensitivity_rf": {"type": float, "default": -2.0e-11, "unit": "W/m^2/kgSO2"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": -2.0e-11,
+                "unit": "W/m^2/kgSO2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
@@ -93,19 +113,31 @@ class FairClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - CH4 and induced": {
-            "ch4_change_per_species": {"type": float, "default": 0.32, "unit": "kgCH4/kgH2"},
+            "ch4_change_per_species": {
+                "type": float,
+                "default": 0.32,
+                "unit": "kgCH4/kgH2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - SWV": {
-            "sensitivity_rf": {"type": float, "default": 0.19e-12, "unit": "W/m^2/kgH2"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 0.19e-12,
+                "unit": "W/m^2/kgH2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
     }
     available_model_settings = {
         "contrails_saturation_factor": {"type": float, "default": 1.0, "unit": "-"},
-        "background_nox_correction_factor": {"type": float, "default": 0.0, "unit": "-"},
+        "background_nox_correction_factor": {
+            "type": float,
+            "default": 0.0,
+            "unit": "-",
+        },
         "background_scenario": {"type": (str, type(None)), "default": "RCP45"},
         # overrode by background_species_quantities if background_species_quantities is provided
         "background_species_quantities": {"type": dict},
@@ -990,8 +1022,7 @@ def background_species_quantities_function(
     # World CO2
     background_species_quantities["background_CO2"] = (
         background_scenario_data_df["CO2"][
-            start_year
-            - BACKGROUND_SCENARIO_START_YEAR : end_year
+            start_year - BACKGROUND_SCENARIO_START_YEAR : end_year
             - BACKGROUND_SCENARIO_START_YEAR
             + 1
         ].values
@@ -1001,8 +1032,7 @@ def background_species_quantities_function(
     background_species_quantities["background_CH4"] = background_scenario_data_df[
         "CH4"
     ][
-        start_year
-        - BACKGROUND_SCENARIO_START_YEAR : end_year
+        start_year - BACKGROUND_SCENARIO_START_YEAR : end_year
         - BACKGROUND_SCENARIO_START_YEAR
         + 1
     ].values  # Unit: MtCH4
@@ -1011,8 +1041,7 @@ def background_species_quantities_function(
     background_species_quantities["background_NOx"] = background_scenario_data_df[
         "NOx"
     ][
-        start_year
-        - BACKGROUND_SCENARIO_START_YEAR : end_year
+        start_year - BACKGROUND_SCENARIO_START_YEAR : end_year
         - BACKGROUND_SCENARIO_START_YEAR
         + 1
     ].values  # Unit: MtNOx
