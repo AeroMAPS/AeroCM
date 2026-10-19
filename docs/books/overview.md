@@ -1,10 +1,12 @@
 # Overview
 
+The following figure corresponds to the process for using standardised aviation climate models and for calculating aviation climate metrics.
+
+![Figure 1](resources/framework.png)
+
 ## Run a climate simulation
 
-The following figure corresponds to the process for using standardised aviation climate models, using the *AviationClimateSimulation* class.
-
-![Figure 1](resources/climate_model.png)
+The *AviationClimateSimulation* class (blue box) enables the user to run aviation climate models.
 
 The climate outputs available are RF, ERF and surface temperature change ($\Delta T$). The current process allows for the inclusion of the following species: CO<sub>2</sub>, contrail cirrus, NO<sub>x</sub> (via short-term ozone increase, and via long-term methane loss and induced effects), water vapour, aerosol-radiation interactions from soot emissions, and aerosol-radiation interactions from sulphur emissions. Note that the framework could easily be adapted to integrate new species, such as aerosol-cloud interactions from soot or sulphur emissions. 
 
@@ -16,9 +18,7 @@ An aviation climate model is finally chosen for running the simulation for each 
 
 ## Calculate climate metrics
 
-The following figure corresponds to the process for calculating aviation climate metrics, using the *AviationClimateMetricsCalculation* class. 
-
-![Figure 2](resources/climate_metric.png)
+The *AviationClimateMetricsCalculation* class (grey box) enables the user to calculate aviation climate metrics. 
 
 In a first step, this process directly relies on the *AviationClimateSimulation* class for estimating the climate outputs, requiring the same inputs. Concerning the emission inventory, reference emission profiles (pulse, step and combined) are available to simplify the use, but it is also possible to set a custom scenario. In a second step, several climate metrics are calculated. The list of the considered metrics is provided in the following table. This table specifies the definitions of the absolute metrics and the corresponding relative metrics (relative to CO<sub>2</sub>), which are generally those of interest. The choice of the metrics of interest was inspired by the work of Megill et al.[@megill2024alternative], with modifications made to clarify the distinction between RF and ERF.
 
