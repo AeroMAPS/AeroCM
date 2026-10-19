@@ -78,10 +78,10 @@ jobs:
         with:
           fetch-depth: 0  # Required for mike to work with git history
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.12
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.10"
+          python-version: "3.12"
           enable-cache: true
 
       - name: Install dependencies
