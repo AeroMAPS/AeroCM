@@ -1,20 +1,32 @@
 # Changelog
 
+## Version 0.4.0-beta
+
+Changed:
+
+- Add the effects of hydrogen leakage on stratospheric water vapour. (#21)
+- Migrated to uv and support for python 3.14. (#22)
+- Update publication notebooks. (#23)
+
+Fixed:
+- Update documentation. (#24) 
+- Formatting.
+
 ## Version 0.3.0-beta
 
 Changed:
 
-- Add hydrogen leakage (#18)
-- Formatting (#18)
+- Add hydrogen leakage. (#18)
+- Formatting. (#18)
 
 ## Version 0.2.0-beta
 
 Changed:
-- Add ACI for soot and sulfur (#16)
-- Add effects of NOx background (only for FaIR) (#16)
-- Add saturation effects for contrails (only for FaIR) (#16)
-- Add new background scenarios (SSP) (#16)
-- Add a clear correction factor on distance for contrails (#16)
+- Add ACI for soot and sulfur. (#16)
+- Add effects of NOx background (only for FaIR). (#16)
+- Add saturation effects for contrails (only for FaIR). (#16)
+- Add new background scenarios (SSP). (#16)
+- Add a clear correction factor on distance for contrails. (#16)
 
 ## Version 0.1.1-beta
 
@@ -27,4 +39,4 @@ Fixed:
 
 ## Version 0.1.0-beta
 
-- First beta release
+- First beta release.
