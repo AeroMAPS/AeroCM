@@ -36,22 +36,38 @@ class IPCCClimateModel(ClimateModel):
     available_species_settings = {
         "CO2": {"ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"}},
         "Contrails": {
-            "sensitivity_rf": {"type": float, "default": 2.23e-12, "unit": "W/m^2/(aircraft.km)"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 2.23e-12,
+                "unit": "W/m^2/(aircraft.km)",
+            },
             "ratio_erf_rf": {"type": float, "default": 0.42, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - ST O3": {
-            "sensitivity_rf": {"type": float, "default": 7.64e-12, "unit": "W/m^2/kgNOx"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 7.64e-12,
+                "unit": "W/m^2/kgNOx",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.37, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "NOx - CH4 and induced": {
-            "ch4_change_per_species": {"type": float, "default": -3.9, "unit": "kgCH4/kgNOx"},
+            "ch4_change_per_species": {
+                "type": float,
+                "default": -3.9,
+                "unit": "kgCH4/kgNOx",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2O": {
-            "sensitivity_rf": {"type": float, "default": 5.2e-15, "unit": "W/m^2/kgH2O"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 5.2e-15,
+                "unit": "W/m^2/kgH2O",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
@@ -66,7 +82,11 @@ class IPCCClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "Sulfur - ARI": {
-            "sensitivity_rf": {"type": float, "default": -2.0e-11, "unit": "W/m^2/kgSO2"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": -2.0e-11,
+                "unit": "W/m^2/kgSO2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
@@ -81,12 +101,20 @@ class IPCCClimateModel(ClimateModel):
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - CH4 and induced": {
-            "ch4_change_per_species": {"type": float, "default": 0.32, "unit": "kgCH4/kgH2"},
+            "ch4_change_per_species": {
+                "type": float,
+                "default": 0.32,
+                "unit": "kgCH4/kgH2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.18, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },
         "H2 leakage - SWV": {
-            "sensitivity_rf": {"type": float, "default": 0.19e-12, "unit": "W/m^2/kgH2"},
+            "sensitivity_rf": {
+                "type": float,
+                "default": 0.19e-12,
+                "unit": "W/m^2/kgH2",
+            },
             "ratio_erf_rf": {"type": float, "default": 1.0, "unit": "-"},
             "efficacy_erf": {"type": float, "default": 1.0, "unit": "-"},
         },

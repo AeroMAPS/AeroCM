@@ -50,6 +50,5 @@ Citation
 
 If you use AeroCM in your work, please cite the following reference.
 
-> Planès, T., Pollet, F., Perini, M. (2025).
-Aviation climate metrics: calculations and applications based on an open-source framework for standardised climate models.
-Preprint.
+> Planès, T., Pollet, F., Perini, M. (Preprint).
+Aviation climate metrics: calculations and applications based on a dedicated open-source framework.
