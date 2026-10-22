@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2004,12 +2004,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># --- Import libraries ---</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">aerocm.metrics.aviation_climate_metrics_calculation</span><span class="w"> </span><span class="kn">import</span> <span class="n">AviationClimateMetricsCalculation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aerocm.metrics.aviation_climate_metrics_calculation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AviationClimateMetricsCalculation</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">aerocm.utils.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">emission_profile_function</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1"># --- Import libraries ---
 import numpy as np
-from aerocm.metrics.aviation_climate_metrics_calculation import AviationClimateMetricsCalculation
+from aerocm.metrics.aviation_climate_metrics_calculation import (
+    AviationClimateMetricsCalculation,
+)
 from aerocm.utils.functions import emission_profile_function</div>
 </div>
 </div>
@@ -2038,21 +2042,24 @@ from aerocm.utils.functions import emission_profile_function</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># --- Set parameters ---</span>
 
 <span class="c1">## Climate model</span>
-<span class="n">climate_model</span> <span class="o">=</span> <span class="s2">"FaIR"</span> <span class="c1"># Choose a climate model among 'IPCC', 'GWP*', 'LWE' and 'FaIR'</span>
-<span class="n">start_year</span> <span class="o">=</span> <span class="mi">1940</span> <span class="c1"># Choose a start year for the climate simulation</span>
+<span class="n">climate_model</span> <span class="o">=</span> <span class="s2">"FaIR"</span>  <span class="c1"># Choose a climate model among 'IPCC', 'GWP*', 'LWE' and 'FaIR'</span>
+<span class="n">start_year</span> <span class="o">=</span> <span class="mi">1940</span>  <span class="c1"># Choose a start year for the climate simulation</span>
 <span class="c1">### The end_year parameter will be automatically calculated using time horizon (Option 1)</span>
 <span class="c1">### or the length of the species inventory, with a check for time horizon (Option 2)</span>
 
 <span class="c1">## Metrics</span>
-<span class="n">time_horizon</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span> <span class="c1"># Choose an integer or a list of integers</span>
+<span class="n">time_horizon</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>  <span class="c1"># Choose an integer or a list of integers</span>
 
 <span class="c1">## Species</span>
-<span class="n">species_profile</span> <span class="o">=</span> <span class="s1">'pulse'</span> <span class="c1"># Choose between 'pulse', 'step', 'combined', 'scenario'</span>
+<span class="n">species_profile</span> <span class="o">=</span> <span class="s2">"pulse"</span>  <span class="c1"># Choose between 'pulse', 'step', 'combined', 'scenario'</span>
 
 <span class="c1">## Option 1 ('pulse', 'step', 'combined'): standard profiles</span>
 <span class="c1">### This option will directly generate standard emission profiles (pulse/step)</span>
-<span class="n">profile_start_year</span> <span class="o">=</span> <span class="mi">2020</span> <span class="c1"># Choose the start year for the pulse/step (for FaIR: profile_start_year&gt;start_year)</span>
-<span class="n">species_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Contrails"</span><span class="p">,</span> <span class="s2">"Soot - ARI"</span><span class="p">]</span> <span class="c1"># Choose the species to study among the ones available in the climate model</span>
+<span class="n">profile_start_year</span> <span class="o">=</span> <span class="mi">2020</span>  <span class="c1"># Choose the start year for the pulse/step (for FaIR: profile_start_year&gt;start_year)</span>
+<span class="n">species_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Contrails"</span><span class="p">,</span>
+    <span class="s2">"Soot - ARI"</span><span class="p">,</span>
+<span class="p">]</span>  <span class="c1"># Choose the species to study among the ones available in the climate model</span>
 
 <span class="c1">## Aditional settings</span>
 <span class="c1">### You can use species_settings or model_settings as in the case of the AviationClimateSimulation class</span>
@@ -2060,21 +2067,24 @@ from aerocm.utils.functions import emission_profile_function</div>
 <div class="clipboard-copy-txt" id="cell-2"># --- Set parameters ---
 
 ## Climate model
-climate_model = "FaIR" # Choose a climate model among 'IPCC', 'GWP*', 'LWE' and 'FaIR'
-start_year = 1940 # Choose a start year for the climate simulation
+climate_model = "FaIR"  # Choose a climate model among 'IPCC', 'GWP*', 'LWE' and 'FaIR'
+start_year = 1940  # Choose a start year for the climate simulation
 ### The end_year parameter will be automatically calculated using time horizon (Option 1)
 ### or the length of the species inventory, with a check for time horizon (Option 2)
 
 ## Metrics
-time_horizon = [20, 50, 100] # Choose an integer or a list of integers
+time_horizon = [20, 50, 100]  # Choose an integer or a list of integers
 
 ## Species
-species_profile = 'pulse' # Choose between 'pulse', 'step', 'combined', 'scenario'
+species_profile = "pulse"  # Choose between 'pulse', 'step', 'combined', 'scenario'
 
 ## Option 1 ('pulse', 'step', 'combined'): standard profiles
 ### This option will directly generate standard emission profiles (pulse/step)
-profile_start_year = 2020 # Choose the start year for the pulse/step (for FaIR: profile_start_year&gt;start_year)
-species_list = ["Contrails", "Soot - ARI"] # Choose the species to study among the ones available in the climate model
+profile_start_year = 2020  # Choose the start year for the pulse/step (for FaIR: profile_start_year&gt;start_year)
+species_list = [
+    "Contrails",
+    "Soot - ARI",
+]  # Choose the species to study among the ones available in the climate model
 
 ## Aditional settings
 ### You can use species_settings or model_settings as in the case of the AviationClimateSimulation class</div>
@@ -2109,10 +2119,10 @@ species_list = ["Contrails", "Soot - ARI"] # Choose the species to study among t
     <span class="n">time_horizon</span><span class="p">,</span>
     <span class="n">species_profile</span><span class="p">,</span>
     <span class="n">profile_start_year</span><span class="p">,</span>
-    <span class="n">species_list</span>   
+    <span class="n">species_list</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">include_absolute_metrics</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># &lt;-- whether to include absolute metrics (default is False)</span>
-    <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># &lt;-- whether to return resulsts as a dataframe (default is a nested dict)</span>
+    <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># &lt;-- whether to return resulsts as a dataframe (default is a nested dict)</span>
 <span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3"># --- Run simulation in the case of Option 1 ---
@@ -2122,10 +2132,10 @@ results = AviationClimateMetricsCalculation(
     time_horizon,
     species_profile,
     profile_start_year,
-    species_list   
+    species_list,
 ).run(
     include_absolute_metrics=False,  # &lt;-- whether to include absolute metrics (default is False)
-    return_df=True  # &lt;-- whether to return resulsts as a dataframe (default is a nested dict)
+    return_df=True,  # &lt;-- whether to return resulsts as a dataframe (default is a nested dict)
 )</div>
 </div>
 </div>
@@ -2443,14 +2453,16 @@ results.pivot_table(index=["species", "time_horizon"])</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Select specific time horizon and/or specie and metrics</span>
 <span class="n">results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"time_horizon"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">50</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"species"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Contrails"</span><span class="p">),</span>  <span class="c1"># &lt;- rows to select</span>
-    <span class="c1">#["gwp_rf", "gtp", "agwp_rf"]  # &lt;- columns to select</span>
+    <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"time_horizon"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"species"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Contrails"</span><span class="p">),</span>  <span class="c1"># &lt;- rows to select</span>
+    <span class="c1"># ["gwp_rf", "gtp", "agwp_rf"]  # &lt;- columns to select</span>
 <span class="p">]</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-6"># Select specific time horizon and/or specie and metrics
 results.loc[
-    (results["time_horizon"] == 50) &amp; (results["species"] == "Contrails"),  # &lt;- rows to select
-    #["gwp_rf", "gtp", "agwp_rf"]  # &lt;- columns to select
+    (results["time_horizon"] == 50)
+    &amp; (results["species"] == "Contrails"),  # &lt;- rows to select
+    # ["gwp_rf", "gtp", "agwp_rf"]  # &lt;- columns to select
 ]</div>
 </div>
 </div>
@@ -2535,7 +2547,9 @@ results.loc[
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># --- Run simulation in the case of Option 2 ---</span>
 
 <span class="c1">## Species</span>
-<span class="n">species_profile_scenario</span> <span class="o">=</span> <span class="s1">'scenario'</span> <span class="c1"># Choose between 'pulse', 'step', 'combined', 'scenario'</span>
+<span class="n">species_profile_scenario</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">"scenario"</span>  <span class="c1"># Choose between 'pulse', 'step', 'combined', 'scenario'</span>
+<span class="p">)</span>
 
 <span class="c1">## Option 2 ('scenario'): species inventory</span>
 <span class="c1">### This option will directly generate the emission profiles of your choice</span>
@@ -2549,24 +2563,27 @@ results.loc[
 
 <span class="c1">### Inventory</span>
 <span class="n">species_inventory</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"CO2"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span>
-                                            <span class="n">profile_start_year</span><span class="p">,</span>
-                                            <span class="n">time_horizon_max</span><span class="p">,</span>
-                                            <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
-                                            <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span>
-                                            <span class="p">),</span> <span class="c1"># in kg</span>
-    <span class="s2">"Contrails"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span>
-                                            <span class="n">profile_start_year</span><span class="p">,</span>
-                                            <span class="n">time_horizon_max</span><span class="p">,</span>
-                                            <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
-                                            <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span>
-                                            <span class="p">),</span> <span class="c1"># in km</span>
-    <span class="s2">"Soot - ARI"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span><span class="n">start_year</span><span class="p">,</span>
-                                            <span class="n">profile_start_year</span><span class="p">,</span>
-                                            <span class="n">time_horizon_max</span><span class="p">,</span>
-                                            <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
-                                            <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">14</span>
-                                            <span class="p">),</span>  <span class="c1"># in kg</span>
+    <span class="s2">"CO2"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
+        <span class="n">start_year</span><span class="p">,</span>
+        <span class="n">profile_start_year</span><span class="p">,</span>
+        <span class="n">time_horizon_max</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
+        <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">),</span>  <span class="c1"># in kg</span>
+    <span class="s2">"Contrails"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
+        <span class="n">start_year</span><span class="p">,</span>
+        <span class="n">profile_start_year</span><span class="p">,</span>
+        <span class="n">time_horizon_max</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
+        <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">),</span>  <span class="c1"># in km</span>
+    <span class="s2">"Soot - ARI"</span><span class="p">:</span> <span class="n">emission_profile_function</span><span class="p">(</span>
+        <span class="n">start_year</span><span class="p">,</span>
+        <span class="n">profile_start_year</span><span class="p">,</span>
+        <span class="n">time_horizon_max</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">=</span><span class="s2">"pulse"</span><span class="p">,</span>
+        <span class="n">unit_value</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">,</span>
+    <span class="p">),</span>  <span class="c1"># in kg</span>
 <span class="p">}</span>
 
 <span class="n">results_scenario</span> <span class="o">=</span> <span class="n">AviationClimateMetricsCalculation</span><span class="p">(</span>
@@ -2580,7 +2597,9 @@ results.loc[
 <div class="clipboard-copy-txt" id="cell-7"># --- Run simulation in the case of Option 2 ---
 
 ## Species
-species_profile_scenario = 'scenario' # Choose between 'pulse', 'step', 'combined', 'scenario'
+species_profile_scenario = (
+    "scenario"  # Choose between 'pulse', 'step', 'combined', 'scenario'
+)
 
 ## Option 2 ('scenario'): species inventory
 ### This option will directly generate the emission profiles of your choice
@@ -2594,24 +2613,27 @@ profile_start_year = 2020
 
 ### Inventory
 species_inventory = {
-    "CO2": emission_profile_function(start_year,
-                                            profile_start_year,
-                                            time_horizon_max,
-                                            profile="pulse",
-                                            unit_value=10**10
-                                            ), # in kg
-    "Contrails": emission_profile_function(start_year,
-                                            profile_start_year,
-                                            time_horizon_max,
-                                            profile="pulse",
-                                            unit_value=10**10
-                                            ), # in km
-    "Soot - ARI": emission_profile_function(start_year,
-                                            profile_start_year,
-                                            time_horizon_max,
-                                            profile="pulse",
-                                            unit_value=10**14
-                                            ),  # in kg
+    "CO2": emission_profile_function(
+        start_year,
+        profile_start_year,
+        time_horizon_max,
+        profile="pulse",
+        unit_value=10**10,
+    ),  # in kg
+    "Contrails": emission_profile_function(
+        start_year,
+        profile_start_year,
+        time_horizon_max,
+        profile="pulse",
+        unit_value=10**10,
+    ),  # in km
+    "Soot - ARI": emission_profile_function(
+        start_year,
+        profile_start_year,
+        time_horizon_max,
+        profile="pulse",
+        unit_value=10**14,
+    ),  # in kg
 }
 
 results_scenario = AviationClimateMetricsCalculation(
@@ -2938,10 +2960,10 @@ results_scenario = AviationClimateMetricsCalculation(
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.path", "search.highlight", "search.suggest", "toc.integrate", "content.code.annotate", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.path", "search.highlight", "search.suggest", "toc.integrate", "content.code.annotate", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

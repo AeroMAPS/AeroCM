@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1267,16 +1267,16 @@
 
 
 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<p>The following figure corresponds to the process for using standardised aviation climate models and for calculating aviation climate metrics.</p>
+<p><img alt="Figure 1" src="../resources/framework.png" /></p>
 <h2 id="run-a-climate-simulation">Run a climate simulation<a class="headerlink" href="#run-a-climate-simulation" title="Permanent link">&para;</a></h2>
-<p>The following figure corresponds to the process for using standardised aviation climate models, using the <em>AviationClimateSimulation</em> class.</p>
-<p><img alt="Figure 1" src="../resources/climate_model.png" /></p>
+<p>The <em>AviationClimateSimulation</em> class (blue box) enables the user to run aviation climate models.</p>
 <p>The climate outputs available are RF, ERF and surface temperature change (<span class="arithmatex">\(\Delta T\)</span>). The current process allows for the inclusion of the following species: CO<sub>2</sub>, contrail cirrus, NO<sub>x</sub> (via short-term ozone increase, and via long-term methane loss and induced effects), water vapour, aerosol-radiation interactions from soot emissions, and aerosol-radiation interactions from sulphur emissions. Note that the framework could easily be adapted to integrate new species, such as aerosol-cloud interactions from soot or sulphur emissions. </p>
 <p>An emission inventory is needed for the considered species. In the case of contrails, the decision was made to use an indicator based on 2018 flight distance. This indicator corresponds to the annual distance flown by aircraft in the considered year, adjusted for the effects of alternative fuels and contrail avoidance strategies compared to 2018<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. </p>
 <p>Species settings are then required for calibrating their effects on climate, using by default data from Lee et al.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>. Most of the time, three settings are available. First, the sensitivity to emissions <span class="arithmatex">\(\sigma\)</span> corresponds to the RF induced by a unit species emission. Secondly, the ratio <span class="arithmatex">\(\eta\)</span> corresponds to the ratio of the ERF to the RF. This parameter enables the rapid radiative adjustments to be taken into account. Lastly, the (ERF) efficacy <span class="arithmatex">\(r_{ERF}\)</span> corresponds to the ratio of the climate sensitivity of the considered species to that of CO<sub>2</sub>, with the climate sensitivity being defined here as the induced global mean surface temperature response per unit ERF. This parameter enables the slow feedbacks to be taken into account<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>.</p>
 <p>An aviation climate model is finally chosen for running the simulation for each considered species. Four aviation climate models are currently available: IPCC, GWP*, LWE, and FaIR. Note that species settings can differ depending on the climate model chosen, and that dedicated model settings are available.</p>
 <h2 id="calculate-climate-metrics">Calculate climate metrics<a class="headerlink" href="#calculate-climate-metrics" title="Permanent link">&para;</a></h2>
-<p>The following figure corresponds to the process for calculating aviation climate metrics, using the <em>AviationClimateMetricsCalculation</em> class. </p>
-<p><img alt="Figure 2" src="../resources/climate_metric.png" /></p>
+<p>The <em>AviationClimateMetricsCalculation</em> class (grey box) enables the user to calculate aviation climate metrics. </p>
 <p>In a first step, this process directly relies on the <em>AviationClimateSimulation</em> class for estimating the climate outputs, requiring the same inputs. Concerning the emission inventory, reference emission profiles (pulse, step and combined) are available to simplify the use, but it is also possible to set a custom scenario. In a second step, several climate metrics are calculated. The list of the considered metrics is provided in the following table. This table specifies the definitions of the absolute metrics and the corresponding relative metrics (relative to CO<sub>2</sub>), which are generally those of interest. The choice of the metrics of interest was inspired by the work of Megill et al.<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>, with modifications made to clarify the distinction between RF and ERF.</p>
 <table>
 <thead>
@@ -1380,10 +1380,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.path", "search.highlight", "search.suggest", "toc.integrate", "content.code.annotate", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.path", "search.highlight", "search.suggest", "toc.integrate", "content.code.annotate", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
