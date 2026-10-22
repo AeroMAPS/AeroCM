@@ -1,6 +1,6 @@
 [project]
 name = "aerocm"
-version = "0.4.0-beta"
+dynamic = ["version"]
 description = "AeroCM: standardised climate models dedicated to aviation"
 authors = [
     {name = "Thomas PLANES", email = "thomas.planes@isae-supaero.fr"},
